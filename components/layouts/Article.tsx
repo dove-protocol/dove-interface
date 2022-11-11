@@ -12,7 +12,7 @@ const Article = ({ children }) => {
       exit="hidden"
       className="relative w-full"
     >
-      <div className="mx-auto flex min-h-screen w-full flex-col items-center overflow-hidden px-48">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center overflow-hidden">
         <Navbar />
         {children}
       </div>

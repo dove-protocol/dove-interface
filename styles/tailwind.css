@@ -2,8 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  @apply font-wagmi text-6xl sm:text-7xl lg:text-8xl;
+}
+
+h2 {
+  @apply font-wagmi text-4xl sm:text-5xl lg:text-6xl;
+}
+
+h3 {
+  @apply font-wagmi text-3xl sm:text-4xl lg:text-5xl;
+}
+
 p {
-  @apply font-wagmi text-xs tracking-wide lg:text-sm;
+  @apply font-wagmi text-sm;
 }
 
 @font-face {
