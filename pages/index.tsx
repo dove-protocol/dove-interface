@@ -117,7 +117,7 @@ export default function Home() {
                       </Tabs.Content>
                       <Tabs.Content value="tab2">
                         <h3 className="mb-2 text-white">39.93</h3>
-                        <p className="mb-4 font-thin uppercase tracking-widest text-white/50">
+                        <p className="mb-8 font-thin uppercase tracking-widest text-white/50">
                           Total balance (ETH)
                         </p>
                         <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
@@ -136,15 +136,16 @@ export default function Home() {
                         </div>
                       </Tabs.Content>
                       <Tabs.Content value="tab3">
-                        <h3 className="mb-2 text-white">139.14</h3>
-                        <p className="mb-4 font-thin uppercase tracking-widest text-white/50">
-                          Reserve 1 (EXP)
+                        <p className="mb-2 font-thin uppercase tracking-widest text-white">
+                          Reserve 1 <span className="text-white/50">(EXP)</span>
                         </p>
-                        <div className="mb-4 h-px w-full bg-white/5" />
+                        <h3 className="mb-8 text-white">139.14</h3>
+                        <div className="mb-8 h-px w-full bg-white/5" />
+                        <p className="mb-2 font-thin uppercase tracking-widest text-white">
+                          Reserve 1{" "}
+                          <span className="text-white/50">(SOJU)</span>
+                        </p>
                         <h3 className="mb-2 text-white">23.64</h3>
-                        <p className="mb-4 font-thin uppercase tracking-widest text-white/50">
-                          Reserve 1 (SOJU)
-                        </p>
                       </Tabs.Content>
                     </Tabs.Root>
                   </div>
@@ -178,7 +179,35 @@ export default function Home() {
                     </div>
                   </div>
                 </Tabs.Content>
-                <Tabs.Content value="tab3"></Tabs.Content>
+                <Tabs.Content value="tab3">
+                  <div className="bg flex w-full flex-col rounded-sm p-8 shadow-damn">
+                    <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
+                      <div className="background-gradient-pattern" />
+                    </div>
+                    <p className="mb-4 font-thin text-white">Swap</p>
+                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                      <input
+                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+                        placeholder="0.00"
+                      />
+                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+                        EXP
+                      </h4>
+                    </div>
+                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                      <input
+                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+                        placeholder="0.00"
+                      />
+                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+                        EXP
+                      </h4>
+                    </div>
+                    <div className="flex h-16 w-full items-center justify-center rounded-sm border border-white/5 shadow-damn">
+                      <p className="text-white drop-shadow-soju">Swap</p>
+                    </div>
+                  </div>
+                </Tabs.Content>
               </Tabs.Root>
             </div>
           </div>
