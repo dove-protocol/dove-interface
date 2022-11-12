@@ -18,54 +18,90 @@ export default function Home() {
                 <Tabs.List className="flex flex-row space-x-4">
                   <Tabs.Trigger
                     value="tab1"
-                    className="cursor-pointer rounded-sm bg-tan px-2 py-0.5 backdrop-blur-lg  transition duration-300 ease-linear hover:text-secondary rdx-state-active:bg-primary rdx-state-active:text-secondary rdx-state-inactive:text-secondary/50"
+                    className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                   >
                     <p className="">dAMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="tab2"
-                    className="cursor-pointer rounded-sm bg-tan px-2 py-0.5 backdrop-blur-lg  transition duration-300 ease-linear hover:text-secondary rdx-state-active:bg-primary rdx-state-active:text-secondary rdx-state-inactive:text-secondary/50"
+                    className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                   >
                     <p className="">Fuji AMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="tab3"
-                    className="cursor-pointer rounded-sm bg-tan px-2 py-0.5 backdrop-blur-lg  transition duration-300 ease-linear hover:text-secondary rdx-state-active:bg-primary rdx-state-active:text-secondary rdx-state-inactive:text-secondary/50"
+                    className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                   >
                     <p className="">Arbitrum AMM</p>
                   </Tabs.Trigger>
                 </Tabs.List>
 
                 <Tabs.Content value="tab1">
-                  <div className="mt-8 flex w-full flex-col space-y-1 rounded-sm border border-white/5 p-8 shadow-md">
-                    <p className="">Provide</p>
-                    <div className="flex h-20 items-start w-full justify-between rounded-sm bg-tan/50 p-4">
-                      <input
-                        className="placeholder:/50 bg-transparent font-wagmi  text-xl focus:outline-none"
-                        placeholder="0.00"
-                      />
-                      <p className="h-fit rounded-sm border border-primary bg-primary/10 px-2 py-0.5 text-primary ">
-                        EXP
-                      </p>
-                    </div>
-                    <div className="flex h-20 items-start w-full justify-between rounded-sm bg-tan/50 p-4">
-                      <input
-                        className="placeholder:/50 bg-transparent font-wagmi  text-xl focus:outline-none"
-                        placeholder="0.00"
-                      />
+                  <div className="bg mt-8 flex w-full flex-col space-y-1 rounded-lg p-8 shadow-damn">
+                    <Tabs.Root defaultValue="tab1" className="w-full">
+                      <Tabs.List className="mb-8 flex flex-row space-x-4">
+                        <Tabs.Trigger
+                          value="tab1"
+                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                        >
+                          <p className="">Provide</p>
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                          value="tab2"
+                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                        >
+                          <p className="">Withdraw</p>
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                          value="tab3"
+                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                        >
+                          <p className="">Stats</p>
+                        </Tabs.Trigger>
+                      </Tabs.List>
+                      <Tabs.Content value="tab1">
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm bg-white/5 p-4">
+                          <input
+                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+                            placeholder="0.00"
+                          />
+                          <p className="h-fit rounded-sm border border-primary bg-primary/10 px-2 py-0.5 text-primary ">
+                            EXP
+                          </p>
+                        </div>
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm bg-white/5 p-4">
+                          <input
+                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+                            placeholder="0.00"
+                          />
 
-                      <p className="h-fit rounded-sm border border-primary bg-primary/10 px-2 py-0.5 text-primary ">
-                        ETH
-                      </p>
-                    </div>
-                    <div className="flex h-16 w-full items-center justify-center rounded-sm bg-primary">
-                      <p className="text-secondary">Add Liquidity</p>
-                    </div>
-                    <div className="h-px w-full bg-white/5" />
-                    <p className="">Withdraw</p>
-                    <div className="h-16 w-full rounded-sm bg-white/5 p-4"></div>
-                    <div className="h-px w-full bg-white/5" />
-                    <p className="">Stats</p>
+                          <p className="h-fit rounded-sm border border-primary bg-primary/10 px-2 py-0.5 text-primary ">
+                            ETH
+                          </p>
+                        </div>
+                        <div className="flex h-16 w-full items-center justify-center rounded-sm bg-primary">
+                          <p className="text-secondary">Add Liquidity</p>
+                        </div>
+                      </Tabs.Content>
+                      <Tabs.Content value="tab2">
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm bg-white/5 p-4">
+                          <input
+                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+                            placeholder="0.00"
+                          />
+
+                          <p className="h-fit rounded-sm border border-primary bg-primary/10 px-2 py-0.5 text-primary ">
+                            ETH
+                          </p>
+                        </div>
+                        <div className="flex h-16 w-full items-center justify-center rounded-sm bg-primary">
+                          <p className="text-secondary">Withdraw</p>
+                        </div>
+                      </Tabs.Content>
+                      <Tabs.Content value="tab3">
+                        <p className="text-white">Stats</p>
+                      </Tabs.Content>
+                    </Tabs.Root>
                   </div>
                 </Tabs.Content>
                 <Tabs.Content value="tab2">
