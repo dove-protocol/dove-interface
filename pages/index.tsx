@@ -54,8 +54,9 @@ export default function Home() {
                       <Tabs.List className="mb-8 flex flex-row space-x-4">
                         <Tabs.Trigger
                           value="tab1"
-                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
+                          <img src="/add.png" className="mr-2 h-3 w-3" />
                           <p
                             className={`font-light ${
                               activeTab === "tab1" && ""
@@ -66,8 +67,9 @@ export default function Home() {
                         </Tabs.Trigger>
                         <Tabs.Trigger
                           value="tab2"
-                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
+                          <img src="/minus.png" className="mr-2 h-3 w-3" />
                           <p
                             className={`font-light ${
                               activeTab === "tab2" && ""
@@ -78,8 +80,10 @@ export default function Home() {
                         </Tabs.Trigger>
                         <Tabs.Trigger
                           value="tab3"
-                          className="cursor-pointer rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
+                          <img src="/stats.png" className="mr-2 h-3 w-3" />
+
                           <p
                             className={`font-light ${
                               activeTab === "tab3" && ""
