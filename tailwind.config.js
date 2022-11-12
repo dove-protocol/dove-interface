@@ -17,6 +17,9 @@ module.exports = {
       dropShadow: {
         soju: "0 0 5px #fff",
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--gradient-color-stops))",
+      },
     },
   },
   plugins: [

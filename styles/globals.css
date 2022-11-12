@@ -20,6 +20,14 @@ a {
   background: linear-gradient(138.16deg, #313135 -14.83%, #1f2024 92.59%);
 }
 
+.radial {
+  background: radial-gradient(
+    farthest-side at 50% 50%,
+    rgba(255, 255, 255, 0.05),
+    rgba(0, 0, 0, 0)
+  );
+}
+
 .background-gradient-pattern {
   position: absolute;
   inset: 0px;
