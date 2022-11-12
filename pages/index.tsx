@@ -6,6 +6,7 @@ import { chain, useSwitchNetwork } from "wagmi";
 import Button from "../components/InteractButton";
 import InteractButton from "../components/InteractButton";
 import { useIsMounted } from "../hooks/useIsMounted";
+import { BiPlus, BiMinus, BiStats } from "react-icons/bi";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -83,7 +84,7 @@ export default function Home() {
                           value="tab1"
                           className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <img src="/add.png" className="mr-2 h-3 w-3" />
+                          <BiPlus className="mr-2" />
                           <p
                             className={`font-light ${
                               activeTab === "tab1" && ""
@@ -96,7 +97,7 @@ export default function Home() {
                           value="tab2"
                           className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <img src="/minus.png" className="mr-2 h-3 w-3" />
+                          <BiMinus className="mr-2" />
                           <p
                             className={`font-light ${
                               activeTab === "tab2" && ""
@@ -109,14 +110,14 @@ export default function Home() {
                           value="tab3"
                           className="flex cursor-pointer items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <img src="/stats.png" className="mr-2 h-3 w-3" />
+                          <BiStats className="mr-2" />
 
                           <p
                             className={`font-light ${
                               activeTab === "tab3" && ""
                             }`}
                           >
-                            Stats
+                            Reserves
                           </p>
                         </Tabs.Trigger>
                       </Tabs.List>
@@ -146,11 +147,11 @@ export default function Home() {
                         />
                       </Tabs.Content>
                       <Tabs.Content value="tab2">
-                        <h3 className="mb-2 text-white">39.93</h3>
-                        <p className="mb-8 font-thin tracking-widest text-white/50">
+                        <p className="mb-2 font-thin tracking-widest text-white/50">
                           <span className="text-white">Total Balance</span>{" "}
                           (ETH)
                         </p>
+                        <h3 className="mb-8 text-white">39.93</h3>
                         <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                           <input
                             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
@@ -200,7 +201,7 @@ export default function Home() {
                         placeholder="0.00"
                       />
                       <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDT
+                        USDC
                       </h4>
                     </div>
                     <InteractButton text="Swap" onClick={() => {}} />
@@ -228,7 +229,7 @@ export default function Home() {
                         placeholder="0.00"
                       />
                       <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDT
+                        USDC
                       </h4>
                     </div>
                     <InteractButton text="Swap" onClick={() => {}} />
