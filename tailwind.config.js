@@ -8,6 +8,11 @@ module.exports = {
       fontFamily: {
         wagmi: "Klima",
       },
+      colors: {
+        primary: "#ffae33",
+        secondary: "#120f0c",
+        tan: "#ece7e5",
+      },
     },
   },
   plugins: [
