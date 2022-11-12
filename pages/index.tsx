@@ -90,7 +90,7 @@ export default function Home() {
                         </Tabs.Trigger>
                       </Tabs.List>
                       <Tabs.Content value="tab1">
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                           <input
                             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                             placeholder="0.00"
@@ -99,7 +99,7 @@ export default function Home() {
                             EXP
                           </h4>
                         </div>
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                           <input
                             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                             placeholder="0.00"
@@ -120,7 +120,7 @@ export default function Home() {
                         <p className="mb-8 font-thin uppercase tracking-widest text-white/50">
                           Total balance (ETH)
                         </p>
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                           <input
                             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                             placeholder="0.00"
@@ -156,7 +156,7 @@ export default function Home() {
                       <div className="background-gradient-pattern" />
                     </div>
                     <p className="mb-4 font-thin text-white">Swap</p>
-                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
                         className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                         placeholder="0.00"
@@ -165,7 +165,7 @@ export default function Home() {
                         EXP
                       </h4>
                     </div>
-                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
                         className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                         placeholder="0.00"
@@ -185,7 +185,7 @@ export default function Home() {
                       <div className="background-gradient-pattern" />
                     </div>
                     <p className="mb-4 font-thin text-white">Swap</p>
-                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
                         className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                         placeholder="0.00"
@@ -194,7 +194,7 @@ export default function Home() {
                         EXP
                       </h4>
                     </div>
-                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 p-4">
+                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
                         className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
                         placeholder="0.00"
