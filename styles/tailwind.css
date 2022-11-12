@@ -15,7 +15,11 @@ h3 {
 }
 
 p {
-  @apply font-wagmi text-sm;
+  @apply font-wagmi font-thin text-sm;
+}
+
+input {
+  @apply font-wagmi font-thin text-sm;
 }
 
 @font-face {
