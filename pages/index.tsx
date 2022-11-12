@@ -10,6 +10,17 @@ import { useState } from "react";
 export default function Home() {
   const [activeTab, setActiveTab] = useState("tab1");
 
+  async function switchToNetwork(chainId) {
+    try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: chainId }],
+        });
+      } catch (switchError) {
+        console.log(switchError);
+      }      
+  }
+
   return (
     <Main>
       <Article>
@@ -46,6 +57,7 @@ export default function Home() {
                     <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
                       <div className="background-gradient-pattern" />
                     </div>
+                    <button className="text-white" onClick={async () => {await switchToNetwork("0x5");} }>Switch to Goerli</button>
                     <Tabs.Root
                       value={activeTab}
                       onValueChange={(v) => setActiveTab(v)}
@@ -159,6 +171,7 @@ export default function Home() {
                     <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
                       <div className="background-gradient-pattern" />
                     </div>
+                    <button className="text-white" onClick={async () => {await switchToNetwork("0xa869");} }>Switch to Fuji</button>
                     <p className="mb-4 font-thin text-white">Swap</p>
                     <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
@@ -188,6 +201,7 @@ export default function Home() {
                     <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
                       <div className="background-gradient-pattern" />
                     </div>
+                    <button className="text-white" onClick={async () => {await switchToNetwork("0x66eed");} }>Switch to Arbitrum</button>
                     <p className="mb-4 font-thin text-white">Swap</p>
                     <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
                       <input
