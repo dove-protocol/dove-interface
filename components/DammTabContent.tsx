@@ -4,9 +4,28 @@ import { useState } from "react";
 import { BiPlus, BiMinus, BiStats } from "react-icons/bi";
 import InteractButton from "./InteractButton";
 import { chain } from "wagmi";
+import { validateNumber } from "../lib/utils";
+import usedAMM from "../hooks/usedAMM";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
+
+  const [amount1, setAmount1] = useState<string>();
+  const [amount2, setAmount2] = useState<string>();
+
+  const { provide } = usedAMM({ amount1, amount2 });
+
+  const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (validateNumber(e.target.value)) {
+      setAmount1(e.target.value);
+    }
+  };
+
+  const handleAmount2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (validateNumber(e.target.value)) {
+      setAmount2(e.target.value);
+    }
+  };
 
   return (
     <Tabs.Root
@@ -43,6 +62,8 @@ const DammTabContent = () => {
           <input
             className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
+            value={amount1}
+            onChange={handleAmount1Change}
           />
           <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
             USDT
@@ -52,6 +73,8 @@ const DammTabContent = () => {
           <input
             className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
+            value={amount2}
+            onChange={handleAmount2Change}
           />
           <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
             USDC
