@@ -90,7 +90,7 @@ const DammTabContent = () => {
         <p className="mb-2 font-thin tracking-widest text-white/50">
           <span className="text-white">Total Balance</span> (ETH)
         </p>
-        <h3 className="mb-8 text-white">39.93</h3>
+        <h3 className="mb-8 text-white">$392,432.93</h3>
         <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
           <input
             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
@@ -107,15 +107,19 @@ const DammTabContent = () => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <p className="mb-2 font-thin tracking-widest text-white">
-          Reserve 1 <span className="text-white/50">(USDT)</span>
-        </p>
-        <h3 className="mb-8 text-white">139.14</h3>
-        <div className="mb-8 h-px w-full bg-white/5" />
-        <p className="mb-2 font-thin tracking-widest text-white">
-          Reserve 2 <span className="text-white/50">(USDC)</span>
-        </p>
-        <h3 className="mb-2 text-white">23.64</h3>
+        <div className="flex w-full flex-col items-start">
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Reserve 1 <span className="text-white/50">(USDT)</span>
+          </p>
+          <h3 className="mb-8 text-white">$139.14</h3>
+        </div>
+        <div className="flex w-full flex-col items-start">
+          <div className="mb-8 h-px w-full bg-white/5" />
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Reserve 2 <span className="text-white/50">(USDC)</span>
+          </p>
+          <h3 className="mb-2 text-white">$23.64</h3>
+        </div>
       </Tabs.Content>
     </Tabs.Root>
   );
