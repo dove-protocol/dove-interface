@@ -6,11 +6,11 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 const Navbar = () => {
   return (
     <div className="fixed z-50 w-full">
-      <div className="flex w-full space-x-4 items-center justify-end px-8 py-4">
+      <div className="flex w-full space-x-4 items-center justify-end px-8 py-8">
         {/* <p className="text-white">dAmm</p> */}
         {/* <CustomConnectButton /> */}
-        <FaGithub className="text-white/50" />
-        <FaTwitter className="text-white/50" />
+        <FaGithub className="text-white/10" />
+        <FaTwitter className="text-white/10" />
       </div>
     </div>
   );
