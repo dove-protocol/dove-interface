@@ -9,7 +9,7 @@ const SettingsTabContent = () => {
 
   return (
     <>
-      <p className="mb-4 text-white">Settings</p>
+      <p className="mb-4 font-normal text-white">Settings</p>
 
       <p className="mb-2 text-white/50">Automatically Switch Networks</p>
       <Switch.Root
