@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { transitionAnimation } from "../../lib/utils";
 import Navbar from "../Navbar";
-import { GiAlienFire } from "react-icons/gi";
+import { GiPeaceDove } from "react-icons/gi";
 
 const Article = ({ children }) => {
   return (
@@ -17,7 +17,7 @@ const Article = ({ children }) => {
         <Navbar />
         {children}
         <div className="absolute bottom-0 flex w-full items-center justify-center p-8">
-          <GiAlienFire className="text-4xl text-white/10" />
+          <GiPeaceDove className="text-3xl text-white/10" />
         </div>
         <div className="absolute bottom-0 flex w-full items-center justify-end space-x-2 p-8">
           <div className="h-2 w-2 rounded-full bg-green-400">
