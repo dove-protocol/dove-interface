@@ -1,7 +1,7 @@
 import React from "react";
 import { chain } from "wagmi";
 import InteractButton from "./InteractButton";
-import { BiExpandAlt, BiRefresh, BiCog } from "react-icons/bi";
+import { BiExpandAlt, BiRefresh, BiCog, BiDollar } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { validateNumber } from "../lib/utils";
@@ -14,8 +14,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
-  const { mint : mintUSDC } = useMint({ amount : USDCToMint, isUSDC: true});
-  const { mint : mintUSDT } = useMint({ amount : USDTToMint, isUSDC: false});
+  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
+  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
   const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
@@ -31,13 +31,13 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const handleUSDCToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDCToMint(e.target.value);
+      setUSDCToMint(e.target.value);
     }
   };
 
   const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDTToMint(e.target.value);
+      setUSDTToMint(e.target.value);
     }
   };
 
@@ -61,7 +61,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
         >
           <p className={`font-light ${activeTab === "tab3" && ""}`}>Mint</p>
-          <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />
+          <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />
         </Tabs.Trigger>
         <Tabs.Trigger
           value="tab2"

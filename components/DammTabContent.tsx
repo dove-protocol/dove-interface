@@ -17,8 +17,8 @@ const DammTabContent = () => {
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
   const { provide } = usedAMM({ amount1, amount2 });
-  const { mint : mintUSDC } = useMint({ amount : USDCToMint, isUSDC: true});
-  const { mint : mintUSDT } = useMint({ amount : USDTToMint, isUSDC: false});
+  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
+  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
   const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
@@ -34,13 +34,13 @@ const DammTabContent = () => {
 
   const handleUSDCToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDCToMint(e.target.value);
+      setUSDCToMint(e.target.value);
     }
   };
 
   const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDTToMint(e.target.value);
+      setUSDTToMint(e.target.value);
     }
   };
 
