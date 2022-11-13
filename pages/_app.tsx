@@ -18,6 +18,7 @@ import {
   darkTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
+import { AppProps } from "next/app";
 
 export const avalancheChain: Chain = {
   id: 43113,
@@ -57,7 +58,7 @@ const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
       <WagmiConfig client={wagmiClient}>
