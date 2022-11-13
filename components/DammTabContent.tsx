@@ -15,6 +15,7 @@ const DammTabContent = () => {
   const [amount2, setAmount2] = useState<string>("");
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
 
   const { provide } = usedAMM({ amount1, amount2 });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
@@ -41,6 +42,14 @@ const DammTabContent = () => {
   const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
       setUSDTToMint(e.target.value);
+    }
+  };
+
+  const handleWithdrawAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (validateNumber(e.target.value)) {
+      setWithdrawAmount(e.target.value);
     }
   };
 
@@ -91,25 +100,31 @@ const DammTabContent = () => {
       <Tabs.Content value="tab1">
         <div className="relative mb-4">
           <input
-            className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
             value={amount1}
             onChange={handleAmount1Change}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-            USDT
-          </h4>
+          <div className="absolute top-4 right-4 flex flex-col items-end">
+            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
+              USDT
+            </h4>
+            <p className="text-sm text-white/50">Balance: 10.432</p>
+          </div>
         </div>
         <div className="relative mb-4">
           <input
-            className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
             value={amount2}
             onChange={handleAmount2Change}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-            USDC
-          </h4>
+          <div className="absolute top-4 right-4 flex flex-col items-end">
+            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
+              USDC
+            </h4>
+            <p className="text-sm text-white/50">Balance: 10.432</p>
+          </div>
         </div>
         <InteractButton
           expectedChainId={chain.goerli.id}
@@ -122,14 +137,19 @@ const DammTabContent = () => {
           <span className="text-white">Total Balance</span> (DAMM-LP)
         </p>
         <h3 className="mb-8 text-white">100</h3> */}
-        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+        <div className="relative mb-4">
           <input
-            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
+            value={withdrawAmount}
+            onChange={handleWithdrawAmountChange}
           />
-          <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-            DAMM-LP
-          </h4>
+          <div className="absolute top-4 right-4 flex flex-col items-end">
+            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
+              DAMM-LP
+            </h4>
+            <p className="text-sm text-white/50">Balance: 10.432</p>
+          </div>
         </div>
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
@@ -169,7 +189,7 @@ const DammTabContent = () => {
             value={USDTToMint}
             onChange={handleUSDTToMintChange}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDT
           </h4>
           <InteractButton
@@ -185,7 +205,7 @@ const DammTabContent = () => {
             value={USDCToMint}
             onChange={handleUSDCToMintChange}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDC
           </h4>
           <InteractButton

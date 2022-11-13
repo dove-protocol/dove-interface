@@ -3,10 +3,6 @@ import {
   useNetwork,
   useContractWrite,
   usePrepareContractWrite,
-<<<<<<< HEAD
-=======
-  chain,
->>>>>>> 543065e3a0a94b42daf426d61b066aec1cba6dc3
 } from "wagmi";
 import {
   USDC_GOERLI_ADDRESS,

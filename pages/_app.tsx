@@ -12,7 +12,7 @@ import { providers } from "ethers";
 import { AnimatePresence } from "framer-motion";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import {
   getDefaultWallets,
   darkTheme,
@@ -40,7 +40,15 @@ export const avalancheChain: Chain = {
 
 const { chains, provider } = configureChains(
   [chain.goerli, chain.arbitrumGoerli, avalancheChain],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [
+    alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" }),
+    jsonRpcProvider({
+      rpc: (chain) => {
+        if (chain.id !== avalancheChain.id) return null;
+        return { http: chain.rpcUrls.default };
+      },
+    }),
+  ]
 );
 
 const { connectors } = getDefaultWallets({

@@ -9,8 +9,8 @@ const Navbar = () => {
       <div className="flex w-full items-center justify-end space-x-4 px-8 py-8">
         {/* <p className="text-white">dAmm</p> */}
         <CustomConnectButton />
-        <FaGithub className="text-white/10" />
-        <FaTwitter className="text-white/10" />
+        <FaGithub className="text-white/50" />
+        <FaTwitter className="text-white/50" />
       </div>
     </div>
   );

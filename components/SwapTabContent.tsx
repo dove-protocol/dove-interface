@@ -79,7 +79,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount1}
             onChange={handleAmount1Change}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDT
           </h4>
         </div>
@@ -94,7 +94,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount2}
             onChange={handleAmount2Change}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDC
           </h4>
         </div>
@@ -112,7 +112,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={USDTToMint}
             onChange={handleUSDTToMintChange}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDT
           </h4>
           <InteractButton
@@ -128,7 +128,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={USDCToMint}
             onChange={handleUSDCToMintChange}
           />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
+          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
             USDC
           </h4>
           <InteractButton

@@ -1,6 +1,9 @@
 import React from "react";
 import { useAccount, useNetwork } from "wagmi";
-import { CustomConnectButton } from "./CustomConnectButton";
+import {
+  CustomConnectButton,
+  InteractConnectButton,
+} from "./CustomConnectButton";
 
 const InteractButton = ({
   text,
@@ -23,7 +26,7 @@ const InteractButton = ({
           <Button disabled text="Wrong Network" />
         )
       ) : (
-        <CustomConnectButton />
+        <InteractConnectButton />
       )}
     </>
   );
