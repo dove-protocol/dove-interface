@@ -4,7 +4,7 @@ import { transitionAnimation } from "../../lib/utils";
 import Navbar from "../Navbar";
 import { GiPeaceDove } from "react-icons/gi";
 
-const Article = ({ children }) => {
+const Article = ({ children }: { children: React.ReactNode }) => {
   return (
     <motion.article
       variants={transitionAnimation}
