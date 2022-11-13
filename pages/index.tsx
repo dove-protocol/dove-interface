@@ -3,14 +3,13 @@ import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useEffect } from "react";
 import { chain, useSwitchNetwork } from "wagmi";
-import Button from "../components/InteractButton";
-import InteractButton from "../components/InteractButton";
 import { useIsMounted } from "../hooks/useIsMounted";
-import { BiPlus, BiMinus, BiStats } from "react-icons/bi";
 import { avalancheChain } from "./_app";
+import TabContainer from "../components/TabContainer";
+import SwapTabContent from "../components/SwapTabContent";
+import DammTabContent from "../components/DammTabContent";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("tab1");
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
 
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
@@ -69,183 +68,19 @@ export default function Home() {
                   </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="damm">
-                  <div className="bg relative flex w-full flex-col space-y-1 rounded-sm rounded-tl-none p-8 shadow-damn">
-                    <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
-                      <div className="background-gradient-pattern" />
-                    </div>
-                    <Tabs.Root
-                      defaultValue="tab1"
-                      value={activeTab}
-                      onValueChange={(v) => setActiveTab(v)}
-                      className="w-full"
-                    >
-                      <Tabs.List className="mb-8 flex flex-row space-x-4">
-                        <Tabs.Trigger
-                          value="tab1"
-                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
-                        >
-                          <p
-                            className={`font-light ${
-                              activeTab === "tab1" && ""
-                            }`}
-                          >
-                            Provide
-                          </p>
-                          <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />
-                        </Tabs.Trigger>
-                        <Tabs.Trigger
-                          value="tab2"
-                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
-                        >
-                          <p
-                            className={`font-light ${
-                              activeTab === "tab2" && ""
-                            }`}
-                          >
-                            Withdraw
-                          </p>
-                          <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />
-                        </Tabs.Trigger>
-                        <Tabs.Trigger
-                          value="tab3"
-                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
-                        >
-                          <p
-                            className={`font-light ${
-                              activeTab === "tab3" && ""
-                            }`}
-                          >
-                            Reserves
-                          </p>
-                          <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />
-                        </Tabs.Trigger>
-                      </Tabs.List>
-                      <Tabs.Content value="tab1">
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                          <input
-                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                            placeholder="0.00"
-                          />
-                          <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                            USDT
-                          </h4>
-                        </div>
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                          <input
-                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                            placeholder="0.00"
-                          />
-
-                          <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                            USDC
-                          </h4>
-                        </div>
-                        <InteractButton
-                          expectedChainId={chain.goerli.id}
-                          onClick={() => {}}
-                          text="Add Liquidity"
-                        />
-                      </Tabs.Content>
-                      <Tabs.Content value="tab2">
-                        <p className="mb-2 font-thin tracking-widest text-white/50">
-                          <span className="text-white">Total Balance</span>{" "}
-                          (ETH)
-                        </p>
-                        <h3 className="mb-8 text-white">39.93</h3>
-                        <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                          <input
-                            className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                            placeholder="0.00"
-                          />
-                          <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                            USDT
-                          </h4>
-                        </div>
-                        <InteractButton
-                          expectedChainId={chain.goerli.id}
-                          text="Withdraw"
-                          onClick={() => {}}
-                        />
-                      </Tabs.Content>
-                      <Tabs.Content value="tab3">
-                        <p className="mb-2 font-thin tracking-widest text-white">
-                          Reserve 1{" "}
-                          <span className="text-white/50">(USDT)</span>
-                        </p>
-                        <h3 className="mb-8 text-white">139.14</h3>
-                        <div className="mb-8 h-px w-full bg-white/5" />
-                        <p className="mb-2 font-thin tracking-widest text-white">
-                          Reserve 2{" "}
-                          <span className="text-white/50">(USDC)</span>
-                        </p>
-                        <h3 className="mb-2 text-white">23.64</h3>
-                      </Tabs.Content>
-                    </Tabs.Root>
-                  </div>
+                  <TabContainer>
+                    <DammTabContent />
+                  </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="fuji">
-                  <div className="bg flex w-full flex-col rounded-sm p-8 shadow-damn">
-                    <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
-                      <div className="background-gradient-pattern" />
-                    </div>
-
-                    <p className="mb-4 font-thin text-white">Swap</p>
-                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                      <input
-                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                        placeholder="0.00"
-                      />
-                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDT
-                      </h4>
-                    </div>
-                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                      <input
-                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                        placeholder="0.00"
-                      />
-                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDC
-                      </h4>
-                    </div>
-                    <InteractButton
-                      expectedChainId={avalancheChain.id}
-                      text="Swap"
-                      onClick={() => {}}
-                    />
-                  </div>
+                  <TabContainer>
+                    <SwapTabContent expectedChainId={avalancheChain.id} />
+                  </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">
-                  <div className="bg flex w-full flex-col rounded-sm p-8 shadow-damn">
-                    <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
-                      <div className="background-gradient-pattern" />
-                    </div>
-
-                    <p className="mb-4 font-thin text-white">Swap</p>
-                    <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                      <input
-                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                        placeholder="0.00"
-                      />
-                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDT
-                      </h4>
-                    </div>
-                    <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-                      <input
-                        className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-                        placeholder="0.00"
-                      />
-                      <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-                        USDC
-                      </h4>
-                    </div>
-                    <InteractButton
-                      expectedChainId={chain.arbitrumGoerli.id}
-                      text="Swap"
-                      onClick={() => {}}
-                    />
-                  </div>
+                  <TabContainer>
+                    <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} />
+                  </TabContainer>
                 </Tabs.Content>
               </Tabs.Root>
             </div>
