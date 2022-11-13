@@ -10,8 +10,8 @@ import usedAMM from "../hooks/usedAMMProvide";
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
-  const [amount1, setAmount1] = useState<string>();
-  const [amount2, setAmount2] = useState<string>();
+  const [amount1, setAmount1] = useState<string>("");
+  const [amount2, setAmount2] = useState<string>("");
 
   const { provide } = usedAMM({ amount1, amount2 });
 
