@@ -2,11 +2,12 @@ import create from "zustand";
 import produce from "immer";
 
 interface StoreState {
-  address: string;
-  setAddress: (address: string) => void;
+  isAutoSwitch: boolean;
+  setAutoSwitch: (isAutoSwitch: boolean) => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
-  address: "",
-  setAddress: (address) => set((state) => ({ address: address })),
+  isAutoSwitch: false,
+  setAutoSwitch: (isAutoSwitch) =>
+    set((state) => ({ isAutoSwitch: isAutoSwitch })),
 }));

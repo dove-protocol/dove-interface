@@ -42,7 +42,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           </h4>
         </div>
         <div className="relative -my-8 flex h-20 w-full items-center justify-center">
-          <BiExpandAlt className="-rotate-45 text-2xl text-white drop-shadow-soju" />
+          <BiExpandAlt className="-rotate-45 text-2xl text-white/50" />
         </div>
         <div className="relative mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
           <input
