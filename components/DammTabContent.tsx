@@ -6,14 +6,19 @@ import InteractButton from "./InteractButton";
 import { chain } from "wagmi";
 import { validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
+import useMint from "../hooks/useMint";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const [amount1, setAmount1] = useState<string>();
   const [amount2, setAmount2] = useState<string>();
+  const [USDCToMint, setUSDCToMint] = useState<string>();
+  const [USDTToMint, setUSDTToMint] = useState<string>();
 
   const { provide } = usedAMM({ amount1, amount2 });
+  const { mint : mintUSDC } = useMint({ amount : USDCToMint, isUSDC: true});
+  const { mint : mintUSDT } = useMint({ amount : USDTToMint, isUSDC: false});
 
   const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
@@ -24,6 +29,18 @@ const DammTabContent = () => {
   const handleAmount2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
       setAmount2(e.target.value);
+    }
+  };
+
+  const handleUSDCToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (validateNumber(e.target.value)) {
+        setUSDCToMint(e.target.value);
+    }
+  };
+
+  const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (validateNumber(e.target.value)) {
+        setUSDTToMint(e.target.value);
     }
   };
 
@@ -140,13 +157,15 @@ const DammTabContent = () => {
           <input
             className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
+            value={USDTToMint}
+            onChange={handleUSDTToMintChange}
           />
           <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
             USDT
           </h4>
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
+            onClick={() => mintUSDT()}
             text="Mint USDT"
           />
         </div>
@@ -154,13 +173,15 @@ const DammTabContent = () => {
           <input
             className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
+            value={USDCToMint}
+            onChange={handleUSDCToMintChange}
           />
           <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
             USDC
           </h4>
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
+            onClick={() => mintUSDC()}
             text="Mint USDC"
           />
         </div>

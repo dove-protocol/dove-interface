@@ -17,7 +17,7 @@ export const CustomConnectButton = () => {
         // can remove all 'authenticationStatus' checks
         const ready = mounted;
         const connected = ready && account && chain;
-
+        
         return (
           <div className={`${!ready && "hidden"}`}>
             {(() => {
