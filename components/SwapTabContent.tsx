@@ -14,8 +14,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
-  const { mint : mintUSDC } = useMint({ amount : USDCToMint, isUSDC: true});
-  const { mint : mintUSDT } = useMint({ amount : USDTToMint, isUSDC: false});
+  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
+  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
   const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
@@ -31,13 +31,13 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const handleUSDCToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDCToMint(e.target.value);
+      setUSDCToMint(e.target.value);
     }
   };
 
   const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
-        setUSDTToMint(e.target.value);
+      setUSDTToMint(e.target.value);
     }
   };
 

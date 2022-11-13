@@ -6,7 +6,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 const Navbar = () => {
   return (
     <div className="fixed z-50 w-full">
-      <div className="flex w-full space-x-4 items-center justify-end px-8 py-8">
+      <div className="flex w-full items-center justify-end space-x-4 px-8 py-8">
         {/* <p className="text-white">dAmm</p> */}
         <CustomConnectButton />
         <FaGithub className="text-white/10" />
