@@ -7,6 +7,7 @@ import Button from "../components/InteractButton";
 import InteractButton from "../components/InteractButton";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { BiPlus, BiMinus, BiStats } from "react-icons/bi";
+import { avalancheChain } from "./_app";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -72,7 +73,6 @@ export default function Home() {
                     <div className="background-gradient pointer-events-none absolute h-full w-[36rem] opacity-20">
                       <div className="background-gradient-pattern" />
                     </div>
-
                     <Tabs.Root
                       defaultValue="tab1"
                       value={activeTab}
@@ -82,9 +82,8 @@ export default function Home() {
                       <Tabs.List className="mb-8 flex flex-row space-x-4">
                         <Tabs.Trigger
                           value="tab1"
-                          className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <BiPlus className="mr-2" />
                           <p
                             className={`font-light ${
                               activeTab === "tab1" && ""
@@ -92,12 +91,12 @@ export default function Home() {
                           >
                             Provide
                           </p>
+                          <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />
                         </Tabs.Trigger>
                         <Tabs.Trigger
                           value="tab2"
-                          className="flex cursor-pointer flex-row items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <BiMinus className="mr-2" />
                           <p
                             className={`font-light ${
                               activeTab === "tab2" && ""
@@ -105,13 +104,12 @@ export default function Home() {
                           >
                             Withdraw
                           </p>
+                          <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />
                         </Tabs.Trigger>
                         <Tabs.Trigger
                           value="tab3"
-                          className="flex cursor-pointer items-center rounded-sm border border-white/5 px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+                          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
                         >
-                          <BiStats className="mr-2" />
-
                           <p
                             className={`font-light ${
                               activeTab === "tab3" && ""
@@ -119,6 +117,7 @@ export default function Home() {
                           >
                             Reserves
                           </p>
+                          <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />
                         </Tabs.Trigger>
                       </Tabs.List>
                       <Tabs.Content value="tab1">
@@ -142,6 +141,7 @@ export default function Home() {
                           </h4>
                         </div>
                         <InteractButton
+                          expectedChainId={chain.goerli.id}
                           onClick={() => {}}
                           text="Add Liquidity"
                         />
@@ -161,7 +161,11 @@ export default function Home() {
                             USDT
                           </h4>
                         </div>
-                        <InteractButton text="Withdraw" onClick={() => {}} />
+                        <InteractButton
+                          expectedChainId={chain.goerli.id}
+                          text="Withdraw"
+                          onClick={() => {}}
+                        />
                       </Tabs.Content>
                       <Tabs.Content value="tab3">
                         <p className="mb-2 font-thin tracking-widest text-white">
@@ -204,7 +208,11 @@ export default function Home() {
                         USDC
                       </h4>
                     </div>
-                    <InteractButton text="Swap" onClick={() => {}} />
+                    <InteractButton
+                      expectedChainId={avalancheChain.id}
+                      text="Swap"
+                      onClick={() => {}}
+                    />
                   </div>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">
@@ -232,7 +240,11 @@ export default function Home() {
                         USDC
                       </h4>
                     </div>
-                    <InteractButton text="Swap" onClick={() => {}} />
+                    <InteractButton
+                      expectedChainId={chain.arbitrumGoerli.id}
+                      text="Swap"
+                      onClick={() => {}}
+                    />
                   </div>
                 </Tabs.Content>
               </Tabs.Root>

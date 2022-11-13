@@ -14,7 +14,7 @@ const Article = ({ children }) => {
       className="relative w-full"
     >
       <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
-        {/* <Navbar /> */}
+        <Navbar />
         {children}
         <div className="absolute bottom-0 flex w-full items-center justify-center p-8">
           <GiAlienFire className="text-4xl text-white/10" />

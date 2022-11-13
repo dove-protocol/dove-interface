@@ -19,7 +19,7 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 
-const avalancheChain: Chain = {
+export const avalancheChain: Chain = {
   id: 43113,
   name: "Avalanche",
   network: "avalanche",

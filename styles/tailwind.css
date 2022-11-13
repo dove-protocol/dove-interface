@@ -23,25 +23,25 @@ input {
 }
 
 @font-face {
-  src: url(/Klima-Light.otf);
+  src: url(/Satoshi-Light.otf);
   font-weight: 100;
-  font-family: "Klima";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Klima-Regular.otf);
+  src: url(/Satoshi-Regular.otf);
   font-weight: 400;
-  font-family: "Klima";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Klima-Medium.otf);
+  src: url(/Satoshi-Medium.otf);
   font-weight: 500;
-  font-family: "Klima";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Klima-Bold.otf);
+  src: url(/Satoshi-Bold.otf);
   font-weight: 700;
-  font-family: "Klima";
+  font-family: "Satoshi";
 }
