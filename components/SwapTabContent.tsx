@@ -80,7 +80,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        <div className="relative mb-4">
+        <div className="relative">
           <InteractButton
             expectedChainId={expectedChainId}
             onClick={() => {}}
