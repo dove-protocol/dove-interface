@@ -7,6 +7,7 @@ import { chain } from "wagmi";
 import { validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import useMint from "../hooks/useMint";
+import InputWithBalance from "./InputWithBalance";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -98,34 +99,18 @@ const DammTabContent = () => {
         </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="tab1">
-        <div className="relative mb-4">
-          <input
-            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={amount1}
-            onChange={handleAmount1Change}
-          />
-          <div className="absolute top-4 right-4 flex flex-col items-end">
-            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-              USDT
-            </h4>
-            <p className="text-sm text-white/50">Balance: 10.432</p>
-          </div>
-        </div>
-        <div className="relative mb-4">
-          <input
-            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={amount2}
-            onChange={handleAmount2Change}
-          />
-          <div className="absolute top-4 right-4 flex flex-col items-end">
-            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-              USDC
-            </h4>
-            <p className="text-sm text-white/50">Balance: 10.432</p>
-          </div>
-        </div>
+        <InputWithBalance
+          label="USDT"
+          value={amount1}
+          setValue={setAmount1}
+          balance={"100"}
+        />
+        <InputWithBalance
+          label="USDC"
+          value={amount2}
+          setValue={setAmount2}
+          balance={"200"}
+        />
         <InteractButton
           expectedChainId={chain.goerli.id}
           onClick={() => {}}
@@ -137,20 +122,12 @@ const DammTabContent = () => {
           <span className="text-white">Total Balance</span> (DAMM-LP)
         </p>
         <h3 className="mb-8 text-white">100</h3> */}
-        <div className="relative mb-4">
-          <input
-            className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={withdrawAmount}
-            onChange={handleWithdrawAmountChange}
-          />
-          <div className="absolute top-4 right-4 flex flex-col items-end">
-            <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-              DAMM-LP
-            </h4>
-            <p className="text-sm text-white/50">Balance: 10.432</p>
-          </div>
-        </div>
+        <InputWithBalance
+          label="DAMM-LP"
+          value={withdrawAmount}
+          setValue={setWithdrawAmount}
+          balance={"100"}
+        />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDC</p>

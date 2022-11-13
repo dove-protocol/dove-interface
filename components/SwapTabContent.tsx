@@ -6,6 +6,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
+import InputWithBalance from "./InputWithBalance";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -72,32 +73,22 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="tab1">
-        <div className="relative">
-          <input
-            className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={amount1}
-            onChange={handleAmount1Change}
-          />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-            USDT
-          </h4>
-        </div>
+        <InputWithBalance
+          label="USDC"
+          value={amount2}
+          setValue={setAmount2}
+          balance="100"
+        />
 
-        <div className="relative -my-8 flex h-20 w-full items-center justify-center">
+        <div className="relative -mb-8 -mt-12 flex h-20 w-full items-center justify-center">
           <BiExpandAlt className="-rotate-45 text-2xl text-white/50" />
         </div>
-        <div className="relative mb-4">
-          <input
-            className="flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={amount2}
-            onChange={handleAmount2Change}
-          />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-            USDC
-          </h4>
-        </div>
+        <InputWithBalance
+          label="USDC"
+          value={amount2}
+          setValue={setAmount2}
+          balance="100"
+        />
         <InteractButton
           expectedChainId={expectedChainId}
           text="Swap"
