@@ -34,7 +34,7 @@ export const CustomConnectButton = () => {
                 );
               }
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div style={{ display: "flex", gap: 12, color: "white" }}>
                   <button
                     onClick={openChainModal}
                     style={{ display: "flex", alignItems: "center" }}
