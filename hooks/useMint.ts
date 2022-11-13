@@ -3,6 +3,10 @@ import {
   useNetwork,
   useContractWrite,
   usePrepareContractWrite,
+<<<<<<< HEAD
+=======
+  chain,
+>>>>>>> 543065e3a0a94b42daf426d61b066aec1cba6dc3
 } from "wagmi";
 import {
   USDC_GOERLI_ADDRESS,
@@ -13,6 +17,7 @@ import {
   USDT_FUJI_ADDRESS,
 } from "../lib/contracts";
 import MintableERC20 from "../abis/ERC20.json";
+import { avalancheChain } from "../pages/_app";
 
 export default function ({
   amount,
@@ -23,41 +28,25 @@ export default function ({
 }): {
   mint: () => void;
 } {
-  const { chain, chains } = useNetwork();
+  const { chain: currentChain, chains } = useNetwork();
 
-  let tokenAddress;
-  if (isUSDC) {
-    switch (chain.id) {
-      // probably bad to manually encode index
-      case chains[0].id: {
-        tokenAddress = USDC_GOERLI_ADDRESS;
-        break;
-      }
-      case chains[1].id: {
-        tokenAddress = USDC_ARBI_ADDRESS;
-        break;
-      }
-      case chains[2].id: {
-        tokenAddress = USDC_FUJI_ADDRESS;
-        break;
-      }
+  let tokenAddress = "";
+  switch (currentChain?.id) {
+    // probably bad to manually encode index
+    case chains[0].id: {
+      tokenAddress = isUSDC ? USDC_GOERLI_ADDRESS : USDT_GOERLI_ADDRESS;
+      break;
     }
-  } else {
-    switch (chain.id) {
-      case chains[0].id: {
-        tokenAddress = USDT_GOERLI_ADDRESS;
-        break;
-      }
-      case chains[1].id: {
-        tokenAddress = USDT_ARBI_ADDRESS;
-        break;
-      }
-      case chains[2].id: {
-        tokenAddress = USDT_FUJI_ADDRESS;
-        break;
-      }
+    case chains[1].id: {
+      tokenAddress = isUSDC ? USDC_ARBI_ADDRESS : USDT_ARBI_ADDRESS;
+      break;
+    }
+    case chains[2].id: {
+      tokenAddress = isUSDC ? USDC_FUJI_ADDRESS : USDT_FUJI_ADDRESS;
+      break;
     }
   }
+
   const { address } = useAccount();
   // assume correct chain id will be selected as it's enforced on each tab
   const { config } = usePrepareContractWrite({
