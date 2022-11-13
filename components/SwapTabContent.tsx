@@ -18,30 +18,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
-  const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setAmount1(e.target.value);
-    }
-  };
-
-  const handleAmount2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setAmount2(e.target.value);
-    }
-  };
-
-  const handleUSDCToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setUSDCToMint(e.target.value);
-    }
-  };
-
-  const handleUSDTToMintChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setUSDTToMint(e.target.value);
-    }
-  };
-
   return (
     <Tabs.Root
       defaultValue="tab1"
@@ -74,9 +50,9 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       </Tabs.List>
       <Tabs.Content value="tab1">
         <InputWithBalance
-          label="USDC"
-          value={amount2}
-          setValue={setAmount2}
+          label="USDT"
+          value={amount1}
+          setValue={setAmount1}
           balance="100"
         />
 
@@ -96,38 +72,30 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
+        <InputWithBalance
+          label="USDT"
+          value={USDTToMint}
+          setValue={setUSDTToMint}
+          balance="100"
+        />
         <div className="relative mb-4">
-          <input
-            className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={USDTToMint}
-            onChange={handleUSDTToMintChange}
-          />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-            USDT
-          </h4>
           <InteractButton
             expectedChainId={expectedChainId}
             onClick={() => mintUSDT()}
             text="Mint USDT"
           />
         </div>
-        <div className="relative mb-4">
-          <input
-            className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-10 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
-            placeholder="0.00"
-            value={USDCToMint}
-            onChange={handleUSDCToMintChange}
-          />
-          <h4 className="pointer-events-none absolute top-4 right-4 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-            USDC
-          </h4>
-          <InteractButton
-            expectedChainId={expectedChainId}
-            onClick={() => mintUSDC()}
-            text="Mint USDC"
-          />
-        </div>
+        <InputWithBalance
+          label="USDC"
+          value={USDCToMint}
+          setValue={setUSDCToMint}
+          balance="100"
+        />
+        <InteractButton
+          expectedChainId={expectedChainId}
+          onClick={() => mintUSDC()}
+          text="Mint USDC"
+        />
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <div className="relative">
