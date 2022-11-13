@@ -11,10 +11,10 @@ import useMint from "../hooks/useMint";
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
-  const [amount1, setAmount1] = useState<string>();
-  const [amount2, setAmount2] = useState<string>();
-  const [USDCToMint, setUSDCToMint] = useState<string>();
-  const [USDTToMint, setUSDTToMint] = useState<string>();
+  const [amount1, setAmount1] = useState<string>("");
+  const [amount2, setAmount2] = useState<string>("");
+  const [USDCToMint, setUSDCToMint] = useState<string>("");
+  const [USDTToMint, setUSDTToMint] = useState<string>("");
 
   const { provide } = usedAMM({ amount1, amount2 });
   const { mint : mintUSDC } = useMint({ amount : USDCToMint, isUSDC: true});
