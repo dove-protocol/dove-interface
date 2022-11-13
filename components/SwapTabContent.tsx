@@ -15,17 +15,17 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       onValueChange={(v) => setActiveTab(v)}
       className="w-full"
     >
-      <Tabs.List className="mb-8 flex flex-row space-x-4">
+      <Tabs.List className="mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1">
         <Tabs.Trigger
           value="tab1"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
         >
           <p className={`font-light ${activeTab === "tab1" && ""}`}>Swap</p>
           <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />
         </Tabs.Trigger>
         <Tabs.Trigger
           value="tab2"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-2 py-0.5 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:text-white rdx-state-active:shadow-damn rdx-state-inactive:text-white/50"
+          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
         >
           <p className={`font-light ${activeTab === "tab2" && ""}`}>Advanced</p>
           <BiCog className="ml-2 rounded-sm bg-white/5 p-px" />
