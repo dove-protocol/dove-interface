@@ -17,7 +17,7 @@ const SettingsTabContent = () => {
         checked={isAutoSwitch}
         onCheckedChange={(v) => setAutoSwitch(v)}
       >
-        <Switch.Thumb className="block h-6 w-6 translate-x-[34px] rounded-sm border border-white/5 transition ease-in-out rdx-state-checked:translate-x-1 rdx-state-checked:bg-white rdx-state-checked:drop-shadow-soju rdx-state-unchecked:bg-white/10" />
+        <Switch.Thumb className="block h-6 w-6 translate-x-[34px] rounded-sm border border-white/5 transition ease-in-out rdx-state-checked:translate-x-1 rdx-state-checked:bg-white rdx-state-unchecked:bg-white/10" />
       </Switch.Root>
 
       {/* <p className="text-white/50">Slippage Tolerance</p> */}
