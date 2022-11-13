@@ -8,8 +8,8 @@ import { validateNumber } from "../lib/utils";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
-  const [amount1, setAmount1] = useState<string>();
-  const [amount2, setAmount2] = useState<string>();
+  const [amount1, setAmount1] = useState<string>("");
+  const [amount2, setAmount2] = useState<string>("");
 
   const handleAmount1Change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
@@ -80,7 +80,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        <div className="relative mb-4">
+        <div className="relative">
           <InteractButton
             expectedChainId={expectedChainId}
             onClick={() => {}}

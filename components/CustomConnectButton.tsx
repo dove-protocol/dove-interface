@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "./InteractButton";
+import { BiChevronDown } from "react-icons/bi";
 
 export const CustomConnectButton = () => {
   return (
@@ -61,12 +62,15 @@ export const CustomConnectButton = () => {
                       </div>
                     )}
                     {chain.name}
+                    <BiChevronDown className="ml-1" />
                   </button>
-                  <button onClick={openAccountModal} type="button">
+                  <button
+                    onClick={openAccountModal}
+                    className="flex items-center"
+                    type="button"
+                  >
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
+                    <BiChevronDown className="ml-1" />
                   </button>
                 </div>
               );
