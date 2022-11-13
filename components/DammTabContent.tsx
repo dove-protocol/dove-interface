@@ -102,16 +102,16 @@ const DammTabContent = () => {
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <p className="mb-2 font-thin tracking-widest text-white/50">
-          <span className="text-white">Total Balance</span> (ETH)
+          <span className="text-white">Total Balance</span> (DAMM LP)
         </p>
-        <h3 className="mb-8 text-white">$392,432.93</h3>
+        <h3 className="mb-8 text-white">100</h3>
         <div className="mb-4 flex h-20 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
           <input
             className="bg-transparent font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
             placeholder="0.00"
           />
           <h4 className="h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white/50 ">
-            USDT
+            DAMM-LP
           </h4>
         </div>
         <InteractButton
