@@ -12,11 +12,11 @@ const Main = ({ children }) => {
     <div className="mx-auto">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Wagmi Starter</title>
+        <title>Dove Interface</title>
       </Head>
       <NextSeo
-        title="Wagmi Boilerplate"
-        description="Wagmi Boiler"
+        title="Dove Interface"
+        description="Dove Interface"
         openGraph={{
           url: "",
           title: "Wagmi",

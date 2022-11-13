@@ -1,12 +1,16 @@
-import { ConnectKitButton } from "connectkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
+import { CustomConnectButton } from "./CustomConnectButton";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const Navbar = () => {
   return (
-    <div className="fixed z-50 w-full px-48">
-      <div className="flex w-full items-center justify-between border-b border-white/5 px-8 py-4">
-        <p className="text-base text-white">wagmi</p>
-        <ConnectKitButton />
+    <div className="fixed z-50 w-full">
+      <div className="flex w-full items-center justify-end space-x-4 px-8 py-8">
+        {/* <p className="text-white">dAmm</p> */}
+        <CustomConnectButton />
+        <FaGithub className="text-white/50" />
+        <FaTwitter className="text-white/50" />
       </div>
     </div>
   );

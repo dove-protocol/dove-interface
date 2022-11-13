@@ -2,30 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  @apply font-wagmi text-6xl sm:text-7xl lg:text-8xl;
+}
+
+h2 {
+  @apply font-wagmi text-4xl sm:text-5xl lg:text-6xl;
+}
+
+h3 {
+  @apply font-wagmi text-3xl sm:text-4xl lg:text-5xl;
+}
+
 p {
-  @apply font-wagmi text-xs tracking-wide lg:text-sm;
+  @apply font-wagmi text-base font-thin;
+}
+
+input {
+  @apply font-wagmi text-sm font-thin;
 }
 
 @font-face {
-  src: url(/Gilroy-Thin.ttf);
+  src: url(/Satoshi-Light.otf);
   font-weight: 100;
-  font-family: "Gilroy";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Gilroy-Regular.ttf);
+  src: url(/Satoshi-Regular.otf);
   font-weight: 400;
-  font-family: "Gilroy";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Gilroy-Medium.ttf);
+  src: url(/Satoshi-Medium.otf);
   font-weight: 500;
-  font-family: "Gilroy";
+  font-family: "Satoshi";
 }
 
 @font-face {
-  src: url(/Gilroy-Bold.ttf);
+  src: url(/Satoshi-Bold.otf);
   font-weight: 700;
-  font-family: "Gilroy";
+  font-family: "Satoshi";
 }

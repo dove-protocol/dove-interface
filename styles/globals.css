@@ -1,9 +1,9 @@
 html,
 body {
-  background-color: #000000;
+  background-color: #131319;
   padding: 0;
   margin: 0;
-  font-family: Gilroy, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+  font-family: Satoshi, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -14,4 +14,35 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.bg {
+  background: linear-gradient(138.16deg, #313135 -14.83%, #1f2024 92.59%);
+}
+
+.radial {
+  background: radial-gradient(
+    farthest-side at 50% 50%,
+    rgba(255, 255, 255, 0.05),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.background-gradient-pattern {
+  position: absolute;
+  inset: 0px;
+  background-image: url("/guilloche.svg");
+  background-repeat: repeat;
+  background-position: right top;
+  background-size: 20px, 20px;
+  mix-blend-mode: overlay;
+}
+
+.background-gradient {
+  -webkit-mask-image: radial-gradient(
+    farthest-side at 50% 50%,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0)
+  );
+  background-image: linear-gradient(90deg,#ffffff,#ffae33,1));
 }
