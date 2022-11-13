@@ -5,7 +5,7 @@ import { BiPlus, BiMinus, BiStats } from "react-icons/bi";
 import InteractButton from "./InteractButton";
 import { chain } from "wagmi";
 import { validateNumber } from "../lib/utils";
-import usedAMM from "../hooks/usedAMM";
+import usedAMM from "../hooks/usedAMMProvide";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
