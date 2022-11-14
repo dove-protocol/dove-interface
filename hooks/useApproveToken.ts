@@ -18,7 +18,7 @@ export default function ({
   token: string;
   spender: string;
   amount?: BigNumberish;
-  amountRequested: string;
+  amountRequested: BigNumberish;
 }): {
   approve: () => void;
   isApproved: boolean;
@@ -49,17 +49,15 @@ export default function ({
   const { write: approve } = useContractWrite(approvalConfig);
 
   function approveToken() {
-    if (data && data[0] && amountRequested) {
-      if ((data[0] as any as BigNumber).lt(BigNumber.from(amountRequested))) {
-        approve?.();
-      }
-    }
+    approve?.();
   }
 
   return {
     approve: () => approveToken(),
     isApproved: amountRequested
-      ? (data?.[0] as any as BigNumber).gte(BigNumber.from(amountRequested))
+      ? (data?.[0] as any as BigNumber).gte(
+          BigNumber.from(amountRequested).mul(BigNumber.from(10).pow(6))
+        )
       : false,
   };
 }

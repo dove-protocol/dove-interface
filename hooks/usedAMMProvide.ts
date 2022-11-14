@@ -25,8 +25,8 @@ export default function ({
     contractInterface: dAMMContractInterface,
     functionName: "provide",
     args: [
-      BigNumber.from(amount1).mul(10 ** 6),
-      BigNumber.from(amount2).mul(10 ** 6),
+      BigNumber.from(amount1).mul(BigNumber.from(10).pow(6)),
+      BigNumber.from(amount2).mul(BigNumber.from(10).pow(6)),
     ],
   });
 

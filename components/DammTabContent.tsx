@@ -236,7 +236,7 @@ const DammTabContent = () => {
           value={withdrawAmount}
           setError={setWithdrawError}
           setValue={reactiveSetWithdrawAmount}
-          balance={LPBalance.toString()}
+          balance={LPBalance}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">

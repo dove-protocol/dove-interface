@@ -13,6 +13,6 @@ export default function (): {
   });
 
   return {
-    balance: data?.value || BigNumber.from(0),
+    balance: data?.formatted ?? "0",
   };
 }
