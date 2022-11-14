@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   erc20ABI,
   useAccount,
@@ -17,7 +17,7 @@ export default function ({
 }: {
   token: string;
   spender: string;
-  amount?: string | BigNumber;
+  amount?: BigNumberish;
   amountRequested: string;
 }): {
   approve: () => void;

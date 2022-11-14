@@ -33,7 +33,12 @@ const DammTabContent = () => {
     setAmount1(value);
     const amount0 = value === "" ? 0 : BigNumber.from(value);
     setAmount2(
-      value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
+      value === ""
+        ? ""
+        : (reserve1 as any as BigNumber)
+            ?.mul(amount0)
+            .div(reserve0 as any as BigNumber)
+            .toString()
     );
   };
 
@@ -89,7 +94,10 @@ const DammTabContent = () => {
   const { balance: LPBalance } = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
-  const { provide } = usedAMM({ amount1, amount2 });
+  const { provide } = usedAMM({
+    amount1: amount1 === "" ? BigNumber.from(amount1) : BigNumber.from(0),
+    amount2: BigNumber.from(amount2),
+  });
   const { withdraw } = usedAMMWithdraw({ amount: withdrawAmount });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });

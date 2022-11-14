@@ -15,12 +15,13 @@ import {
 import MintableERC20 from "../abis/ERC20.json";
 import { avalancheChain } from "../pages/_app";
 import { getTokenAddress } from "../lib/utils";
+import { BigNumber, BigNumberish } from "ethers";
 
 export default function ({
   amount,
   isUSDC,
 }: {
-  amount: string;
+  amount: BigNumberish;
   isUSDC: boolean;
 }): {
   mint: () => void;
@@ -35,7 +36,7 @@ export default function ({
     addressOrName: tokenAddress,
     contractInterface: MintableERC20,
     functionName: "mint",
-    args: [address, (parseInt(amount as string) * 10 ** 6).toString()],
+    args: [address, BigNumber.from(amount).mul(10 ** 6)],
   });
 
   const { write } = useContractWrite(config);
