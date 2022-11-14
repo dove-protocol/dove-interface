@@ -36,8 +36,6 @@ export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
     token: tokenAddress,
   });
 
-  console.log(data);
-
   return {
     balance: data?.formatted || "0",
   };

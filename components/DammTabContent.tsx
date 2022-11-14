@@ -10,6 +10,8 @@ import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import useBalance from "../hooks/useBalance";
+import useSyncL2 from "../hooks/useSyncL2";
+import { avalancheChain } from "../pages/_app";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -22,6 +24,8 @@ const DammTabContent = () => {
 
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
+  const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
+  const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
   const { provide } = usedAMM({ amount1, amount2 });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
@@ -182,7 +186,7 @@ const DammTabContent = () => {
         <div className="relative mb-4">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => mintUSDT()}
+            onClick={mintUSDT}
             text="Mint USDT"
           />
         </div>
@@ -194,7 +198,7 @@ const DammTabContent = () => {
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
-          onClick={() => mintUSDC()}
+          onClick={mintUSDC}
           text="Mint USDC"
         />
       </Tabs.Content>
@@ -202,14 +206,14 @@ const DammTabContent = () => {
         <div className="relative mb-4">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
+            onClick={syncArbi}
             text="Sync to Arbitrum AMM"
           />
         </div>
         <div className="relative">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
+            onClick={syncFuji}
             text="Sync to Fuji AMM"
           />
         </div>
