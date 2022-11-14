@@ -49,7 +49,7 @@ export default function ({
     addressOrName: tokenAddress,
     contractInterface: MintableERC20,
     functionName: "mint",
-    args: [address, amount],
+    args: [address, (parseInt(amount as string) * 10 ** 6).toString()],
   });
 
   const { write } = useContractWrite(config);
