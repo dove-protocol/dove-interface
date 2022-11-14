@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { useAccount, useBalance, useNetwork } from "wagmi";
 import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 
@@ -10,8 +11,6 @@ export default function () {
   });
 
   return {
-    balance:
-      parseFloat(parseFloat(data?.formatted as string).toFixed(6)).toString() ||
-      "0",
+    balance: data?.value || BigNumber.from("0"),
   };
 }
