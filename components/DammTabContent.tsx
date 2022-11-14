@@ -157,7 +157,7 @@ const DammTabContent = () => {
         <InteractButton
           expectedChainId={chain.goerli.id}
           error={provideError}
-          onClick={() => {}}
+          onClick={() => provide()}
           text="Add Liquidity"
         />
       </Tabs.Content>

@@ -17,7 +17,6 @@ export default function ({
     functionName: "provide",
     args: [amount1, amount2],
   });
-
   const { write } = useContractWrite(config);
 
   function provideLiquidity() {
