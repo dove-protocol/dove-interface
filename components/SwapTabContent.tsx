@@ -17,6 +17,7 @@ import Tab from "./Tab";
 import useBalance from "../hooks/useBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
 import useApproveToken from "../hooks/useApproveToken";
+import { BigNumber } from "ethers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -39,8 +40,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const { sync } = useSyncToL1();
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
-  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
-  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
+  const { mint: mintUSDC } = useMint({
+    amount: USDCToMint === "" ? 0 : USDCToMint,
+    isUSDC: true,
+  });
+  const { mint: mintUSDT } = useMint({
+    amount: USDTToMint === "" ? 0 : USDTToMint,
+    isUSDC: false,
+  });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
