@@ -2,25 +2,46 @@ import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
-import InteractButton from "./InteractButton";
 import { chain } from "wagmi";
-import { validateNumber } from "../lib/utils";
-import usedAMM from "../hooks/usedAMMProvide";
-import useMint from "../hooks/useMint";
+
+import InteractButton from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
+
+import { validateNumber } from "../lib/utils";
+import { DAMM } from "../lib/contracts";
+import usedAMM from "../hooks/usedAMMProvide";
+import usedAMMData from "../hooks/usedAMMData";
+import useMint from "../hooks/useMint";
 import useBalance from "../hooks/useBalance";
 import useSyncL2 from "../hooks/useSyncL2";
 import { avalancheChain } from "../pages/_app";
+import { BigNumber } from "ethers";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
+  const { reserve0, reserve1 } = usedAMMData();
   const [amount1, setAmount1] = useState<string>("");
+  // wrapper around setAmount1
+  // automatically sets other field
+  const reactiveSetAmount1 = (value: string) => {
+    setAmount1(value);
+    const amount0 = value == "" ? 0 : BigNumber.from(value);
+    setAmount2(reserve1.mul(amount0).div(reserve0).toString());
+  };
   const [amount2, setAmount2] = useState<string>("");
+  const reactiveSetAmount2 = (value: string) => {
+    setAmount2(value);
+    const amount1 = value == "" ? 0 : BigNumber.from(value);
+    setAmount1(reserve0.mul(amount1).div(reserve1).toString());
+  };
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+
+  const [damm, setDamm] = useState<DAMM | undefined>();
+
   const [provideError, setProvideError] = useState<string | undefined>();
   const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
@@ -123,14 +144,14 @@ const DammTabContent = () => {
           label="USDT"
           value={amount1}
           setError={setProvideError}
-          setValue={setAmount1}
+          setValue={reactiveSetAmount1}
           balance={USDTBalance}
         />
         <InputWithBalance
           label="USDC"
           value={amount2}
           setError={setProvideError}
-          setValue={setAmount2}
+          setValue={reactiveSetAmount2}
           balance={USDCBalance}
         />
         <InteractButton
