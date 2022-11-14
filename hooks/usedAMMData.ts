@@ -4,7 +4,6 @@ import DAMMABI from "../abis/dAMM.json";
 
 export default function () {
   // to replace with single function contract-side to return all data
-  console.log("here");
   const dAMMContract = {
     addressOrName: DAMM_CONTRACT_ADDRESS,
     contractInterface: DAMMABI,
