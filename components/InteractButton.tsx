@@ -9,9 +9,11 @@ const InteractButton = ({
   text,
   expectedChainId,
   onClick,
+  error = undefined,
 }: {
   text: string;
   expectedChainId: number;
+  error?: string;
   onClick: () => void;
 }) => {
   const { address } = useAccount();
@@ -19,15 +21,20 @@ const InteractButton = ({
 
   return (
     <>
-      {address ? (
-        chain?.id === expectedChainId ? (
-          <Button onClick={onClick} text={text} />
-        ) : (
-          <Button disabled text="Wrong Network" />
-        )
-      ) : (
-        <InteractConnectButton />
-      )}
+      {(() => {
+        if (address) {
+          if (chain?.id !== expectedChainId) {
+            return <Button disabled text="Wrong Network" />;
+          }
+          if (error) {
+            return <Button disabled text={error} />;
+          }
+
+          return <Button onClick={onClick} text={text} />;
+        } else {
+          return <CustomConnectButton />;
+        }
+      })()}
     </>
   );
 };
