@@ -128,6 +128,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       <Tabs.Content value="tab1">
         <InputWithBalance
           label="USDT"
+          expectedChainId={expectedChainId}
           value={amount1}
           setValue={setAmount1}
           setError={setSwapError}
@@ -139,32 +140,32 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         </div>
         <InputWithBalance
           label="USDC"
+          expectedChainId={expectedChainId}
           value={amount2}
           setValue={setAmount2}
           setError={setSwapError}
           balance={USDCBalance}
         />
-        {(() => {
-          if (!isApprovedUSDC) {
-            return <Button onClick={approveUSDC} text="Approve USDC" />;
-          }
-          if (!isApprovedUSDT) {
-            return <Button onClick={approveUSDT} text="Approve USDT" />;
-          }
-
-          return (
-            <InteractButton
-              expectedChainId={expectedChainId}
-              text="Swap"
-              error={swapError}
-              onClick={() => {}}
-            />
-          );
-        })()}
+        <InteractButton
+          expectedChainId={expectedChainId}
+          text="Swap"
+          error={swapError}
+          onClick={() => {}}
+        >
+          {(() => {
+            if (!isApprovedUSDC) {
+              return <Button onClick={approveUSDC} text="Approve USDC" />;
+            }
+            if (!isApprovedUSDT) {
+              return <Button onClick={approveUSDT} text="Approve USDT" />;
+            }
+          })()}
+        </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
           label="USDT"
+          expectedChainId={expectedChainId}
           value={USDTToMint}
           setValue={setUSDTToMint}
           balance={USDTBalance}
@@ -178,6 +179,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         </div>
         <InputWithBalance
           label="USDC"
+          expectedChainId={expectedChainId}
           value={USDCToMint}
           setValue={setUSDCToMint}
           balance={USDCBalance}

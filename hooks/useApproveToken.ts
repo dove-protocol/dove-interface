@@ -54,10 +54,11 @@ export default function ({
 
   return {
     approve: () => approveToken(),
-    isApproved: amountRequested
-      ? (data?.[0] as any as BigNumber).gte(
-          BigNumber.from(amountRequested).mul(BigNumber.from(10).pow(6))
-        )
-      : false,
+    isApproved:
+      amountRequested && data?.[0]
+        ? (data?.[0] as any as BigNumber).gte(
+            BigNumber.from(amountRequested).mul(BigNumber.from(10).pow(6))
+          )
+        : false,
   };
 }

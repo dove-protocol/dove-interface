@@ -197,6 +197,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab1">
         <InputWithBalance
           label="USDT"
+          expectedChainId={chain.goerli.id}
           value={amount1}
           setError={setProvideError}
           setValue={reactiveSetAmount1}
@@ -204,35 +205,35 @@ const DammTabContent = () => {
         />
         <InputWithBalance
           label="USDC"
+          expectedChainId={chain.goerli.id}
           value={amount2}
           setError={setProvideError}
           setValue={reactiveSetAmount2}
           balance={USDCBalance}
         />
-        {(() => {
-          if (amount1 === "" || amount2 === "") {
-            return <Button disabled text="Enter an amount" />;
-          }
-          if (!isApprovedUSDC) {
-            return <Button onClick={approveUSDC} text="Approve USDC" />;
-          }
-          if (!isApprovedUSDT) {
-            return <Button onClick={approveUSDT} text="Approve USDT" />;
-          }
-
-          return (
-            <InteractButton
-              expectedChainId={chain.goerli.id}
-              error={provideError}
-              onClick={provide}
-              text="Add Liquidity"
-            />
-          );
-        })()}
+        <InteractButton
+          expectedChainId={chain.goerli.id}
+          error={provideError}
+          onClick={provide}
+          text="Add Liquidity"
+        >
+          {(() => {
+            if (amount1 === "" || amount2 === "") {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (!isApprovedUSDC) {
+              return <Button onClick={approveUSDC} text="Approve USDC" />;
+            }
+            if (!isApprovedUSDT) {
+              return <Button onClick={approveUSDT} text="Approve USDT" />;
+            }
+          })()}
+        </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
           label="DAMM-LP"
+          expectedChainId={chain.goerli.id}
           value={withdrawAmount}
           setError={setWithdrawError}
           setValue={reactiveSetWithdrawAmount}
@@ -276,6 +277,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab4">
         <InputWithBalance
           label="USDT"
+          expectedChainId={chain.goerli.id}
           value={USDTToMint}
           setValue={setUSDTToMint}
           balance={USDTBalance}
@@ -289,6 +291,7 @@ const DammTabContent = () => {
         </div>
         <InputWithBalance
           label="USDC"
+          expectedChainId={chain.goerli.id}
           value={USDCToMint}
           setValue={setUSDCToMint}
           balance={USDCBalance}
