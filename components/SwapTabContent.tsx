@@ -88,6 +88,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     >
       <Tabs.List
         ref={wrapperRef}
+        onMouseLeave={() => setHighlightedTab(null)}
         className="relative mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1"
       >
         <div
