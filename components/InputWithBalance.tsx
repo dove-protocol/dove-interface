@@ -6,15 +6,25 @@ const InputWithBalance = ({
   balance,
   value,
   setValue,
+  setError,
 }: {
   label: string;
   balance: string;
   value: string;
   setValue: (value: string) => void;
+  setError?: (error: string | undefined) => void;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
       setValue(e.target.value);
+
+      if (setError) {
+        if (parseFloat(e.target.value) > parseFloat(balance)) {
+          setError("Insufficient balance");
+        } else {
+          setError(undefined);
+        }
+      }
     }
   };
 

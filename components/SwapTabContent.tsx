@@ -23,6 +23,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [amount2, setAmount2] = useState<string>("");
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
+  const [error, setError] = useState<string | undefined>();
 
   const { sync } = useSyncToL1();
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
@@ -110,6 +111,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDT"
           value={amount1}
           setValue={setAmount1}
+          setError={setError}
           balance={USDTBalance}
         />
 
@@ -120,6 +122,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDC"
           value={amount2}
           setValue={setAmount2}
+          setError={setError}
           balance={USDCBalance}
         />
         <InteractButton
@@ -132,6 +135,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <InputWithBalance
           label="USDT"
           value={USDTToMint}
+          setError={setError}
           setValue={setUSDTToMint}
           balance={USDTBalance}
         />
@@ -140,11 +144,13 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             expectedChainId={expectedChainId}
             onClick={mintUSDT}
             text="Mint USDT"
+            error={error}
           />
         </div>
         <InputWithBalance
           label="USDC"
           value={USDCToMint}
+          setError={setError}
           setValue={setUSDCToMint}
           balance={USDCBalance}
         />

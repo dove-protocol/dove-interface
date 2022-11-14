@@ -21,6 +21,8 @@ const DammTabContent = () => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [swapError, setSwapError] = useState<string | undefined>();
+  const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
@@ -120,29 +122,29 @@ const DammTabContent = () => {
         <InputWithBalance
           label="USDT"
           value={amount1}
+          setError={setSwapError}
           setValue={setAmount1}
           balance={USDTBalance}
         />
         <InputWithBalance
           label="USDC"
           value={amount2}
+          setError={setSwapError}
           setValue={setAmount2}
           balance={USDCBalance}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
+          error={swapError}
           onClick={() => {}}
           text="Add Liquidity"
         />
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        {/* <p className="mb-2 font-thin tracking-widest text-white/50">
-          <span className="text-white">Total Balance</span> (DAMM-LP)
-        </p>
-        <h3 className="mb-8 text-white">100</h3> */}
         <InputWithBalance
           label="DAMM-LP"
           value={withdrawAmount}
+          setError={setWithdrawError}
           setValue={setWithdrawAmount}
           balance={"100"}
         />
@@ -157,6 +159,7 @@ const DammTabContent = () => {
         </div>
         <InteractButton
           expectedChainId={chain.goerli.id}
+          error={withdrawError}
           text="Withdraw"
           onClick={() => {}}
         />
