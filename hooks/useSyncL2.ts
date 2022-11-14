@@ -16,12 +16,12 @@ export default function ({ chainId }: { chainId: number }): {
   let layerZeroChainId = 0;
   switch (chainId) {
     // probably bad to manually encode index
-    case chains[1].id: {
+    case chains?.[1]?.id: {
       ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
       layerZeroChainId = 10143;
       break;
     }
-    case chains[2].id: {
+    case chains?.[2]?.id: {
       ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
       layerZeroChainId = 10106;
       break;

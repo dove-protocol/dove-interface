@@ -32,7 +32,7 @@ const InteractButton = ({
 
           return <Button onClick={onClick} text={text} />;
         } else {
-          return <CustomConnectButton />;
+          return <InteractConnectButton />;
         }
       })()}
     </>

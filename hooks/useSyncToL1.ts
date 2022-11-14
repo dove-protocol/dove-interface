@@ -16,12 +16,12 @@ export default function (): {
   let dstChainId = 10121;
   switch (currentChain?.id) {
     // probably bad to manually encode index
-    case chains[1].id: {
+    case chains?.[1]?.id: {
       ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
       console.log("syncing to arbi");
       break;
     }
-    case chains[2].id: {
+    case chains?.[2]?.id: {
       ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
       break;
     }
