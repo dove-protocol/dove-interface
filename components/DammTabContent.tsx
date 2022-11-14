@@ -32,23 +32,22 @@ const DammTabContent = () => {
   const reactiveSetAmount1 = (value: string) => {
     setAmount1(value);
     const amount0 = value === "" ? 0 : BigNumber.from(value);
-    setAmount2(
-      value === ""
-        ? ""
-        : (reserve1 as any as BigNumber)
-            ?.mul(amount0)
-            .div(reserve0 as any as BigNumber)
-            .toString()
-    );
+    if (reserve1 && reserve0) {
+      setAmount2(
+        value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
+      );
+    }
   };
 
   const [amount2, setAmount2] = useState<string>("");
   const reactiveSetAmount2 = (value: string) => {
     setAmount2(value);
     const amount1 = value === "" ? 0 : BigNumber.from(value);
-    setAmount1(
-      value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
-    );
+    if (reserve1 && reserve0) {
+      setAmount1(
+        value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
+      );
+    }
   };
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
@@ -62,18 +61,14 @@ const DammTabContent = () => {
   const reactiveSetWithdrawAmount = (value: string) => {
     setWithdrawAmount(value);
     const shares = value === "" ? BigNumber.from(0) : BigNumber.from(value);
-    setExpectedUSDCWithdrawn(
-      shares
-        .mul(reserve0 as any)
-        .div(totalSupply as any)
-        .toString()
-    );
-    setExpectedUSDTWithdrawn(
-      shares
-        .mul(reserve1 as any)
-        .div(totalSupply as any)
-        .toString()
-    );
+    if (totalSupply && reserve0 && reserve1) {
+      setExpectedUSDCWithdrawn(
+        shares.mul(reserve0).div(totalSupply).toString()
+      );
+      setExpectedUSDTWithdrawn(
+        shares.mul(reserve1).div(totalSupply).toString()
+      );
+    }
   };
 
   const [provideError, setProvideError] = useState<string | undefined>();
