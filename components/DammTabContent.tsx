@@ -1,6 +1,6 @@
 import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import InteractButton from "./InteractButton";
 import { chain } from "wagmi";
@@ -8,6 +8,7 @@ import { validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
+import Tab from "./Tab";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -22,6 +23,64 @@ const DammTabContent = () => {
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+
+  const [tabBoundingBox, setTabBoundingBox] = useState<DOMRect | null>(null);
+  const [wrapperBoundingBox, setWrapperBoundingBox] = useState<DOMRect | null>(
+    null
+  );
+  const [highlightedTab, setHighlightedTab] = useState<string | null>(null);
+  const [isHoveredFromNull, setIsHoveredFromNull] = useState(true);
+
+  const repositionHighlight = (e: any, id: string) => {
+    if (wrapperRef.current) {
+      setTabBoundingBox(e.target.getBoundingClientRect());
+      setWrapperBoundingBox(wrapperRef.current.getBoundingClientRect());
+      setIsHoveredFromNull(!highlightedTab);
+      setHighlightedTab(id);
+    }
+  };
+
+  const highlightStyles: any = {};
+
+  if (tabBoundingBox && wrapperBoundingBox) {
+    highlightStyles.transitionDuration = isHoveredFromNull ? "0ms" : "150ms";
+    highlightStyles.opacity = highlightedTab ? 1 : 0;
+    highlightStyles.width = `${tabBoundingBox.width - 1}px`;
+    highlightStyles.transform = `translate(${
+      tabBoundingBox.left - wrapperBoundingBox.left + 1
+    }px)`;
+  }
+
+  const tabsData = [
+    {
+      id: "tab1",
+      label: "Provide",
+      content: <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab2",
+      label: "Withdraw",
+      content: <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab3",
+      label: "Reserves",
+      content: <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab4",
+      label: "Mint",
+      content: <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab5",
+      label: "Sync",
+      content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+  ];
+
   return (
     <Tabs.Root
       defaultValue="tab1"
@@ -29,42 +88,26 @@ const DammTabContent = () => {
       onValueChange={(v) => setActiveTab(v)}
       className="w-full"
     >
-      <Tabs.List className="mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1">
-        <Tabs.Trigger
-          value="tab1"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab1" && ""}`}>Provide</p>
-          <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab2"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab2" && ""}`}>Withdraw</p>
-          <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab3"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab3" && ""}`}>Reserves</p>
-          <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab4"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab4" && ""}`}>Mint</p>
-          <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab5"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab5" && ""}`}>Sync</p>
-          <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
+      <Tabs.List
+        ref={wrapperRef}
+        onMouseLeave={() => setHighlightedTab(null)}
+        className="relative mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1"
+      >
+        <div
+          className="absolute -left-px h-[34px] translate-y-[4px] rounded-sm bg-white/5 transition"
+          ref={highlightRef}
+          style={highlightStyles}
+        />
+        {tabsData.map((tab) => (
+          <Tab
+            key={tab.id}
+            id={tab.id}
+            label={tab.label}
+            repositionHighlight={repositionHighlight}
+          >
+            {tab.content}
+          </Tab>
+        ))}
       </Tabs.List>
       <Tabs.Content value="tab1">
         <InputWithBalance
