@@ -23,6 +23,7 @@ const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const { reserve0, reserve1, totalSupply } = usedAMMData();
+  console.log(reserve0);
   const [amount1, setAmount1] = useState<string>("");
   // wrapper around setAmount1
   // automatically sets other field
@@ -213,14 +214,18 @@ const DammTabContent = () => {
           <p className="mb-2 font-thin tracking-widest text-white">
             Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
-          <h3 className="mb-8 text-white">$139.14</h3>
+          <h3 className="mb-8 text-white">
+            {reserve1.div(10 ** 6).toString()}
+          </h3>
         </div>
         <div className="flex w-full flex-col items-start">
           <div className="mb-8 h-px w-full bg-white/5" />
           <p className="mb-2 font-thin tracking-widest text-white">
             Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
-          <h3 className="mb-2 text-white">$23.64</h3>
+          <h3 className="mb-2 text-white">
+            {reserve0.div(10 ** 6).toString()}
+          </h3>
         </div>
       </Tabs.Content>
       <Tabs.Content value="tab4">
