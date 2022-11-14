@@ -206,7 +206,7 @@ const DammTabContent = () => {
             text="Sync to Arbitrum AMM"
           />
         </div>
-        <div className="relative mb-4">
+        <div className="relative">
           <InteractButton
             expectedChainId={chain.goerli.id}
             onClick={() => {}}
