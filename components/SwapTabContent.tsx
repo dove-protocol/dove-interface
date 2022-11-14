@@ -15,6 +15,7 @@ import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import useBalance from "../hooks/useBalance";
+import useSyncToL1 from "../hooks/useSyncToL1";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -23,6 +24,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
+  const { sync } = useSyncToL1();
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
@@ -156,7 +158,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <div className="relative">
           <InteractButton
             expectedChainId={expectedChainId}
-            onClick={() => {}}
+            onClick={sync}
             text="Sync to L1"
           />
         </div>
