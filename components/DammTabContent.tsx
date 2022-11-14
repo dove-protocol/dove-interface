@@ -9,6 +9,7 @@ import usedAMM from "../hooks/usedAMMProvide";
 import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
+import useBalance from "../hooks/useBalance";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -19,6 +20,8 @@ const DammTabContent = () => {
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
 
+  const { balance: USDCBalance } = useBalance({ isUSDC: true });
+  const { balance: USDTBalance } = useBalance({ isUSDC: false });
   const { provide } = usedAMM({ amount1, amount2 });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
@@ -114,13 +117,13 @@ const DammTabContent = () => {
           label="USDT"
           value={amount1}
           setValue={setAmount1}
-          balance={"100"}
+          balance={USDTBalance}
         />
         <InputWithBalance
           label="USDC"
           value={amount2}
           setValue={setAmount2}
-          balance={"200"}
+          balance={USDCBalance}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
@@ -174,7 +177,7 @@ const DammTabContent = () => {
           label="USDT"
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance="100"
+          balance={USDTBalance}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -187,7 +190,7 @@ const DammTabContent = () => {
           label="USDC"
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance="100"
+          balance={USDCBalance}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}

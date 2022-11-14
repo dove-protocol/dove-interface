@@ -14,6 +14,7 @@ import { validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
+import useBalance from "../hooks/useBalance";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -22,6 +23,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
+  const { balance: USDCBalance } = useBalance({ isUSDC: true });
+  const { balance: USDTBalance } = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
@@ -105,7 +108,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDT"
           value={amount1}
           setValue={setAmount1}
-          balance="100"
+          balance={USDTBalance}
         />
 
         <div className="relative z-10 -mb-8 -mt-12 flex h-20 w-full items-center justify-center">
@@ -115,7 +118,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDC"
           value={amount2}
           setValue={setAmount2}
-          balance="100"
+          balance={USDCBalance}
         />
         <InteractButton
           expectedChainId={expectedChainId}
@@ -128,7 +131,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDT"
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance="100"
+          balance={USDTBalance}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -141,7 +144,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           label="USDC"
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance="100"
+          balance={USDCBalance}
         />
         <InteractButton
           expectedChainId={expectedChainId}
