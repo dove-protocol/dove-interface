@@ -9,11 +9,12 @@ import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 
 import { validateNumber } from "../lib/utils";
-import { DAMM } from "../lib/contracts";
 import usedAMM from "../hooks/usedAMMProvide";
+import usedAMMWithdraw from "../hooks/usedAMMWithdraw";
 import usedAMMData from "../hooks/usedAMMData";
 import useMint from "../hooks/useMint";
 import useBalance from "../hooks/useBalance";
+import useLPBalance from "../hooks/useLPBalance";
 import useSyncL2 from "../hooks/useSyncL2";
 import { avalancheChain } from "../pages/_app";
 import { BigNumber } from "ethers";
@@ -21,7 +22,7 @@ import { BigNumber } from "ethers";
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
-  const { reserve0, reserve1 } = usedAMMData();
+  const { reserve0, reserve1, totalSupply } = usedAMMData();
   const [amount1, setAmount1] = useState<string>("");
   // wrapper around setAmount1
   // automatically sets other field
@@ -36,20 +37,32 @@ const DammTabContent = () => {
     const amount1 = value == "" ? 0 : BigNumber.from(value);
     setAmount1(reserve0.mul(amount1).div(reserve1).toString());
   };
+
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
-  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
 
-  const [damm, setDamm] = useState<DAMM | undefined>();
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [expectedUSDCWithdrawn, setExpectedUSDCWithdrawn] =
+    useState<string>("");
+  const [expectedUSDTWithdrawn, setExpectedUSDTWithdrawn] =
+    useState<string>("");
+  const reactiveSetWithdrawAmount = (value: string) => {
+    setWithdrawAmount(value);
+    const shares = value == "" ? BigNumber.from(0) : BigNumber.from(value);
+    setExpectedUSDCWithdrawn(shares.mul(reserve0).div(totalSupply).toString());
+    setExpectedUSDTWithdrawn(shares.mul(reserve1).div(totalSupply).toString());
+  };
 
   const [provideError, setProvideError] = useState<string | undefined>();
   const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
+  const { balance: LPBalance } = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
   const { provide } = usedAMM({ amount1, amount2 });
+  const { withdraw } = usedAMMWithdraw({ amount: withdrawAmount });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
 
@@ -166,23 +179,23 @@ const DammTabContent = () => {
           label="DAMM-LP"
           value={withdrawAmount}
           setError={setWithdrawError}
-          setValue={setWithdrawAmount}
-          balance={"100"}
+          setValue={reactiveSetWithdrawAmount}
+          balance={LPBalance}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDC</p>
-          <p className="text-sm text-white">100</p>
+          <p className="text-sm text-white">{expectedUSDCWithdrawn}</p>
         </div>
         <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDT</p>
-          <p className="text-sm text-white">100</p>
+          <p className="text-sm text-white">{expectedUSDTWithdrawn}</p>
         </div>
         <InteractButton
           expectedChainId={chain.goerli.id}
           error={withdrawError}
           text="Withdraw"
-          onClick={() => {}}
+          onClick={() => withdraw()}
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
