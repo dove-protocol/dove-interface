@@ -5,6 +5,7 @@ import {
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import dAMMContractInterface from "../abis/dAMM.json";
+import { ethers } from "ethers";
 
 export default function ({ chainId }: { chainId: number }): {
   sync: () => void;
@@ -12,14 +13,17 @@ export default function ({ chainId }: { chainId: number }): {
   const { chain: currentChain, chains } = useNetwork();
 
   let ammAddress = "";
+  let layerZeroChainId = 0;
   switch (chainId) {
     // probably bad to manually encode index
     case chains[1].id: {
       ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
+      layerZeroChainId = 10143;
       break;
     }
     case chains[2].id: {
       ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
+      layerZeroChainId = 10106;
       break;
     }
   }
@@ -28,7 +32,10 @@ export default function ({ chainId }: { chainId: number }): {
     addressOrName: DAMM_CONTRACT_ADDRESS,
     contractInterface: dAMMContractInterface,
     functionName: "syncL2",
-    args: [chainId, ammAddress],
+    args: [layerZeroChainId, ammAddress],
+    overrides: {
+      value: ethers.utils.parseEther("0.1"),
+    },
   });
 
   const { write } = useContractWrite(config);
