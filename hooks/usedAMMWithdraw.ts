@@ -6,8 +6,8 @@ export default function ({
   amount1,
   amount2,
 }: {
-  amount1: string | undefined;
-  amount2: string | undefined;
+  amount1: string;
+  amount2: string;
 }): {
   provide: () => void;
 } {

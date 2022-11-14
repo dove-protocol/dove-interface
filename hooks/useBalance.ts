@@ -37,6 +37,8 @@ export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
   });
 
   return {
-    balance: data?.formatted || "0",
+    balance:
+      parseFloat(parseFloat(data?.formatted as string).toFixed(6)).toString() ||
+      "0",
   };
 }

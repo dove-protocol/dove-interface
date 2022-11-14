@@ -19,8 +19,8 @@ export default function ({
   amount,
   isUSDC,
 }: {
-  amount: string | undefined;
-  isUSDC: boolean | undefined;
+  amount: string;
+  isUSDC: boolean;
 }): {
   mint: () => void;
 } {
