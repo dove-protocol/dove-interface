@@ -181,7 +181,7 @@ const DammTabContent = () => {
         <InteractButton
           expectedChainId={chain.goerli.id}
           error={provideError}
-          onClick={() => provide()}
+          onClick={provide}
           text="Add Liquidity"
         />
       </Tabs.Content>
@@ -215,7 +215,7 @@ const DammTabContent = () => {
             Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {reserve1.div(10 ** 6).toString()}
+            {reserve1?.div(10 ** 6).toString()}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -224,7 +224,7 @@ const DammTabContent = () => {
             Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {reserve0.div(10 ** 6).toString()}
+            {reserve0?.div(10 ** 6).toString()}
           </h3>
         </div>
       </Tabs.Content>
