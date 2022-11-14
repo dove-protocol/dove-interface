@@ -40,7 +40,9 @@ const InputWithBalance = ({
         <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
           {label}
         </h4>
-        <p className="text-sm text-white/50">Balance: {balance}</p>
+        <p className="text-sm text-white/50">
+          Balance: {parseFloat(parseFloat(balance).toFixed(6))}
+        </p>
       </div>
     </div>
   );

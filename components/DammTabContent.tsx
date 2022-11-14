@@ -89,9 +89,9 @@ const DammTabContent = () => {
     spender: DAMM_CONTRACT_ADDRESS,
     amountRequested: amount2,
   });
-  const { balance: USDCBalance } = useBalance({ isUSDC: true });
-  const { balance: USDTBalance } = useBalance({ isUSDC: false });
-  const { balance: LPBalance } = useLPBalance();
+  const { formatted: USDCBalance } = useBalance({ isUSDC: true });
+  const { formatted: USDTBalance } = useBalance({ isUSDC: false });
+  const { formatted: LPBalance } = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
   const { provide } = usedAMM({

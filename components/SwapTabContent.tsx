@@ -38,8 +38,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     amountRequested: amount2,
   });
   const { sync } = useSyncToL1();
-  const { balance: USDCBalance } = useBalance({ isUSDC: true });
-  const { balance: USDTBalance } = useBalance({ isUSDC: false });
+  const { formatted: USDCBalance } = useBalance({ isUSDC: true });
+  const { formatted: USDTBalance } = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({
     amount: USDCToMint === "" ? 0 : USDCToMint,
     isUSDC: true,
