@@ -1,5 +1,7 @@
 import { chainId, useNetwork } from "wagmi";
 import {
+  ARBI_AMM_CONTRACT_ADDRESS,
+  FUJI_AMM_CONTRACT_ADDRESS,
   USDC_ARBI_ADDRESS,
   USDC_FUJI_ADDRESS,
   USDC_GOERLI_ADDRESS,
@@ -40,4 +42,22 @@ export const getTokenAddress = (isUSDC: boolean): string => {
   }
 
   return tokenAddress;
+};
+
+export const getDammAddress = (): string => {
+  const { chain: currentChain, chains } = useNetwork();
+
+  let dammAddress = "";
+  switch (currentChain?.id) {
+    case chains?.[1]?.id: {
+      dammAddress = ARBI_AMM_CONTRACT_ADDRESS;
+      break;
+    }
+    case chains?.[2]?.id: {
+      dammAddress = FUJI_AMM_CONTRACT_ADDRESS;
+      break;
+    }
+  }
+
+  return dammAddress;
 };

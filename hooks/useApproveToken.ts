@@ -10,18 +10,23 @@ import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 import { getTokenAddress } from "../lib/utils";
 
 export default function ({
-  tokenAddress,
+  token,
+  spender,
+  amount = ethers.constants.MaxUint256,
   amountRequested,
 }: {
-  tokenAddress: string;
+  token: string;
+  spender: string;
+  amount?: string | BigNumber;
   amountRequested: string;
 }): {
   approve: () => void;
+  isApproved: boolean;
 } {
   const { address } = useAccount();
 
   const tokenContract = {
-    addressOrName: tokenAddress,
+    addressOrName: token,
     contractInterface: erc20ABI,
   };
 
@@ -30,7 +35,7 @@ export default function ({
       {
         ...tokenContract,
         functionName: "allowance",
-        args: [address, DAMM_CONTRACT_ADDRESS],
+        args: [address, spender],
       },
     ],
   });
@@ -38,14 +43,14 @@ export default function ({
   const { config: approvalConfig } = usePrepareContractWrite({
     ...tokenContract,
     functionName: "approve",
-    args: [DAMM_CONTRACT_ADDRESS, ethers.constants.MaxUint256],
+    args: [spender, amount],
   });
 
   const { write: approve } = useContractWrite(approvalConfig);
 
   function approveToken() {
     if (data && data[0] && amountRequested) {
-      if ((data[0] as any as BigNumber) < BigNumber.from(amountRequested)) {
+      if ((data[0] as any as BigNumber).lt(BigNumber.from(amountRequested))) {
         approve?.();
       }
     }
@@ -53,5 +58,8 @@ export default function ({
 
   return {
     approve: () => approveToken(),
+    isApproved: amountRequested
+      ? (data?.[0] as any as BigNumber).gte(BigNumber.from(amountRequested))
+      : false,
   };
 }

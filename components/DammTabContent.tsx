@@ -4,11 +4,11 @@ import { useState, useRef } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
 
-import InteractButton from "./InteractButton";
+import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 
-import { validateNumber } from "../lib/utils";
+import { getTokenAddress, validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import usedAMMWithdraw from "../hooks/usedAMMWithdraw";
 import usedAMMData from "../hooks/usedAMMData";
@@ -18,6 +18,8 @@ import useLPBalance from "../hooks/useLPBalance";
 import useSyncL2 from "../hooks/useSyncL2";
 import { avalancheChain } from "../pages/_app";
 import { BigNumber } from "ethers";
+import useApproveToken from "../hooks/useApproveToken";
+import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -29,14 +31,19 @@ const DammTabContent = () => {
   // automatically sets other field
   const reactiveSetAmount1 = (value: string) => {
     setAmount1(value);
-    const amount0 = value == "" ? 0 : BigNumber.from(value);
-    setAmount2(reserve1?.mul(amount0).div(reserve0).toString());
+    const amount0 = value === "" ? 0 : BigNumber.from(value);
+    setAmount2(
+      value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
+    );
   };
+
   const [amount2, setAmount2] = useState<string>("");
   const reactiveSetAmount2 = (value: string) => {
     setAmount2(value);
-    const amount1 = value == "" ? 0 : BigNumber.from(value);
-    setAmount1(reserve0?.mul(amount1).div(reserve1).toString());
+    const amount1 = value === "" ? 0 : BigNumber.from(value);
+    setAmount1(
+      value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
+    );
   };
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
@@ -49,7 +56,7 @@ const DammTabContent = () => {
     useState<string>("");
   const reactiveSetWithdrawAmount = (value: string) => {
     setWithdrawAmount(value);
-    const shares = value == "" ? BigNumber.from(0) : BigNumber.from(value);
+    const shares = value === "" ? BigNumber.from(0) : BigNumber.from(value);
     setExpectedUSDCWithdrawn(
       shares
         .mul(reserve0 as any)
@@ -67,6 +74,16 @@ const DammTabContent = () => {
   const [provideError, setProvideError] = useState<string | undefined>();
   const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
+  const { approve: approveUSDC, isApproved: isApprovedUSDC } = useApproveToken({
+    token: getTokenAddress(true),
+    spender: DAMM_CONTRACT_ADDRESS,
+    amountRequested: amount1,
+  });
+  const { approve: approveUSDT, isApproved: isApprovedUSDT } = useApproveToken({
+    token: getTokenAddress(false),
+    spender: DAMM_CONTRACT_ADDRESS,
+    amountRequested: amount2,
+  });
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
   const { balance: LPBalance } = useLPBalance();
@@ -178,12 +195,26 @@ const DammTabContent = () => {
           setValue={reactiveSetAmount2}
           balance={USDCBalance}
         />
-        <InteractButton
-          expectedChainId={chain.goerli.id}
-          error={provideError}
-          onClick={provide}
-          text="Add Liquidity"
-        />
+        {(() => {
+          if (amount1 === "" || amount2 === "") {
+            return <Button disabled text="Enter an amount" />;
+          }
+          if (!isApprovedUSDC) {
+            return <Button onClick={approveUSDC} text="Approve USDC" />;
+          }
+          if (!isApprovedUSDT) {
+            return <Button onClick={approveUSDT} text="Approve USDT" />;
+          }
+
+          return (
+            <InteractButton
+              expectedChainId={chain.goerli.id}
+              error={provideError}
+              onClick={provide}
+              text="Add Liquidity"
+            />
+          );
+        })()}
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
@@ -206,7 +237,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           error={withdrawError}
           text="Withdraw"
-          onClick={() => withdraw()}
+          onClick={withdraw}
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">

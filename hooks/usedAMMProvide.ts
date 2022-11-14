@@ -20,16 +20,6 @@ export default function ({
 }): {
   provide: () => void;
 } {
-  const { approve: usdcApprove } = useApproveToken({
-    tokenAddress: getTokenAddress(true),
-    amountRequested: amount1,
-  });
-
-  const { approve: usdtApprove } = useApproveToken({
-    tokenAddress: getTokenAddress(false),
-    amountRequested: amount2,
-  });
-
   const { config } = usePrepareContractWrite({
     addressOrName: DAMM_CONTRACT_ADDRESS,
     contractInterface: dAMMContractInterface,
@@ -40,9 +30,6 @@ export default function ({
   const { write } = useContractWrite(config);
 
   function provideLiquidity() {
-    usdcApprove();
-    usdtApprove();
-
     write?.();
   }
 

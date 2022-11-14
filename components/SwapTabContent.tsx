@@ -1,6 +1,6 @@
 import React from "react";
 import { chain } from "wagmi";
-import InteractButton from "./InteractButton";
+import InteractButton, { Button } from "./InteractButton";
 import {
   BiExpandAlt,
   BiRefresh,
@@ -10,12 +10,13 @@ import {
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
-import { validateNumber } from "../lib/utils";
+import { getDammAddress, getTokenAddress, validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import useBalance from "../hooks/useBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
+import useApproveToken from "../hooks/useApproveToken";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -25,6 +26,16 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [swapError, setSwapError] = useState<string | undefined>();
 
+  const { approve: approveUSDC, isApproved: isApprovedUSDC } = useApproveToken({
+    token: getTokenAddress(true),
+    spender: getDammAddress(),
+    amountRequested: amount1,
+  });
+  const { approve: approveUSDT, isApproved: isApprovedUSDT } = useApproveToken({
+    token: getTokenAddress(false),
+    spender: getDammAddress(),
+    amountRequested: amount2,
+  });
   const { sync } = useSyncToL1();
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
@@ -126,12 +137,23 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           setError={setSwapError}
           balance={USDCBalance}
         />
-        <InteractButton
-          expectedChainId={expectedChainId}
-          text="Swap"
-          error={swapError}
-          onClick={() => {}}
-        />
+        {(() => {
+          if (!isApprovedUSDC) {
+            return <Button onClick={approveUSDC} text="Approve USDC" />;
+          }
+          if (!isApprovedUSDT) {
+            return <Button onClick={approveUSDT} text="Approve USDT" />;
+          }
+
+          return (
+            <InteractButton
+              expectedChainId={expectedChainId}
+              text="Swap"
+              error={swapError}
+              onClick={() => {}}
+            />
+          );
+        })()}
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
