@@ -21,22 +21,20 @@ import { BigNumber } from "ethers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
+  const [isSwapped, setIsSwapped] = useState(false);
   const [amount1, setAmount1] = useState<string>("");
   const [amount2, setAmount2] = useState<string>("");
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [swapError, setSwapError] = useState<string | undefined>();
 
-  const { approve: approveUSDC, isApproved: isApprovedUSDC } = useApproveToken({
-    token: getTokenAddress(true),
-    spender: getDammAddress(),
-    amountRequested: amount1,
-  });
-  const { approve: approveUSDT, isApproved: isApprovedUSDT } = useApproveToken({
-    token: getTokenAddress(false),
-    spender: getDammAddress(),
-    amountRequested: amount2,
-  });
+  const { approve: approveAmount1, isApproved: isApprovedAmount1 } =
+    useApproveToken({
+      token: getTokenAddress(true),
+      spender: getDammAddress(),
+      amountRequested: amount1,
+    });
+
   const { sync } = useSyncToL1();
   const { formatted: USDCBalance } = useBalance({ isUSDC: true });
   const { formatted: USDTBalance } = useBalance({ isUSDC: false });
@@ -126,26 +124,49 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         ))}
       </Tabs.List>
       <Tabs.Content value="tab1">
-        <InputWithBalance
-          label="USDT"
-          expectedChainId={expectedChainId}
-          value={amount1}
-          setValue={setAmount1}
-          setError={setSwapError}
-          balance={USDTBalance}
-        />
-
-        <div className="relative z-10 -mb-8 -mt-12 flex h-20 w-full items-center justify-center">
-          <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50" />
+        {!isSwapped ? (
+          <InputWithBalance
+            label="USDT"
+            expectedChainId={expectedChainId}
+            value={amount1}
+            setValue={setAmount1}
+            setError={setSwapError}
+            balance={USDTBalance}
+          />
+        ) : (
+          <InputWithBalance
+            label="USDC"
+            expectedChainId={expectedChainId}
+            value={amount2}
+            setValue={setAmount2}
+            setError={setSwapError}
+            balance={USDCBalance}
+          />
+        )}
+        <div className="relative z-10 -my-12 -mb-8 flex h-20 w-fit left-1/2 -translate-x-1/2 items-center justify-center">
+          <button className="group" onClick={() => setIsSwapped(!isSwapped)}>
+            <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
+          </button>
         </div>
-        <InputWithBalance
-          label="USDC"
-          expectedChainId={expectedChainId}
-          value={amount2}
-          setValue={setAmount2}
-          setError={setSwapError}
-          balance={USDCBalance}
-        />
+        {!isSwapped ? (
+          <InputWithBalance
+            label="USDC"
+            expectedChainId={expectedChainId}
+            value={amount2}
+            setValue={setAmount2}
+            setError={setSwapError}
+            balance={USDCBalance}
+          />
+        ) : (
+          <InputWithBalance
+            label="USDT"
+            expectedChainId={expectedChainId}
+            value={amount1}
+            setValue={setAmount1}
+            setError={setSwapError}
+            balance={USDTBalance}
+          />
+        )}
         <InteractButton
           expectedChainId={expectedChainId}
           text="Swap"
@@ -153,11 +174,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           onClick={() => {}}
         >
           {(() => {
-            if (!isApprovedUSDC) {
-              return <Button onClick={approveUSDC} text="Approve USDC" />;
-            }
-            if (!isApprovedUSDT) {
-              return <Button onClick={approveUSDT} text="Approve USDT" />;
+            if (!isApprovedAmount1) {
+              return <Button onClick={approveAmount1} text="Approve USDC" />;
             }
           })()}
         </InteractButton>
