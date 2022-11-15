@@ -15,9 +15,11 @@ import Tab from "./Tab";
 import { validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
 import useBalance from "../hooks/useBalance";
+import useVoucherBalance from "../hooks/useVoucherBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
 import useAMMReserves from "../hooks/useAMMReserves";
 import useAMM from "../hooks/useAMM";
+import useBurnVouchers from "../hooks/useBurnVouchers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -50,6 +52,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     setAmount1In(amountIn.toString());
     setAmount0In("0");
   };
+  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("");
+  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("");
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
@@ -58,9 +62,12 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const { sync } = useSyncToL1();
   const { balance: USDCBalance } = useBalance({ isUSDC: true });
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
+  const vUSDCBalance = useVoucherBalance({ isvUSDC: true });
+  const vUSDTBalance = useVoucherBalance({ isvUSDC: false });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
   const { swap } = useAMM({ amount0In, amount1In });
+  const { burn } = useBurnVouchers({ vUSDCToBurn, vUSDTToBurn });
   const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
@@ -106,6 +113,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     {
       id: "tab3",
       label: "Sync",
+      content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab4",
+      label: "Vouchers",
       content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
   ];
@@ -196,6 +208,27 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             expectedChainId={expectedChainId}
             onClick={sync}
             text="Sync to L1"
+          />
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="tab4">
+        <div className="relative">
+          <InputWithBalance
+            label="vUSDC"
+            value={vUSDCToBurn}
+            setValue={setvUSDCToBurn}
+            balance={vUSDCBalance.toString()}
+          />
+          <InputWithBalance
+            label="vUSDT"
+            value={vUSDTToBurn}
+            setValue={setvUSDTToBurn}
+            balance={vUSDTBalance.toString()}
+          />
+          <InteractButton
+            expectedChainId={expectedChainId}
+            onClick={burn}
+            text="Burn vouchers"
           />
         </div>
       </Tabs.Content>
