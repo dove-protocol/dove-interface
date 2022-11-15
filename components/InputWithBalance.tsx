@@ -33,7 +33,12 @@ const InputWithBalance = ({
       setValue(e.target.value);
 
       if (setError && balance && e.target.value !== "") {
-        if (BigNumber.from(e.target.value).gt(balance.value)) {
+        if (
+          BigNumber.from(e.target.value)
+            .mul(BigNumber.from(10).pow(6))
+            .gt(balance.value)
+        ) {
+          console.log("error");
           setError("Insufficient balance");
         } else {
           setError(undefined);
