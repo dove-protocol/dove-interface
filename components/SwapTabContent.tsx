@@ -7,6 +7,8 @@ import {
   BiCog,
   BiDollar,
   BiDownload,
+  BiReceipt,
+  BiCreditCardFront,
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
@@ -142,7 +144,9 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     {
       id: "tab4",
       label: "Vouchers",
-      content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
+      content: (
+        <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />
+      ),
     },
   ];
 
@@ -289,7 +293,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <InteractButton
             expectedChainId={expectedChainId}
             onClick={burn}
-            text="Burn vouchers"
+            text="Burn Vouchers"
           />
         </div>
       </Tabs.Content>
