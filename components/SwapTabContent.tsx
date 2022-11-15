@@ -12,18 +12,59 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
 import { getDammAddress, getTokenAddress, validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
+import { BigNumber } from "ethers";
+import InteractButton from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
+import { validateNumber } from "../lib/utils";
 import useBalance from "../hooks/useBalance";
+import useVoucherBalance from "../hooks/useVoucherBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
 import useApproveToken from "../hooks/useApproveToken";
 import { BigNumber } from "ethers";
+import useAMMReserves from "../hooks/useAMMReserves";
+import useAMM from "../hooks/useAMM";
+import useBurnVouchers from "../hooks/useBurnVouchers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [isSwapped, setIsSwapped] = useState(false);
+
+
+const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
+  const [activeTab, setActiveTab] = useState("tab1");
+
+  // used exclusively for constructor swap calldata
+  const [amount0In, setAmount0In] = useState<string>("");
+  const [amount1In, setAmount1In] = useState<string>("");
+
+  const [amount0, setAmount0] = useState<string>("");
+  const reactiveSetAmount0 = (value: string) => {
+    setAmount0(value);
+    const amountIn =
+      value == ""
+        ? BigNumber.from(0)
+        : BigNumber.from(parseFloat(value) * 10 ** 6);
+    const amountOut = amountIn.mul(reserve1).div(reserve0.add(amountIn));
+    setAmount1((amountOut.toNumber() / 10 ** 6).toString());
+    setAmount0In(amountIn.toString());
+    setAmount1In("0");
+  };
   const [amount1, setAmount1] = useState<string>("");
-  const [amount2, setAmount2] = useState<string>("");
+  const reactiveSetAmount1 = (value: string) => {
+    setAmount1(value);
+    const amountIn =
+      value == ""
+        ? BigNumber.from(0)
+        : BigNumber.from(parseFloat(value) * 10 ** 6);
+    const amountOut = amountIn.mul(reserve0).div(reserve1.add(amountIn));
+    setAmount0((amountOut.toNumber() / 10 ** 6).toString());
+    setAmount1In(amountIn.toString());
+    setAmount0In("0");
+  };
+  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("");
+  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("");
+
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [swapError, setSwapError] = useState<string | undefined>();
@@ -36,6 +77,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     });
 
   const { sync } = useSyncToL1();
+
   const usdcData = useBalance({ isUSDC: true });
   const usdtData = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({
@@ -46,7 +88,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     amount: USDTToMint === "" ? 0 : USDTToMint,
     isUSDC: false,
   });
-
+  const vUSDCBalance = useVoucherBalance({ isvUSDC: true });
+  const vUSDTBalance = useVoucherBalance({ isvUSDC: false });
+  const { swap } = useAMM({ amount0In, amount1In });
+  const { burn } = useBurnVouchers({ vUSDCToBurn, vUSDTToBurn });
+  const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
 
@@ -91,6 +137,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     {
       id: "tab3",
       label: "Sync",
+      content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab4",
+      label: "Vouchers",
       content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
   ];
@@ -173,7 +224,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           expectedChainId={expectedChainId}
           text="Swap"
           error={swapError}
-          onClick={() => {}}
+          onClick={swap}
         >
           {(() => {
             if (!isApprovedAmount1) {
@@ -216,6 +267,27 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             expectedChainId={expectedChainId}
             onClick={sync}
             text="Sync to L1"
+          />
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="tab4">
+        <div className="relative">
+          <InputWithBalance
+            label="vUSDC"
+            value={vUSDCToBurn}
+            setValue={setvUSDCToBurn}
+            balance={vUSDCBalance.toString()}
+          />
+          <InputWithBalance
+            label="vUSDT"
+            value={vUSDTToBurn}
+            setValue={setvUSDTToBurn}
+            balance={vUSDTBalance.toString()}
+          />
+          <InteractButton
+            expectedChainId={expectedChainId}
+            onClick={burn}
+            text="Burn vouchers"
           />
         </div>
       </Tabs.Content>

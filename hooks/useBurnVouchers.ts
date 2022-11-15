@@ -1,20 +1,23 @@
-import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useNetwork } from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
-import AMMContractInterface from "../abis/AMM.json";
-import { ethers } from "ethers";
+import AMMInterface from "../abis/AMM.json";
 
-export default function (): {
-  sync: () => void;
+export default function ({
+  vUSDCToBurn,
+  vUSDTToBurn,
+}: {
+  vUSDCToBurn: string;
+  vUSDTToBurn: string;
+}): {
+  burn: () => void;
 } {
+  let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
 
-  let ammAddress = "";
-  let dstChainId = 10121;
   switch (currentChain?.id) {
-    // probably bad to manually encode index
     case chains?.[1]?.id: {
       ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
       break;
@@ -24,24 +27,19 @@ export default function (): {
       break;
     }
   }
-
   const { config } = usePrepareContractWrite({
     addressOrName: ammAddress,
-    contractInterface: AMMContractInterface,
-    functionName: "syncToL1",
-    args: [dstChainId, 1, 1, 2, 2],
-    overrides: {
-      value: ethers.utils.parseEther("0.1"),
-    },
+    contractInterface: AMMInterface,
+    functionName: "burnVouchers",
+    args: [10121, vUSDCToBurn, vUSDTToBurn],
   });
-
   const { write } = useContractWrite(config);
 
-  function syncToL1() {
+  function burnVouchers() {
     write?.();
   }
 
   return {
-    sync: () => syncToL1(),
+    burn: () => burnVouchers(),
   };
 }

@@ -1,19 +1,11 @@
-import { useContractWrite, usePrepareContractWrite, useNetwork } from "wagmi";
+import { useContractReads, useNetwork } from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
 
-export default function ({
-  amount0In,
-  amount1In,
-}: {
-  amount0In: string;
-  amount1In: string;
-}): {
-  swap: () => void;
-} {
+export default function () {
   let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
 
@@ -27,19 +19,25 @@ export default function ({
       break;
     }
   }
-  const { config } = usePrepareContractWrite({
+  const AMMContract = {
     addressOrName: ammAddress,
     contractInterface: AMMInterface,
-    functionName: "swap",
-    args: [amount0In, amount1In],
+  };
+  const { data, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        ...AMMContract,
+        functionName: "reserve0",
+      },
+      {
+        ...AMMContract,
+        functionName: "reserve1",
+      },
+    ],
   });
-  const { write } = useContractWrite(config);
-
-  function swapTokens() {
-    write?.();
-  }
 
   return {
-    swap: () => swapTokens(),
+    reserve0: data?.[0],
+    reserve1: data?.[1],
   };
 }
