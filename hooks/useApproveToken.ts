@@ -52,6 +52,8 @@ export default function ({
     approve?.();
   }
 
+  console.log(data);
+
   return {
     approve: () => approveToken(),
     isApproved:
@@ -59,6 +61,6 @@ export default function ({
         ? (data?.[0] as any as BigNumber).gte(
             BigNumber.from(amountRequested).mul(BigNumber.from(10).pow(6))
           )
-        : false,
+        : true,
   };
 }
