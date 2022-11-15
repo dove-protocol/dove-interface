@@ -25,7 +25,6 @@ const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const { reserve0, reserve1, totalSupply } = usedAMMData();
-  console.log(reserve0);
   const [amount1, setAmount1] = useState<string>("");
   // wrapper around setAmount1
   // automatically sets other field
@@ -54,13 +53,22 @@ const DammTabContent = () => {
   const [USDTToMint, setUSDTToMint] = useState<string>("");
 
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [withdrawAmountAsBN, setWithdrawAmountAsBN] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
   const [expectedUSDCWithdrawn, setExpectedUSDCWithdrawn] =
     useState<string>("");
   const [expectedUSDTWithdrawn, setExpectedUSDTWithdrawn] =
     useState<string>("");
+
   const reactiveSetWithdrawAmount = (value: string) => {
+    const bigValue =
+      value === ""
+        ? BigNumber.from(0)
+        : BigNumber.from(parseFloat(value) * 10 ** 6);
     setWithdrawAmount(value);
-    const shares = value === "" ? BigNumber.from(0) : BigNumber.from(value);
+    setWithdrawAmountAsBN(bigValue);
+    const shares = bigValue;
     if (totalSupply && reserve0 && reserve1) {
       setExpectedUSDCWithdrawn(
         shares.mul(reserve0).div(totalSupply).toString()
@@ -93,7 +101,9 @@ const DammTabContent = () => {
     amount1: amount1 === "" ? "0" : amount1,
     amount2: amount2 === "" ? "0" : amount2,
   });
-  const { withdraw } = usedAMMWithdraw({ amount: withdrawAmount });
+  const { withdraw } = usedAMMWithdraw({
+    amount: withdrawAmountAsBN.toString(),
+  });
   const { mint: mintUSDC } = useMint({
     amount: USDCToMint === "" ? "0" : USDCToMint,
     isUSDC: true,

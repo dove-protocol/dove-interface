@@ -31,13 +31,9 @@ const InputWithBalance = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (validateNumber(e.target.value)) {
       setValue(e.target.value);
-
       if (setError && balance && e.target.value !== "") {
-        if (
-          BigNumber.from(e.target.value)
-            .mul(BigNumber.from(10).pow(6))
-            .gt(balance.value)
-        ) {
+        const value = parseFloat(e.target.value) * 10 ** 6;
+        if (BigNumber.from(value).gt(balance.value)) {
           console.log("error");
           setError("Insufficient balance");
         } else {
@@ -77,6 +73,7 @@ const InputWithBalance = ({
             {maxEnabled && balance && (
               <button
                 onClick={() => {
+                  console.log("max");
                   setValue(
                     balance.value.div(BigNumber.from(10).pow(6)).toString()
                   );

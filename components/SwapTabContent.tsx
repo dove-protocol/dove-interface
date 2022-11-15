@@ -22,7 +22,7 @@ import useSyncToL1 from "../hooks/useSyncToL1";
 import useApproveToken from "../hooks/useApproveToken";
 import { BigNumber } from "ethers";
 import useAMMReserves from "../hooks/useAMMReserves";
-import useAMM from "../hooks/useAMM";
+import useAMMSwap from "../hooks/useAMMSwap";
 import useBurnVouchers from "../hooks/useBurnVouchers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
@@ -47,7 +47,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     useApproveToken({
       token: getTokenAddress(true),
       spender: getDammAddress(),
-      amountRequested: amount0 === "" ? 0 : BigNumber.from(amount0),
+      amountRequested:
+        amount0 === "" ? 0 : BigNumber.from(parseFloat(amount0) * 10 ** 6),
     });
 
   const { sync } = useSyncToL1();
@@ -55,16 +56,16 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const usdcData = useBalance({ isUSDC: true });
   const usdtData = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({
-    amount: USDCToMint === "" ? 0 : USDCToMint,
+    amount: USDCToMint === "" ? "0" : USDCToMint,
     isUSDC: true,
   });
   const { mint: mintUSDT } = useMint({
-    amount: USDTToMint === "" ? 0 : USDTToMint,
+    amount: USDTToMint === "" ? "0" : USDTToMint,
     isUSDC: false,
   });
   const vUSDCData = useVoucherBalance({ isvUSDC: true });
   const vUSDTData = useVoucherBalance({ isvUSDC: false });
-  const { swap } = useAMM({ amount0In, amount1In });
+  const { swap } = useAMMSwap({ amount0In, amount1In });
   const { burn } = useBurnVouchers({ vUSDCToBurn, vUSDTToBurn });
   const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);
