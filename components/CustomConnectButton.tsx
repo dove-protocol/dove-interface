@@ -37,7 +37,7 @@ export const CustomConnectButton = () => {
                     type="button"
                   >
                     Wrong network
-                    <BiError className="ml-1" />
+                    <BiError className="ml-1 text-white/50" />
                   </button>
                 );
               }
@@ -69,7 +69,7 @@ export const CustomConnectButton = () => {
                       </div>
                     )}
                     {chain.name}
-                    <BiChevronDown className="ml-1" />
+                    <BiChevronDown className="ml-1 text-white/50" />
                   </button>
                   <button
                     onClick={openAccountModal}
@@ -77,7 +77,7 @@ export const CustomConnectButton = () => {
                     type="button"
                   >
                     {account.displayName}
-                    <BiChevronDown className="ml-1" />
+                    <BiChevronDown className="ml-1 text-white/50" />
                   </button>
                 </div>
               );
