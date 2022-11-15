@@ -45,10 +45,18 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const { approve: approveAmount0, isApproved: isApprovedAmount0 } =
     useApproveToken({
-      token: getTokenAddress(true),
+      token: getTokenAddress(false),
       spender: getDammAddress(),
       amountRequested:
         amount0 === "" ? 0 : BigNumber.from(parseFloat(amount0) * 10 ** 6),
+    });
+
+  const { approve: approveAmount1, isApproved: isApprovedAmount1 } =
+    useApproveToken({
+      token: getTokenAddress(true),
+      spender: getDammAddress(),
+      amountRequested:
+        amount1 === "" ? 0 : BigNumber.from(parseFloat(amount0) * 10 ** 6),
     });
 
   const { sync } = useSyncToL1();
@@ -232,8 +240,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           onClick={swap}
         >
           {(() => {
-            if (!isApprovedAmount0) {
-              return <Button onClick={approveAmount0} text="Approve USDC" />;
+            if (!isSwapped) {
+              if (!isApprovedAmount0) {
+                return <Button onClick={approveAmount0} text="Approve USDT" />;
+              }
+            } else {
+              if (!isApprovedAmount1) {
+                return <Button onClick={approveAmount1} text="Approve USDC" />;
+              }
             }
           })()}
         </InteractButton>
