@@ -7,11 +7,10 @@ import {
   vUSDT_FUJI_ADDRESS,
 } from "../lib/contracts";
 
-export default function ({
-  isvUSDC,
-}: {
-  isvUSDC: boolean | undefined;
-}): BigNumber {
+export default function ({ isvUSDC }: { isvUSDC: boolean | undefined }): {
+  formatted: string;
+  value: BigNumber;
+} {
   const { chain: currentChain, chains } = useNetwork();
   const { address } = useAccount();
 
@@ -33,5 +32,8 @@ export default function ({
     token: tokenAddress,
   });
 
-  return data?.value || BigNumber.from("0");
+  return {
+    formatted: data?.formatted ?? "0",
+    value: data?.value ?? BigNumber.from(0),
+  };
 }

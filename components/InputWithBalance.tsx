@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import React from "react";
+import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 import { validateNumber } from "../lib/utils";
 
@@ -54,10 +55,11 @@ const InputWithBalance = ({
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
         <h4
-          className={`mb-2 h-fit  rounded-sm border border-white/5 px-2 py-0.5 ${
+          className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
             error ? "text-white/50" : "bg-black/10 text-white"
           }`}
         >
+          <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
           {label}
         </h4>
         {!error && (

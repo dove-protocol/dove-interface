@@ -31,8 +31,8 @@ const DammTabContent = () => {
   // automatically sets other field
   const reactiveSetAmount1 = (value: string) => {
     setAmount1(value);
-    const amount0 = value === "" ? 0 : BigNumber.from(value);
     if (reserve1 && reserve0) {
+      const amount0 = value === "" ? 0 : BigNumber.from(value);
       setAmount2(
         value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
       );
@@ -42,8 +42,8 @@ const DammTabContent = () => {
   const [amount2, setAmount2] = useState<string>("");
   const reactiveSetAmount2 = (value: string) => {
     setAmount2(value);
-    const amount1 = value === "" ? 0 : BigNumber.from(value);
     if (reserve1 && reserve0) {
+      const amount1 = value === "" ? 0 : BigNumber.from(value);
       setAmount1(
         value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
       );
