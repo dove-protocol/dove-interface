@@ -1,6 +1,4 @@
 import React from "react";
-import { chain } from "wagmi";
-import InteractButton from "./InteractButton";
 import {
   BiExpandAlt,
   BiRefresh,
@@ -10,17 +8,49 @@ import {
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
-import { validateNumber } from "../lib/utils";
-import useMint from "../hooks/useMint";
+import { BigNumber } from "ethers";
+import InteractButton from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
+import { validateNumber } from "../lib/utils";
+import useMint from "../hooks/useMint";
 import useBalance from "../hooks/useBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
+import useAMMReserves from "../hooks/useAMMReserves";
+import useAMM from "../hooks/useAMM";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
+
+  // used exclusively for constructor swap calldata
+  const [amount0In, setAmount0In] = useState<string>("");
+  const [amount1In, setAmount1In] = useState<string>("");
+
+  const [amount0, setAmount0] = useState<string>("");
+  const reactiveSetAmount0 = (value: string) => {
+    setAmount0(value);
+    const amountIn =
+      value == ""
+        ? BigNumber.from(0)
+        : BigNumber.from(parseFloat(value) * 10 ** 6);
+    const amountOut = amountIn.mul(reserve1).div(reserve0.add(amountIn));
+    setAmount1((amountOut.toNumber() / 10 ** 6).toString());
+    setAmount0In(amountIn.toString());
+    setAmount1In("0");
+  };
   const [amount1, setAmount1] = useState<string>("");
-  const [amount2, setAmount2] = useState<string>("");
+  const reactiveSetAmount1 = (value: string) => {
+    setAmount1(value);
+    const amountIn =
+      value == ""
+        ? BigNumber.from(0)
+        : BigNumber.from(parseFloat(value) * 10 ** 6);
+    const amountOut = amountIn.mul(reserve0).div(reserve1.add(amountIn));
+    setAmount0((amountOut.toNumber() / 10 ** 6).toString());
+    setAmount1In(amountIn.toString());
+    setAmount0In("0");
+  };
+
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [swapError, setSwapError] = useState<string | undefined>();
@@ -30,7 +60,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const { balance: USDTBalance } = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
   const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
-
+  const { swap } = useAMM({ amount0In, amount1In });
+  const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
 
@@ -111,7 +142,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <InputWithBalance
           label="USDT"
           value={amount1}
-          setValue={setAmount1}
+          setValue={reactiveSetAmount1}
           setError={setSwapError}
           balance={USDTBalance}
         />
@@ -121,8 +152,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         </div>
         <InputWithBalance
           label="USDC"
-          value={amount2}
-          setValue={setAmount2}
+          value={amount0}
+          setValue={reactiveSetAmount0}
           setError={setSwapError}
           balance={USDCBalance}
         />
@@ -130,7 +161,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           expectedChainId={expectedChainId}
           text="Swap"
           error={swapError}
-          onClick={() => {}}
+          onClick={() => swap()}
         />
       </Tabs.Content>
       <Tabs.Content value="tab2">
