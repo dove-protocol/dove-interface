@@ -4,11 +4,11 @@ import { useState, useRef } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
 
-import InteractButton from "./InteractButton";
+import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 
-import { validateNumber } from "../lib/utils";
+import { getTokenAddress, validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import usedAMMWithdraw from "../hooks/usedAMMWithdraw";
 import usedAMMData from "../hooks/usedAMMData";
@@ -18,6 +18,8 @@ import useLPBalance from "../hooks/useLPBalance";
 import useSyncL2 from "../hooks/useSyncL2";
 import { avalancheChain } from "../pages/_app";
 import { BigNumber } from "ethers";
+import useApproveToken from "../hooks/useApproveToken";
+import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -29,14 +31,23 @@ const DammTabContent = () => {
   // automatically sets other field
   const reactiveSetAmount1 = (value: string) => {
     setAmount1(value);
-    const amount0 = value == "" ? 0 : BigNumber.from(value);
-    setAmount2(reserve1?.mul(amount0).div(reserve0).toString());
+    if (reserve1 && reserve0) {
+      const amount0 = value === "" ? 0 : BigNumber.from(value);
+      setAmount2(
+        value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
+      );
+    }
   };
+
   const [amount2, setAmount2] = useState<string>("");
   const reactiveSetAmount2 = (value: string) => {
     setAmount2(value);
-    const amount1 = value == "" ? 0 : BigNumber.from(value);
-    setAmount1(reserve0?.mul(amount1).div(reserve1).toString());
+    if (reserve1 && reserve0) {
+      const amount1 = value === "" ? 0 : BigNumber.from(value);
+      setAmount1(
+        value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
+      );
+    }
   };
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
@@ -49,33 +60,48 @@ const DammTabContent = () => {
     useState<string>("");
   const reactiveSetWithdrawAmount = (value: string) => {
     setWithdrawAmount(value);
-    const shares = value == "" ? BigNumber.from(0) : BigNumber.from(value);
-    setExpectedUSDCWithdrawn(
-      shares
-        .mul(reserve0 as any)
-        .div(totalSupply as any)
-        .toString()
-    );
-    setExpectedUSDTWithdrawn(
-      shares
-        .mul(reserve1 as any)
-        .div(totalSupply as any)
-        .toString()
-    );
+    const shares = value === "" ? BigNumber.from(0) : BigNumber.from(value);
+    if (totalSupply && reserve0 && reserve1) {
+      setExpectedUSDCWithdrawn(
+        shares.mul(reserve0).div(totalSupply).toString()
+      );
+      setExpectedUSDTWithdrawn(
+        shares.mul(reserve1).div(totalSupply).toString()
+      );
+    }
   };
 
   const [provideError, setProvideError] = useState<string | undefined>();
   const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
-  const { balance: USDCBalance } = useBalance({ isUSDC: true });
-  const { balance: USDTBalance } = useBalance({ isUSDC: false });
-  const { balance: LPBalance } = useLPBalance();
+  const { approve: approveUSDC, isApproved: isApprovedUSDC } = useApproveToken({
+    token: getTokenAddress(true),
+    spender: DAMM_CONTRACT_ADDRESS,
+    amountRequested: amount1,
+  });
+  const { approve: approveUSDT, isApproved: isApprovedUSDT } = useApproveToken({
+    token: getTokenAddress(false),
+    spender: DAMM_CONTRACT_ADDRESS,
+    amountRequested: amount2,
+  });
+  const usdcData = useBalance({ isUSDC: true });
+  const usdtData = useBalance({ isUSDC: false });
+  const lpData = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
-  const { provide } = usedAMM({ amount1, amount2 });
+  const { provide } = usedAMM({
+    amount1: amount1 === "" ? 0 : amount1,
+    amount2: amount2 === "" ? 0 : amount2,
+  });
   const { withdraw } = usedAMMWithdraw({ amount: withdrawAmount });
-  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
-  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
+  const { mint: mintUSDC } = useMint({
+    amount: USDCToMint === "" ? 0 : USDCToMint,
+    isUSDC: true,
+  });
+  const { mint: mintUSDT } = useMint({
+    amount: USDTToMint === "" ? 0 : USDTToMint,
+    isUSDC: false,
+  });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
@@ -166,32 +192,47 @@ const DammTabContent = () => {
       <Tabs.Content value="tab1">
         <InputWithBalance
           label="USDT"
+          expectedChainId={chain.goerli.id}
           value={amount1}
           setError={setProvideError}
           setValue={reactiveSetAmount1}
-          balance={USDTBalance}
+          balance={usdtData}
         />
         <InputWithBalance
           label="USDC"
+          expectedChainId={chain.goerli.id}
           value={amount2}
           setError={setProvideError}
           setValue={reactiveSetAmount2}
-          balance={USDCBalance}
+          balance={usdcData}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
           error={provideError}
-          onClick={() => provide()}
+          onClick={provide}
           text="Add Liquidity"
-        />
+        >
+          {(() => {
+            if (amount1 === "" || amount2 === "") {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (!isApprovedUSDC) {
+              return <Button onClick={approveUSDC} text="Approve USDC" />;
+            }
+            if (!isApprovedUSDT) {
+              return <Button onClick={approveUSDT} text="Approve USDT" />;
+            }
+          })()}
+        </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
           label="DAMM-LP"
+          expectedChainId={chain.goerli.id}
           value={withdrawAmount}
           setError={setWithdrawError}
           setValue={reactiveSetWithdrawAmount}
-          balance={LPBalance.toString()}
+          balance={lpData}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
@@ -206,7 +247,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           error={withdrawError}
           text="Withdraw"
-          onClick={() => withdraw()}
+          onClick={withdraw}
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
@@ -231,9 +272,10 @@ const DammTabContent = () => {
       <Tabs.Content value="tab4">
         <InputWithBalance
           label="USDT"
+          expectedChainId={chain.goerli.id}
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance={USDTBalance}
+          balance={usdtData}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -244,9 +286,10 @@ const DammTabContent = () => {
         </div>
         <InputWithBalance
           label="USDC"
+          expectedChainId={chain.goerli.id}
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance={USDCBalance}
+          balance={usdcData}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}

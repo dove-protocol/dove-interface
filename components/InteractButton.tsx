@@ -10,11 +10,13 @@ const InteractButton = ({
   expectedChainId,
   onClick,
   error = undefined,
+  children,
 }: {
   text: string;
   expectedChainId: number;
   error?: string;
   onClick: () => void;
+  children?: React.ReactNode;
 }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -28,6 +30,10 @@ const InteractButton = ({
           }
           if (error) {
             return <Button disabled text={error} />;
+          }
+
+          if (children) {
+            return <>{children}</>;
           }
 
           return <Button onClick={onClick} text={text} />;

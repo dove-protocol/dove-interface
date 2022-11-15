@@ -14,34 +14,21 @@ import {
 } from "../lib/contracts";
 import MintableERC20 from "../abis/ERC20.json";
 import { avalancheChain } from "../pages/_app";
+import { getTokenAddress } from "../lib/utils";
+import { BigNumber, BigNumberish } from "ethers";
 
 export default function ({
   amount,
   isUSDC,
 }: {
-  amount: string;
+  amount: BigNumberish;
   isUSDC: boolean;
 }): {
   mint: () => void;
 } {
   const { chain: currentChain, chains } = useNetwork();
 
-  let tokenAddress = "";
-  switch (currentChain?.id) {
-    // probably bad to manually encode index
-    case chains?.[0]?.id: {
-      tokenAddress = isUSDC ? USDC_GOERLI_ADDRESS : USDT_GOERLI_ADDRESS;
-      break;
-    }
-    case chains?.[1]?.id: {
-      tokenAddress = isUSDC ? USDC_ARBI_ADDRESS : USDT_ARBI_ADDRESS;
-      break;
-    }
-    case chains?.[2]?.id: {
-      tokenAddress = isUSDC ? USDC_FUJI_ADDRESS : USDT_FUJI_ADDRESS;
-      break;
-    }
-  }
+  let tokenAddress = getTokenAddress(isUSDC);
 
   const { address } = useAccount();
   // assume correct chain id will be selected as it's enforced on each tab
@@ -49,7 +36,7 @@ export default function ({
     addressOrName: tokenAddress,
     contractInterface: MintableERC20,
     functionName: "mint",
-    args: [address, (parseInt(amount as string) * 10 ** 6).toString()],
+    args: [address, BigNumber.from(amount).mul(10 ** 6)],
   });
 
   const { write } = useContractWrite(config);

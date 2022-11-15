@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { useAccount, useBalance, useNetwork } from "wagmi";
 import {
   USDC_ARBI_ADDRESS,
@@ -9,7 +10,8 @@ import {
 } from "../lib/contracts";
 
 export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
-  balance: string;
+  formatted: string;
+  value: BigNumber;
 } {
   const { chain: currentChain, chains } = useNetwork();
   const { address } = useAccount();
@@ -37,8 +39,7 @@ export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
   });
 
   return {
-    balance:
-      parseFloat(parseFloat(data?.formatted as string).toFixed(6)).toString() ||
-      "0",
+    formatted: data?.formatted ?? "0",
+    value: data?.value ?? BigNumber.from(0),
   };
 }

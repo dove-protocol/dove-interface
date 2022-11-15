@@ -5,9 +5,9 @@ import {
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import dAMMContractInterface from "../abis/dAMM.json";
-import { ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 
-export default function ({ chainId }: { chainId: number }): {
+export default function ({ chainId }: { chainId: BigNumberish }): {
   sync: () => void;
 } {
   const { chain: currentChain, chains } = useNetwork();

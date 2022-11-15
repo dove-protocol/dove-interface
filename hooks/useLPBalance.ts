@@ -2,7 +2,10 @@ import { BigNumber } from "ethers";
 import { useAccount, useBalance, useNetwork } from "wagmi";
 import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 
-export default function () {
+export default function (): {
+  formatted: string;
+  value: BigNumber;
+} {
   const { address } = useAccount();
 
   const { data, isError, isLoading } = useBalance({
@@ -11,6 +14,7 @@ export default function () {
   });
 
   return {
-    balance: data?.value || BigNumber.from("0"),
+    formatted: data?.formatted ?? "0",
+    value: data?.value ?? BigNumber.from(0),
   };
 }

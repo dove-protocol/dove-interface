@@ -4,8 +4,12 @@ import {
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
+import { BigNumber } from "ethers";
 
-export default function () {
+export default function (): {
+  reserve0: BigNumber | undefined;
+  reserve1: BigNumber | undefined;
+} {
   let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
 
@@ -37,7 +41,7 @@ export default function () {
   });
 
   return {
-    reserve0: data?.[0],
-    reserve1: data?.[1],
+    reserve0: data?.[0] as any as BigNumber,
+    reserve1: data?.[1] as any as BigNumber,
   };
 }
