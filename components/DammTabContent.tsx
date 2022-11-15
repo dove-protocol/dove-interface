@@ -65,16 +65,16 @@ const DammTabContent = () => {
     const bigValue =
       value === ""
         ? BigNumber.from(0)
-        : BigNumber.from(parseFloat(value) * 10 ** 6);
+        : BigNumber.from(parseFloat(value) * 10 ** 18);
     setWithdrawAmount(value);
     setWithdrawAmountAsBN(bigValue);
     const shares = bigValue;
     if (totalSupply && reserve0 && reserve1) {
       setExpectedUSDCWithdrawn(
-        shares.mul(reserve0).div(totalSupply).toString()
+        (shares.mul(reserve0).div(totalSupply).toNumber() / 10 ** 6).toString()
       );
       setExpectedUSDTWithdrawn(
-        shares.mul(reserve1).div(totalSupply).toString()
+        (shares.mul(reserve1).div(totalSupply).toNumber() / 10 ** 6).toString()
       );
     }
   };
