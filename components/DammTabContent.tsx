@@ -90,16 +90,16 @@ const DammTabContent = () => {
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
   const { provide } = usedAMM({
-    amount1: amount1 === "" ? 0 : amount1,
-    amount2: amount2 === "" ? 0 : amount2,
+    amount1: amount1 === "" ? "0" : amount1,
+    amount2: amount2 === "" ? "0" : amount2,
   });
   const { withdraw } = usedAMMWithdraw({ amount: withdrawAmount });
   const { mint: mintUSDC } = useMint({
-    amount: USDCToMint === "" ? 0 : USDCToMint,
+    amount: USDCToMint === "" ? "0" : USDCToMint,
     isUSDC: true,
   });
   const { mint: mintUSDT } = useMint({
-    amount: USDTToMint === "" ? 0 : USDTToMint,
+    amount: USDTToMint === "" ? "0" : USDTToMint,
     isUSDC: false,
   });
 
