@@ -36,8 +36,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     });
 
   const { sync } = useSyncToL1();
-  const { formatted: USDCBalance } = useBalance({ isUSDC: true });
-  const { formatted: USDTBalance } = useBalance({ isUSDC: false });
+  const usdcData = useBalance({ isUSDC: true });
+  const usdtData = useBalance({ isUSDC: false });
   const { mint: mintUSDC } = useMint({
     amount: USDCToMint === "" ? 0 : USDCToMint,
     isUSDC: true,
@@ -131,7 +131,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount1}
             setValue={setAmount1}
             setError={setSwapError}
-            balance={USDTBalance}
+            balance={usdtData}
+            maxEnabled
           />
         ) : (
           <InputWithBalance
@@ -140,10 +141,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount2}
             setValue={setAmount2}
             setError={setSwapError}
-            balance={USDCBalance}
+            balance={usdcData}
+            maxEnabled
           />
         )}
-        <div className="relative z-10 -my-12 -mb-8 flex h-20 w-fit left-1/2 -translate-x-1/2 items-center justify-center">
+        <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
           <button className="group" onClick={() => setIsSwapped(!isSwapped)}>
             <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
           </button>
@@ -155,7 +157,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount2}
             setValue={setAmount2}
             setError={setSwapError}
-            balance={USDCBalance}
+            balance={usdcData}
           />
         ) : (
           <InputWithBalance
@@ -164,7 +166,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             value={amount1}
             setValue={setAmount1}
             setError={setSwapError}
-            balance={USDTBalance}
+            balance={usdtData}
           />
         )}
         <InteractButton
@@ -186,7 +188,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           expectedChainId={expectedChainId}
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance={USDTBalance}
+          balance={usdtData}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -200,7 +202,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           expectedChainId={expectedChainId}
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance={USDCBalance}
+          balance={usdcData}
         />
         <InteractButton
           expectedChainId={expectedChainId}

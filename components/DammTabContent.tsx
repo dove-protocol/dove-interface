@@ -84,9 +84,9 @@ const DammTabContent = () => {
     spender: DAMM_CONTRACT_ADDRESS,
     amountRequested: amount2,
   });
-  const { formatted: USDCBalance } = useBalance({ isUSDC: true });
-  const { formatted: USDTBalance } = useBalance({ isUSDC: false });
-  const { formatted: LPBalance } = useLPBalance();
+  const usdcData = useBalance({ isUSDC: true });
+  const usdtData = useBalance({ isUSDC: false });
+  const lpData = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
   const { provide } = usedAMM({
@@ -196,7 +196,7 @@ const DammTabContent = () => {
           value={amount1}
           setError={setProvideError}
           setValue={reactiveSetAmount1}
-          balance={USDTBalance}
+          balance={usdtData}
         />
         <InputWithBalance
           label="USDC"
@@ -204,7 +204,7 @@ const DammTabContent = () => {
           value={amount2}
           setError={setProvideError}
           setValue={reactiveSetAmount2}
-          balance={USDCBalance}
+          balance={usdcData}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
@@ -232,7 +232,7 @@ const DammTabContent = () => {
           value={withdrawAmount}
           setError={setWithdrawError}
           setValue={reactiveSetWithdrawAmount}
-          balance={LPBalance}
+          balance={lpData}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
@@ -275,7 +275,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance={USDTBalance}
+          balance={usdtData}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -289,7 +289,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance={USDCBalance}
+          balance={usdcData}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}

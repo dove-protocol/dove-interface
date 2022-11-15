@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import React from "react";
 import { useNetwork } from "wagmi";
 import { validateNumber } from "../lib/utils";
@@ -9,13 +10,18 @@ const InputWithBalance = ({
   value,
   setValue,
   setError,
+  maxEnabled = false,
 }: {
   label: string;
   expectedChainId: number;
-  balance: string;
+  balance?: {
+    formatted: string;
+    value: BigNumber;
+  };
   value: string;
   setValue: (value: string) => void;
   setError?: (error: string | undefined) => void;
+  maxEnabled?: boolean;
 }) => {
   const { chain } = useNetwork();
 
@@ -25,8 +31,8 @@ const InputWithBalance = ({
     if (validateNumber(e.target.value)) {
       setValue(e.target.value);
 
-      if (setError) {
-        if (parseFloat(e.target.value) > parseFloat(balance)) {
+      if (setError && balance && e.target.value !== "") {
+        if (BigNumber.from(e.target.value).gt(balance.value)) {
           setError("Insufficient balance");
         } else {
           setError(undefined);
@@ -48,16 +54,31 @@ const InputWithBalance = ({
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
         <h4
-          className={`mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 ${
-            error ? "text-white/50" : "text-white"
+          className={`mb-2 h-fit  rounded-sm border border-white/5 px-2 py-0.5 ${
+            error ? "text-white/50" : "bg-black/10 text-white"
           }`}
         >
           {label}
         </h4>
         {!error && (
-          <p className="text-sm text-white/50">
-            Balance: {parseFloat(parseFloat(balance).toFixed(6))}
-          </p>
+          <div className="flex items-center space-x-2">
+            {balance && (
+              <p className="text-sm text-white/50">
+                Balance: {parseFloat(parseFloat(balance.formatted).toFixed(6))}
+              </p>
+            )}
+            {maxEnabled && balance && (
+              <button
+                onClick={() => {
+                  setValue(
+                    balance.value.div(BigNumber.from(10).pow(6)).toString()
+                  );
+                }}
+              >
+                <p className="text-sm text-white">Max</p>
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
