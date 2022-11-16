@@ -47,14 +47,14 @@ export default function ({
   useEffect(() => {
     if (txData && !isError && !isLoading) {
       trigger({
-        description: "You have successfully provided liquidity!",
+        description: "Liquidity provided",
         title: "Success",
         txid: provideTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
-        description: "Something went wrong. Please try again.",
+        description: "Transaction failed",
         title: "Error",
         txid: provideTxData?.hash || "",
         type: "error",

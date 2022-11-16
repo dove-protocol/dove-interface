@@ -61,7 +61,7 @@ export default function ({
       });
     } else if (isError) {
       trigger({
-        description: `Burn failed`,
+        description: `Transaction failed`,
         title: "Error",
         txid: burnTxData?.hash || "",
         type: "error",

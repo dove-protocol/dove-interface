@@ -61,7 +61,7 @@ export default function ({
       });
     } else if (isError) {
       trigger({
-        description: "Swap failed",
+        description: "Transaction failed",
         title: "Error",
         txid: swapTxData?.hash || "",
         type: "error",
