@@ -25,8 +25,8 @@ export default function (): {
   }
 
   const { config } = usePrepareContractWrite({
-    addressOrName: ammAddress,
-    contractInterface: AMMContractInterface,
+    address: ammAddress,
+    abi: AMMContractInterface,
     functionName: "syncToL1",
     args: [dstChainId, 1, 1, 2, 2],
     overrides: {

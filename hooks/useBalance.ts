@@ -34,7 +34,7 @@ export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
   }
 
   const { data, isError, isLoading } = useBalance({
-    addressOrName: address,
+    address: address,
     token: tokenAddress,
     watch: true,
   });

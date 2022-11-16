@@ -36,8 +36,8 @@ export default function ({
     }
   }
   const { config } = usePrepareContractWrite({
-    addressOrName: ammAddress,
-    contractInterface: AMMInterface,
+    address: ammAddress,
+    abi: AMMInterface,
     functionName: "swap",
     args: [amount0In, amount1In],
   });

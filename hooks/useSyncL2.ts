@@ -29,8 +29,8 @@ export default function ({ chainId }: { chainId: BigNumberish }): {
   }
 
   const { config } = usePrepareContractWrite({
-    addressOrName: DAMM_CONTRACT_ADDRESS,
-    contractInterface: dAMMContractInterface,
+    address: DAMM_CONTRACT_ADDRESS,
+    abi: dAMMContractInterface,
     functionName: "syncL2",
     args: [layerZeroChainId, ammAddress],
     overrides: {

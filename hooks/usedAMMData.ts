@@ -10,8 +10,8 @@ export default function (): {
 } {
   // to replace with single function contract-side to return all data
   const dAMMContract = {
-    addressOrName: DAMM_CONTRACT_ADDRESS,
-    contractInterface: DAMMABI,
+    address: DAMM_CONTRACT_ADDRESS,
+    abi: DAMMABI,
   };
   const { data, isError, isLoading } = useContractReads({
     contracts: [

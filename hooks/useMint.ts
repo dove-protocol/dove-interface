@@ -32,8 +32,8 @@ export default function ({
   const { address } = useAccount();
   // assume correct chain id will be selected as it's enforced on each tab
   const { config } = usePrepareContractWrite({
-    addressOrName: tokenAddress,
-    contractInterface: MintableERC20,
+    address: tokenAddress,
+    abi: MintableERC20,
     functionName: "mint",
     args: [address, BigNumber.from(amount).mul(10 ** 6)],
   });

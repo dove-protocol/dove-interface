@@ -24,8 +24,8 @@ export default function (): {
     }
   }
   const AMMContract = {
-    addressOrName: ammAddress,
-    contractInterface: AMMInterface,
+    address: ammAddress,
+    abi: AMMInterface,
   };
   const { data, isError, isLoading } = useContractReads({
     contracts: [
