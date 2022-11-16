@@ -23,6 +23,7 @@ import useApproveToken from "../hooks/useApproveToken";
 import { BigNumber } from "ethers";
 import useAMMReserves from "../hooks/useAMMReserves";
 import useAMMSwap from "../hooks/useAMMSwap";
+import usedAMMData from "../hooks/usedAMMData";
 import useBurnVouchers from "../hooks/useBurnVouchers";
 import useTriggerToast from "../hooks/useTriggerToast";
 
@@ -37,8 +38,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [amount0, setAmount0] = useState<string>("");
   const [amount1, setAmount1] = useState<string>("");
 
-  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("");
-  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("");
+  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("0");
+  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("0");
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
@@ -63,6 +64,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     });
 
   const { sync } = useSyncToL1();
+  const dAMMData = usedAMMData();
 
   const usdcData = useBalance({ isUSDC: true });
   const usdtData = useBalance({ isUSDC: false });
@@ -316,24 +318,18 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             onClick={burn}
             text="Burn Vouchers"
           >
-            {/* {(() => {
-              if (amount0 === "" || amount1 === "") {
-                return <Button disabled text="Enter an amount" />;
+            {(() => {
+              if (
+                dAMMData.marked0?.lt(
+                  BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
+                ) ||
+                dAMMData.marked1?.lt(
+                  BigNumber.from(parseFloat(vUSDTToBurn) * 10 ** 6)
+                )
+              ) {
+                return <Button disabled text="Sync before." />;
               }
-              if (!isSwapped) {
-                if (!isApprovedAmount0) {
-                  return (
-                    <Button onClick={approveAmount0} text="Approve USDT" />
-                  );
-                }
-              } else {
-                if (!isApprovedAmount1) {
-                  return (
-                    <Button onClick={approveAmount1} text="Approve USDC" />
-                  );
-                }
-              }
-            })()} */}
+            })()}
           </InteractButton>
         </div>
       </Tabs.Content>
