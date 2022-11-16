@@ -32,14 +32,14 @@ export default function ({ amount }: { amount: BigNumberish }): {
   useEffect(() => {
     if (txData && !isError && !isLoading) {
       trigger({
-        description: "You have successfully withdrawn liquidity!",
+        description: "Liquidity withdrawn",
         title: "Success",
         txid: withdrawTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
-        description: "Something went wrong. Please try again.",
+        description: "Transaction failed",
         title: "Error",
         txid: withdrawTxData?.hash || "",
         type: "error",
