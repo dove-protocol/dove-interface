@@ -290,7 +290,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <div className="relative">
           <InteractButton
             expectedChainId={expectedChainId}
-            onClick={sync}
+            onClick={() => sync()}
             text="Sync to L1"
           />
         </div>

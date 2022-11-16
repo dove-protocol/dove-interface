@@ -84,8 +84,6 @@ export default function useApproveToken({
     approve?.();
   }
 
-  console.log(data);
-
   return {
     approve: () => approveToken(),
     isApproved:
