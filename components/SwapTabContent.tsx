@@ -24,6 +24,7 @@ import { BigNumber } from "ethers";
 import useAMMReserves from "../hooks/useAMMReserves";
 import useAMMSwap from "../hooks/useAMMSwap";
 import useBurnVouchers from "../hooks/useBurnVouchers";
+import useTriggerToast from "../hooks/useTriggerToast";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -42,6 +43,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
   const [swapError, setSwapError] = useState<string | undefined>();
+
+  const { trigger } = useTriggerToast();
 
   const { approve: approveAmount0, isApproved: isApprovedAmount0 } =
     useApproveToken({
@@ -240,6 +243,9 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           onClick={swap}
         >
           {(() => {
+            if (amount0 === "" || amount1 === "") {
+              return <Button disabled text="Enter an amount" />;
+            }
             if (!isSwapped) {
               if (!isApprovedAmount0) {
                 return <Button onClick={approveAmount0} text="Approve USDT" />;
@@ -309,7 +315,26 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             expectedChainId={expectedChainId}
             onClick={burn}
             text="Burn Vouchers"
-          />
+          >
+            {/* {(() => {
+              if (amount0 === "" || amount1 === "") {
+                return <Button disabled text="Enter an amount" />;
+              }
+              if (!isSwapped) {
+                if (!isApprovedAmount0) {
+                  return (
+                    <Button onClick={approveAmount0} text="Approve USDT" />
+                  );
+                }
+              } else {
+                if (!isApprovedAmount1) {
+                  return (
+                    <Button onClick={approveAmount1} text="Approve USDC" />
+                  );
+                }
+              }
+            })()} */}
+          </InteractButton>
         </div>
       </Tabs.Content>
     </Tabs.Root>

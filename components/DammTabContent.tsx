@@ -3,11 +3,9 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
-
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
-
 import { getTokenAddress, validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import usedAMMWithdraw from "../hooks/usedAMMWithdraw";

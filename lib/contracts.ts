@@ -15,8 +15,3 @@ export const vUSDC_FUJI_ADDRESS = "0x1E70F31de87252E6fBa96E1001c95392B580417e";
 export const USDT_FUJI_ADDRESS = "0x134Dc38AE8C853D1aa2103d5047591acDAA16682";
 export const vUSDT_FUJI_ADDRESS = "0xC12BBc820fD502Ed0DFaca9c8bD0BeccaE942f9E";
 
-export type DAMM = {
-  reserve0: number;
-  reserve1: number;
-  totalSupply: number;
-};

@@ -1,9 +1,16 @@
-import { useContractWrite, usePrepareContractWrite, useNetwork } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
   FUJI_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
+import { useEffect } from "react";
+import useTriggerToast from "./useTriggerToast";
 
 export default function ({
   amount0In,
@@ -16,6 +23,7 @@ export default function ({
 } {
   let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
+  const { trigger } = useTriggerToast();
 
   switch (currentChain?.id) {
     case chains?.[1]?.id: {
@@ -33,7 +41,31 @@ export default function ({
     functionName: "swap",
     args: [amount0In, amount1In],
   });
-  const { write } = useContractWrite(config);
+  const { data: swapTxData, write } = useContractWrite(config);
+
+  const {
+    data: txData,
+    isError,
+    isLoading,
+  } = useWaitForTransaction({
+    hash: swapTxData?.hash,
+  });
+
+  useEffect(() => {
+    if (txData && !isError && !isLoading) {
+      trigger({
+        description: "Swap successful",
+        title: "Success",
+        type: "success",
+      });
+    } else if (isError) {
+      trigger({
+        description: "Swap failed",
+        title: "Error",
+        type: "error",
+      });
+    }
+  }, [txData]);
 
   function swapTokens() {
     write?.();

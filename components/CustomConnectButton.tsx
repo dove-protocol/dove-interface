@@ -48,7 +48,7 @@ export const CustomConnectButton = () => {
                     style={{ display: "flex", alignItems: "center" }}
                     type="button"
                   >
-                    {chain.hasIcon && (
+                    {/* {chain.hasIcon && (
                       <div
                         style={{
                           background: chain.iconBackground,
@@ -67,7 +67,7 @@ export const CustomConnectButton = () => {
                           />
                         )}
                       </div>
-                    )}
+                    )} */}
                     {chain.name}
                     <BiChevronDown className="ml-1 text-white/50" />
                   </button>

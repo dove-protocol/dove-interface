@@ -1,15 +1,19 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { useEffect } from "react";
 import {
   erc20ABI,
   useAccount,
   useContractReads,
   useContractWrite,
   usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
 import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
+import { useStore } from "../lib/store";
 import { getTokenAddress } from "../lib/utils";
+import useTriggerToast from "./useTriggerToast";
 
-export default function ({
+export default function useApproveToken({
   token,
   spender,
   amount = ethers.constants.MaxUint256,
@@ -24,6 +28,7 @@ export default function ({
   isApproved: boolean;
 } {
   const { address } = useAccount();
+  const { trigger } = useTriggerToast();
 
   const tokenContract = {
     addressOrName: token,
@@ -46,7 +51,31 @@ export default function ({
     args: [spender, amount],
   });
 
-  const { write: approve } = useContractWrite(approvalConfig);
+  const {
+    data: approveTxData,
+    write: approve,
+    isSuccess,
+  } = useContractWrite(approvalConfig);
+
+  const { data: txData } = useWaitForTransaction({
+    hash: approveTxData?.hash,
+  });
+
+  useEffect(() => {
+    if (txData && !isError && !isLoading) {
+      trigger({
+        description: `Approved ${amountRequested}`,
+        title: "Success",
+        type: "success",
+      });
+    } else if (isError) {
+      trigger({
+        description: `Failed to approve ${amountRequested}`,
+        title: "Error",
+        type: "error",
+      });
+    }
+  }, [txData]);
 
   function approveToken() {
     approve?.();
@@ -61,6 +90,6 @@ export default function ({
         ? (data?.[0] as any as BigNumber).gte(
             BigNumber.from(amountRequested).mul(BigNumber.from(10).pow(6))
           )
-        : true,
+        : false,
   };
 }

@@ -1,7 +1,7 @@
 import Main from "../components/layouts/Main";
 import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { chain, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { avalancheChain } from "./_app";
@@ -16,6 +16,11 @@ import { GiPeaceDove } from "react-icons/gi";
 export default function Home() {
   const isAutoSwitch = useStore((state) => state.isAutoSwitch);
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
+  const timerRef = useRef(0);
+
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
