@@ -11,6 +11,7 @@ export default function (): {
   const { data, isError, isLoading } = useBalance({
     addressOrName: address,
     token: DAMM_CONTRACT_ADDRESS,
+    watch: true,
   });
 
   return {

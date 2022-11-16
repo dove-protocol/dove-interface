@@ -28,6 +28,7 @@ export default function (): {
         functionName: "totalSupply",
       },
     ],
+    watch: true,
   });
 
   return {

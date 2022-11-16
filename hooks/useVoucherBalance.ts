@@ -30,6 +30,7 @@ export default function ({ isvUSDC }: { isvUSDC: boolean | undefined }): {
   const { data, isError, isLoading } = useBalance({
     addressOrName: address,
     token: tokenAddress,
+    watch: true,
   });
 
   return {

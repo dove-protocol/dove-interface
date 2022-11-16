@@ -43,6 +43,7 @@ export default function useApproveToken({
         args: [address, spender],
       },
     ],
+    watch: true,
   });
 
   const { config: approvalConfig } = usePrepareContractWrite({

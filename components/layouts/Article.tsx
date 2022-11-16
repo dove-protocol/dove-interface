@@ -19,14 +19,17 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       className="relative w-full"
     >
       <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
-        <Toast.Provider duration={10000}>
+        <Toast.Provider>
           <Toast.Root
-            className="rdx-state-closed:hide group relative flex w-64 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-open:animate-slideIn"
+            className="group relative flex w-64 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
             open={isOpen}
             onOpenChange={setOpen}
           >
             <div className="background-gradient absolute h-full w-full opacity-20">
               <div className="background-gradient-pattern" />
+            </div>
+            <div className="absolute h-full w-full overflow-hidden">
+              <GiPeaceDove className="absolute right-2 -bottom-6 -rotate-45 text-7xl text-white/10" />
             </div>
             {toastContent.type === "success" ? (
               <BiCheck className="mr-4 rounded-sm bg-white/5 p-px text-xl text-white" />
