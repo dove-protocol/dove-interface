@@ -1,5 +1,5 @@
 import React from "react";
-import { chain } from "wagmi";
+import { chain, useAccount } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import {
   BiExpandAlt,
@@ -12,21 +12,25 @@ import {
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
-import { getDammAddress, getTokenAddress, validateNumber } from "../lib/utils";
+import { validateNumber } from "../lib/utils";
 import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
-import useBalance from "../hooks/useBalance";
 import useVoucherBalance from "../hooks/useVoucherBalance";
 import useSyncToL1 from "../hooks/useSyncToL1";
-import useApproveToken from "../hooks/useApproveToken";
+import useApproveToken from "../lib/hooks/useApproval";
 import { BigNumber } from "ethers";
 import useAMMReserves from "../hooks/useAMMReserves";
 import useAMMSwap from "../hooks/useAMMSwap";
 import useBurnVouchers from "../hooks/useBurnVouchers";
 import useTriggerToast from "../hooks/useTriggerToast";
+import JSBI from "jsbi";
+import { CurrencyAmount } from "../sdk";
+import { USDC } from "../sdk/constants";
+import { useTokenBalances } from "../lib/hooks/useTokenBalance";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
+  const { address } = useAccount();
   const [activeTab, setActiveTab] = useState("tab1");
   const [isSwapped, setIsSwapped] = useState(false);
 
@@ -64,8 +68,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const { sync } = useSyncToL1();
 
-  const usdcData = useBalance({ isUSDC: true });
-  const usdtData = useBalance({ isUSDC: false });
+  useTokenBalances([], address);
   const { mint: mintUSDC } = useMint({
     amount: USDCToMint === "" ? "0" : USDCToMint,
     isUSDC: true,
@@ -76,7 +79,18 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   });
   const vUSDCData = useVoucherBalance({ isvUSDC: true });
   const vUSDTData = useVoucherBalance({ isvUSDC: false });
-  const { swap } = useAMMSwap({ amount0In, amount1In });
+  const { swap } = useAMMSwap({
+    amountIn: CurrencyAmount.fromFractionalAmount(
+      USDC[expectedChainId],
+      JSBI.BigInt(parseFloat(amount0) * 10 ** 6),
+      JSBI.BigInt(10 ** 6)
+    ),
+    amountOut: CurrencyAmount.fromFractionalAmount(
+      USDC[expectedChainId],
+      JSBI.BigInt(parseFloat(amount0) * 10 ** 6),
+      JSBI.BigInt(10 ** 6)
+    ),
+  });
   const { burn } = useBurnVouchers({ vUSDCToBurn, vUSDTToBurn });
   const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);

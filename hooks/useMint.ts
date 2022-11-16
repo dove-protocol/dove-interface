@@ -4,16 +4,7 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import {
-  USDC_GOERLI_ADDRESS,
-  USDT_GOERLI_ADDRESS,
-  USDC_ARBI_ADDRESS,
-  USDT_ARBI_ADDRESS,
-  USDC_POLYGON_ADDRESS,
-  USDT_POLYGON_ADDRESS,
-} from "../lib/contracts";
 import MintableERC20 from "../abis/ERC20.json";
-import { getTokenAddress } from "../lib/utils";
 import { BigNumber, BigNumberish } from "ethers";
 
 export default function ({
@@ -27,7 +18,6 @@ export default function ({
 } {
   const { chain: currentChain, chains } = useNetwork();
 
-  let tokenAddress = getTokenAddress(isUSDC);
 
   const { address } = useAccount();
   // assume correct chain id will be selected as it's enforced on each tab

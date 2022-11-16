@@ -1,32 +1,30 @@
+import { useMemo } from "react";
 import { useContractReads, useNetwork } from "wagmi";
-import {
-  ARBI_AMM_CONTRACT_ADDRESS,
-  POLYGON_AMM_CONTRACT_ADDRESS,
-} from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
 import { BigNumber } from "ethers";
+import { ChainId } from "../sdk";
+import { AMM_ADDRESS } from "../sdk/constants";
 
 export default function (): {
   reserve0: BigNumber | undefined;
   reserve1: BigNumber | undefined;
 } {
-  let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
 
-  switch (currentChain?.id) {
-    case chains?.[1]?.id: {
-      ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
-      break;
+  let ammAddress = useMemo(() => {
+    if (currentChain?.id === ChainId.ARBITRUM_GOERLI) {
+      return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
     }
-    case chains?.[2]?.id: {
-      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
-      break;
+    if (currentChain?.id === ChainId.POLYGON_MUMBAI) {
+      return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
     }
-  }
+  }, [currentChain]);
+
   const AMMContract = {
     address: ammAddress,
     abi: AMMInterface,
   };
+
   const { data, isError, isLoading } = useContractReads({
     contracts: [
       {

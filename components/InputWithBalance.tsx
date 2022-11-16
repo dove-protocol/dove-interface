@@ -3,6 +3,7 @@ import React from "react";
 import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 import { validateNumber } from "../lib/utils";
+import { Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
   label,
@@ -15,10 +16,7 @@ const InputWithBalance = ({
 }: {
   label: string;
   expectedChainId: number;
-  balance?: {
-    formatted: string;
-    value: BigNumber;
-  };
+  balance?: CurrencyAmount<Currency>;
   value: string;
   setValue: (value: string) => void;
   setError?: (error: string | undefined) => void;

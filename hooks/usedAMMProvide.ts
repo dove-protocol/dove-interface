@@ -1,18 +1,14 @@
 import {
-  erc20ABI,
-  useAccount,
-  useContractReads,
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
 import dAMMContractInterface from "../abis/dAMM.json";
-import { getTokenAddress } from "../lib/utils";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import useApproveToken from "./useApproveToken";
+import { BigNumber, BigNumberish } from "ethers";
 import useTriggerToast from "./useTriggerToast";
 import { useEffect } from "react";
+import { DAMM_ADDRESS } from "../sdk/constants";
+import { ChainId } from "../sdk";
 
 export default function ({
   amount1,
@@ -25,7 +21,7 @@ export default function ({
 } {
   const { trigger } = useTriggerToast();
   const { config } = usePrepareContractWrite({
-    address: DAMM_CONTRACT_ADDRESS,
+    address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
     functionName: "provide",
     args: [

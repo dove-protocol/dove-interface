@@ -6,17 +6,17 @@ import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
-import { getTokenAddress, validateNumber } from "../lib/utils";
+import { validateNumber } from "../lib/utils";
 import usedAMM from "../hooks/usedAMMProvide";
 import usedAMMWithdraw from "../hooks/usedAMMWithdraw";
 import usedAMMData from "../hooks/usedAMMData";
 import useMint from "../hooks/useMint";
-import useBalance from "../hooks/useBalance";
-import useLPBalance from "../hooks/useLPBalance";
+import { useTokenBalances } from "../lib/hooks/useTokenBalance";
 import useSyncL2 from "../hooks/useSyncL2";
 import { BigNumber } from "ethers";
-import useApproveToken from "../hooks/useApproveToken";
-import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
+import useApproveToken from "../lib/hooks/useApproval";
+import { USDC, USDT } from "../sdk/constants";
+import useAllTokens from "../lib/hooks/useAllTokens";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -89,9 +89,7 @@ const DammTabContent = () => {
     spender: DAMM_CONTRACT_ADDRESS,
     amountRequested: amount2,
   });
-  const usdcData = useBalance({ isUSDC: true });
-  const usdtData = useBalance({ isUSDC: false });
-  const lpData = useLPBalance();
+  const balances = useTokenBalances(useAllTokens());
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
   const { sync: syncPolygon } = useSyncL2({ chainId: chain.polygonMumbai.id });
   const { provide } = usedAMM({
@@ -203,7 +201,7 @@ const DammTabContent = () => {
           value={amount1}
           setError={setProvideError}
           setValue={reactiveSetAmount1}
-          balance={usdtData}
+          balance={balances[0]}
         />
         <InputWithBalance
           label="USDC"
@@ -211,7 +209,7 @@ const DammTabContent = () => {
           value={amount2}
           setError={setProvideError}
           setValue={reactiveSetAmount2}
-          balance={usdcData}
+          balance={balances[1]}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}
@@ -239,7 +237,7 @@ const DammTabContent = () => {
           value={withdrawAmount}
           setError={setWithdrawError}
           setValue={reactiveSetWithdrawAmount}
-          balance={lpData}
+          balance={balances[2]}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
@@ -282,7 +280,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           value={USDTToMint}
           setValue={setUSDTToMint}
-          balance={usdtData}
+          balance={balances[1]}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -296,7 +294,7 @@ const DammTabContent = () => {
           expectedChainId={chain.goerli.id}
           value={USDCToMint}
           setValue={setUSDCToMint}
-          balance={usdcData}
+          balance={balances[0]}
         />
         <InteractButton
           expectedChainId={chain.goerli.id}

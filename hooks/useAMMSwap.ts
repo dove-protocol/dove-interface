@@ -4,42 +4,40 @@ import {
   useNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import {
-  ARBI_AMM_CONTRACT_ADDRESS,
-  POLYGON_AMM_CONTRACT_ADDRESS,
-} from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import useTriggerToast from "./useTriggerToast";
+import { CurrencyAmount } from "../sdk/entities/fractions/currencyAmount";
+import { Currency } from "../sdk/entities/currency";
+import { AMM_ADDRESS } from "../sdk/constants";
+import { ChainId } from "../sdk";
 
 export default function ({
-  amount0In,
-  amount1In,
+  amountIn,
+  amountOut,
 }: {
-  amount0In: string;
-  amount1In: string;
+  amountIn: CurrencyAmount<Currency>;
+  amountOut: CurrencyAmount<Currency>;
 }): {
   swap: () => void;
 } {
-  let ammAddress = "";
   const { chain: currentChain, chains } = useNetwork();
   const { trigger } = useTriggerToast();
 
-  switch (currentChain?.id) {
-    case chains?.[1]?.id: {
-      ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
-      break;
+  let ammAddress = useMemo(() => {
+    if (currentChain?.id === ChainId.ARBITRUM_GOERLI) {
+      return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
     }
-    case chains?.[2]?.id: {
-      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
-      break;
+    if (currentChain?.id === ChainId.POLYGON_MUMBAI) {
+      return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
     }
-  }
+  }, [currentChain]);
+
   const { config } = usePrepareContractWrite({
     address: ammAddress,
     abi: AMMInterface,
     functionName: "swap",
-    args: [amount0In, amount1In],
+    args: [amountIn.quotient.toString(), amountOut.quotient.toString()],
   });
   const { data: swapTxData, write } = useContractWrite(config);
 

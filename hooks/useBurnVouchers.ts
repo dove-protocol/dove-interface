@@ -4,10 +4,6 @@ import {
   useNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import {
-  ARBI_AMM_CONTRACT_ADDRESS,
-  POLYGON_AMM_CONTRACT_ADDRESS,
-} from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
 import { useEffect } from "react";
 import useTriggerToast from "./useTriggerToast";
@@ -25,16 +21,6 @@ export default function ({
   const { chain: currentChain, chains } = useNetwork();
   const { trigger } = useTriggerToast();
 
-  switch (currentChain?.id) {
-    case chains?.[1]?.id: {
-      ammAddress = ARBI_AMM_CONTRACT_ADDRESS;
-      break;
-    }
-    case chains?.[2]?.id: {
-      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
-      break;
-    }
-  }
   const { config } = usePrepareContractWrite({
     address: ammAddress,
     abi: AMMInterface,
