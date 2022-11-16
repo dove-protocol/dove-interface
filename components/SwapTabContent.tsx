@@ -195,8 +195,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <InputWithBalance
             label="USDT"
             expectedChainId={expectedChainId}
-            value={amount0}
-            setValue={reactiveSetAmount0}
+            value={amount1}
+            setValue={reactiveSetAmount1}
             setError={setSwapError}
             balance={usdtData}
             maxEnabled
@@ -205,8 +205,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <InputWithBalance
             label="USDC"
             expectedChainId={expectedChainId}
-            value={amount1}
-            setValue={reactiveSetAmount1}
+            value={amount0}
+            setValue={reactiveSetAmount0}
             setError={setSwapError}
             balance={usdcData}
             maxEnabled
@@ -221,8 +221,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <InputWithBalance
             label="USDC"
             expectedChainId={expectedChainId}
-            value={amount1}
-            setValue={reactiveSetAmount1}
+            value={amount0}
+            setValue={reactiveSetAmount0}
             setError={setSwapError}
             balance={usdcData}
           />
@@ -230,8 +230,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <InputWithBalance
             label="USDT"
             expectedChainId={expectedChainId}
-            value={amount0}
-            setValue={reactiveSetAmount0}
+            value={amount1}
+            setValue={reactiveSetAmount1}
             setError={setSwapError}
             balance={usdtData}
           />
