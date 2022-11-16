@@ -7,5 +7,6 @@ export type DAMM = {
 export type ToastContent = {
   title: string;
   description: string;
+  txid: string;
   type: "success" | "error";
 };

@@ -49,12 +49,14 @@ export default function ({
       trigger({
         description: "You have successfully provided liquidity!",
         title: "Success",
+        txid: provideTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
         description: "Something went wrong. Please try again.",
         title: "Error",
+        txid: provideTxData?.hash || "",
         type: "error",
       });
     }

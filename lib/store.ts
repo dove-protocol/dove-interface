@@ -20,8 +20,9 @@ export const useStore = create<StoreState>((set, get) => ({
   toastContent: {
     title: "",
     description: "",
+    txid: "",
     type: "success",
   },
-  setToastContent: (toastContent) =>
+  setToastContent: (toastContent: ToastContent) =>
     set((state) => ({ toastContent: toastContent })),
 }));

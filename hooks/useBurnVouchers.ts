@@ -56,12 +56,14 @@ export default function ({
       trigger({
         description: `Burn successful`,
         title: "Success",
+        txid: burnTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
         description: `Burn failed`,
         title: "Error",
+        txid: burnTxData?.hash || "",
         type: "error",
       });
     }

@@ -56,12 +56,14 @@ export default function ({
       trigger({
         description: "Swap successful",
         title: "Success",
+        txid: swapTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
         description: "Swap failed",
         title: "Error",
+        txid: swapTxData?.hash || "",
         type: "error",
       });
     }

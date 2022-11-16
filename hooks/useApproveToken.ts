@@ -67,12 +67,14 @@ export default function useApproveToken({
       trigger({
         description: `Approved ${amountRequested}`,
         title: "Success",
+        txid: approveTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
         description: `Failed to approve ${amountRequested}`,
         title: "Error",
+        txid: approveTxData?.hash || "",
         type: "error",
       });
     }

@@ -34,12 +34,14 @@ export default function ({ amount }: { amount: BigNumberish }): {
       trigger({
         description: "You have successfully withdrawn liquidity!",
         title: "Success",
+        txid: withdrawTxData?.hash || "",
         type: "success",
       });
     } else if (isError) {
       trigger({
         description: "Something went wrong. Please try again.",
         title: "Error",
+        txid: withdrawTxData?.hash || "",
         type: "error",
       });
     }
