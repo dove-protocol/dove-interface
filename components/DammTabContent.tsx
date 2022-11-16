@@ -14,7 +14,6 @@ import useMint from "../hooks/useMint";
 import useBalance from "../hooks/useBalance";
 import useLPBalance from "../hooks/useLPBalance";
 import useSyncL2 from "../hooks/useSyncL2";
-import { avalancheChain } from "../pages/_app";
 import { BigNumber } from "ethers";
 import useApproveToken from "../hooks/useApproveToken";
 import { DAMM_CONTRACT_ADDRESS } from "../lib/contracts";
@@ -94,7 +93,7 @@ const DammTabContent = () => {
   const usdtData = useBalance({ isUSDC: false });
   const lpData = useLPBalance();
   const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
-  const { sync: syncFuji } = useSyncL2({ chainId: avalancheChain.id });
+  const { sync: syncPolygon } = useSyncL2({ chainId: chain.polygonMumbai.id });
   const { provide } = usedAMM({
     amount1: amount1 === "" ? "0" : amount1,
     amount2: amount2 === "" ? "0" : amount2,
@@ -316,8 +315,8 @@ const DammTabContent = () => {
         <div className="relative">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={syncFuji}
-            text="Sync to Fuji AMM"
+            onClick={syncPolygon}
+            text="Sync to Polygon AMM"
           />
         </div>
       </Tabs.Content>

@@ -3,8 +3,8 @@ import { BigNumber } from "ethers";
 import {
   vUSDC_ARBI_ADDRESS,
   vUSDT_ARBI_ADDRESS,
-  vUSDC_FUJI_ADDRESS,
-  vUSDT_FUJI_ADDRESS,
+  vUSDC_POLYGON_ADDRESS,
+  vUSDT_POLYGON_ADDRESS,
 } from "../lib/contracts";
 
 export default function ({ isvUSDC }: { isvUSDC: boolean | undefined }): {
@@ -22,7 +22,7 @@ export default function ({ isvUSDC }: { isvUSDC: boolean | undefined }): {
       break;
     }
     case chains?.[2]?.id: {
-      tokenAddress = isvUSDC ? vUSDC_FUJI_ADDRESS : vUSDT_FUJI_ADDRESS;
+      tokenAddress = isvUSDC ? vUSDC_POLYGON_ADDRESS : vUSDT_POLYGON_ADDRESS;
       break;
     }
   }

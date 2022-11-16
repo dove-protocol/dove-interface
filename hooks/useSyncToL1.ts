@@ -1,7 +1,7 @@
 import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
-  FUJI_AMM_CONTRACT_ADDRESS,
+  POLYGON_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMContractInterface from "../abis/AMM.json";
 import { ethers } from "ethers";
@@ -10,7 +10,6 @@ export default function (): {
   sync: () => void;
 } {
   const { chain: currentChain, chains } = useNetwork();
-
   let ammAddress = "";
   let dstChainId = 10121;
   switch (currentChain?.id) {
@@ -20,7 +19,7 @@ export default function (): {
       break;
     }
     case chains?.[2]?.id: {
-      ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
+      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
       break;
     }
   }

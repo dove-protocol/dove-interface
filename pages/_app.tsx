@@ -39,7 +39,7 @@ export const avalancheChain: Chain = {
 };
 
 const { chains, provider } = configureChains(
-  [chain.goerli, chain.arbitrumGoerli, avalancheChain],
+  [chain.goerli, chain.arbitrumGoerli, chain.polygonMumbai],
   [
     alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" }),
     jsonRpcProvider({

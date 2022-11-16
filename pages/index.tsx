@@ -4,7 +4,6 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useEffect, useRef } from "react";
 import { chain, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../hooks/useIsMounted";
-import { avalancheChain } from "./_app";
 import { BiCog } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
@@ -30,8 +29,8 @@ export default function Home() {
       if (activeNetworkTab === "damm") {
         switchNetwork?.(chain.goerli.id);
       }
-      if (activeNetworkTab === "fuji") {
-        switchNetwork?.(43113);
+      if (activeNetworkTab === "polygon") {
+        switchNetwork?.(chain.polygonMumbai.id);
       }
       if (activeNetworkTab === "arbi") {
         switchNetwork?.(chain.arbitrumGoerli.id);
@@ -70,13 +69,13 @@ export default function Home() {
                     <p className="font-normal">dAMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
-                    value="fuji"
+                    value="polygon"
                     className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
-                    {activeNetworkTab === "fuji" && (
+                    {activeNetworkTab === "polygon" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
                     )}
-                    <p className="font-normal">Fuji AMM</p>
+                    <p className="font-normal">Polygon AMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="arbi"
@@ -99,9 +98,9 @@ export default function Home() {
                     <DammTabContent />
                   </TabContainer>
                 </Tabs.Content>
-                <Tabs.Content value="fuji">
+                <Tabs.Content value="polygon">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={avalancheChain.id} />
+                    <SwapTabContent expectedChainId={chain.polygonMumbai.id} />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">

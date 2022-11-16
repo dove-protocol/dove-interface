@@ -1,7 +1,7 @@
 import { useContractReads, useNetwork } from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
-  FUJI_AMM_CONTRACT_ADDRESS,
+  POLYGON_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
 import { BigNumber } from "ethers";
@@ -19,7 +19,7 @@ export default function (): {
       break;
     }
     case chains?.[2]?.id: {
-      ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
+      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
       break;
     }
   }

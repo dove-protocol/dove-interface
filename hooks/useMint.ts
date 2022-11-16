@@ -9,11 +9,10 @@ import {
   USDT_GOERLI_ADDRESS,
   USDC_ARBI_ADDRESS,
   USDT_ARBI_ADDRESS,
-  USDC_FUJI_ADDRESS,
-  USDT_FUJI_ADDRESS,
+  USDC_POLYGON_ADDRESS,
+  USDT_POLYGON_ADDRESS,
 } from "../lib/contracts";
 import MintableERC20 from "../abis/ERC20.json";
-import { avalancheChain } from "../pages/_app";
 import { getTokenAddress } from "../lib/utils";
 import { BigNumber, BigNumberish } from "ethers";
 
