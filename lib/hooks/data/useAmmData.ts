@@ -2,11 +2,14 @@ import { useContractReads, useNetwork } from "wagmi";
 import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo } from "react";
+import { BigNumber } from "ethers";
 
-export default function useAmmData(): [
-  reserve1: CurrencyAmount<Currency> | undefined,
-  reserve2: CurrencyAmount<Currency> | undefined
-] {
+export default function useAmmData(
+  currency1: Currency | undefined,
+  currency2: Currency | undefined
+): {
+  data: CurrencyAmount<Currency>[] | null;
+} {
   const { chain } = useNetwork();
 
   const ammAddress = useMemo(() => {
@@ -39,10 +42,18 @@ export default function useAmmData(): [
     watch: true,
   });
 
-  if (!data) return [undefined, undefined];
-
-  return [
-    data?.[0] as any as CurrencyAmount<Currency>,
-    data?.[1] as any as CurrencyAmount<Currency>,
-  ];
+  if (!data?.[0] || !data?.[1] || !currency1 || !currency2)
+    return { data: null };
+  return {
+    data: [
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[0] as BigNumber).toString()
+      ),
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[1] as BigNumber).toString()
+      ),
+    ],
+  };
 }

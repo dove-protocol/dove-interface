@@ -12,7 +12,7 @@ const TabSlider = ({
     icon: React.ReactNode;
   }[];
 }) => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState(tabsData[0].id);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
   const [tabBoundingBox, setTabBoundingBox] = useState<DOMRect | null>(null);

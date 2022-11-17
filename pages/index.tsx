@@ -100,12 +100,12 @@ export default function Home() {
                 </Tabs.Content>
                 <Tabs.Content value="polygon">
                   <TabContainer>
-                    {/* <SwapTabContent expectedChainId={chain.polygonMumbai.id} /> */}
+                    <SwapTabContent expectedChainId={chain.polygonMumbai.id} />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">
                   <TabContainer>
-                    {/* <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} /> */}
+                    <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="settings">
