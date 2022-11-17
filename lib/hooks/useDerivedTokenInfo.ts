@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { Currency, CurrencyAmount } from "../../sdk";
+import { useMemo, useEffect } from "react";
+import { useNetwork } from "wagmi";
+import { Currency, CurrencyAmount, USDC, USDC_ADDRESS, USDT } from "../../sdk";
 import { Field, useProvideStore } from "../state/useProvideStore";
 
 export default function useDerivedTokenInfo(): {
@@ -14,4 +15,17 @@ export default function useDerivedTokenInfo(): {
       currencyBalances: {},
     };
   }, [currencies]);
+}
+
+export function useDefaults() {
+  const { chain } = useNetwork();
+  const { setCurrencies } = useProvideStore();
+
+  useEffect(() => {
+    if (!chain) return;
+    setCurrencies({
+      [Field.INDEPENDENT]: USDC[chain.id],
+      [Field.DEPENDENT]: USDT[chain.id],
+    });
+  }, [chain]);
 }

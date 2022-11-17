@@ -7,7 +7,9 @@ import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import { Field, useProvideStore } from "../lib/state/useProvideStore";
-import useDerivedTokenInfo from "../lib/hooks/useDerivedTokenInfo";
+import useDerivedTokenInfo, {
+  useDefaults,
+} from "../lib/hooks/useDerivedTokenInfo";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -70,6 +72,8 @@ const DammTabContent = () => {
     },
   ];
 
+  // load up default tokens for chain
+  useDefaults();
   const { currencies } = useDerivedTokenInfo();
   const { onUserInput } = useProvideStore();
 
