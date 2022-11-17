@@ -17,7 +17,7 @@ export default function useDerivedTokenInfo(): {
   }, [currencies]);
 }
 
-export function useDefaults() {
+export function useChainDefaults() {
   const { chain } = useNetwork();
   const { setCurrencies } = useProvideStore();
 

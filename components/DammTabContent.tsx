@@ -8,7 +8,7 @@ import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import { Field, useProvideStore } from "../lib/state/useProvideStore";
 import useDerivedTokenInfo, {
-  useDefaults,
+  useChainDefaults,
 } from "../lib/hooks/useDerivedTokenInfo";
 import useProvideLiquidity from "../lib/hooks/damm/useProvideLiquidity";
 import { CurrencyAmount } from "../sdk";
@@ -75,7 +75,7 @@ const DammTabContent = () => {
   ];
 
   // load up default tokens for chain
-  useDefaults();
+  useChainDefaults();
 
   // get the token info for the selected tokens
   const { currencies } = useDerivedTokenInfo();
