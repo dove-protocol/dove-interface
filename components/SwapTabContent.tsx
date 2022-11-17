@@ -76,10 +76,16 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     amount: USDTToMint === "" ? "0" : USDTToMint,
     isUSDC: false,
   });
+  const convert = (value: string) => {
+    return (parseFloat(value) * 10 ** 6).toString();
+  };
   const vUSDCData = useVoucherBalance({ isvUSDC: true });
   const vUSDTData = useVoucherBalance({ isvUSDC: false });
   const { swap } = useAMMSwap({ amount0In, amount1In });
-  const { burn } = useBurnVouchers({ vUSDCToBurn, vUSDTToBurn });
+  const { burn } = useBurnVouchers({
+    vUSDCToBurn: convert(vUSDCToBurn),
+    vUSDTToBurn: convert(vUSDTToBurn),
+  });
   const { reserve0, reserve1 } = useAMMReserves();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
@@ -323,18 +329,18 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             onClick={burn}
             text="Burn Vouchers"
           >
-            {/* {(() => {
+            {(() => {
               if (
-                dAMMData.marked0?.lt(
-                  BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
+                BigNumber.from(parseFloat(vUSDCToBurn || "0") * 10 ** 6).gt(
+                  dAMMData.marked0 || BigNumber.from(0)
                 ) ||
-                dAMMData.marked1?.lt(
-                  BigNumber.from(parseFloat(vUSDTToBurn) * 10 ** 6)
+                BigNumber.from(parseFloat(vUSDTToBurn || "0") * 10 ** 6).gt(
+                  dAMMData.marked1 || BigNumber.from(0)
                 )
               ) {
                 return <Button disabled text="Sync before." />;
               }
-            })()} */}
+            })()}
           </InteractButton>
         </div>
       </Tabs.Content>
