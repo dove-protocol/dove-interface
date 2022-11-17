@@ -336,7 +336,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {data?.[1] && formatCurrencyAmount(data[1], 6)}
+            {data?.[1] && formatCurrencyAmount(data[1], 1)}
           </h3>
         </div>
       </Tabs.Content>

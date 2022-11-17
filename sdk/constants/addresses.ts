@@ -1,7 +1,7 @@
 import { ChainId } from "../enums/chainId";
 
 export const DAMM_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0xaEBeDEcFFe73e25C767F80577efF3F72A0FFA4c3",
+  [ChainId.ETHEREUM_GOERLI]: "0x3fa8C90D0be116702b9fE721A3a6287BB9feBB4f",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.ARBITRUM_GOERLI]: "",
 };

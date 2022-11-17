@@ -168,6 +168,7 @@ const DammTabContent = () => {
     currencies[Field.CURRENCY_B],
     DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
+  console.log(data?.[2].toExact());
 
   //////////////////////////////////////////////////////////
 
@@ -245,7 +246,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab3">
         <div className="flex w-full flex-col items-start">
           <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 1 <span className="text-white/50">(USDT)</span>
+            Reserve 1 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-8 text-white">
             {data?.[0] && formatCurrencyAmount(data[0], 6)}
@@ -254,7 +255,7 @@ const DammTabContent = () => {
         <div className="flex w-full flex-col items-start">
           <div className="mb-8 h-px w-full bg-white/5" />
           <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 2 <span className="text-white/50">(USDC)</span>
+            Reserve 2 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
             {data?.[1] && formatCurrencyAmount(data[1], 6)}
@@ -266,7 +267,7 @@ const DammTabContent = () => {
             Total Supply <span className="text-white/50">(DAMM-LP)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {data?.[2] && formatCurrencyAmount(data[2], 6)}
+            {data?.[2] && data?.[2].toExact()}
           </h3>
         </div>
       </Tabs.Content>

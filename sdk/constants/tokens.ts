@@ -62,7 +62,7 @@ export const DAMM_LP: TokenMap = {
   [ChainId.ETHEREUM_GOERLI]: new Token(
     ChainId.ETHEREUM_GOERLI,
     DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
-    6,
+    18,
     "DAMM-LP",
     "DAMM LP"
   ),

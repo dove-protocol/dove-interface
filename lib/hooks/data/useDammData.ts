@@ -38,6 +38,8 @@ export default function useDammData(
     }
     if (chain.id === ChainId.POLYGON_MUMBAI) {
       return LZ_CHAIN[ChainId.POLYGON_MUMBAI];
+    } else {
+      return 0;
     }
   }, [chain]);
 
