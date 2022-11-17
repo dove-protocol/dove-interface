@@ -2,6 +2,7 @@ import create from "zustand";
 import produce from "immer";
 import { ToastContent } from "../types";
 import { Currency } from "../../sdk";
+import { validateNumber } from "../utils";
 
 export enum Field {
   CURRENCY_A = "CURRENCY_A",
@@ -30,7 +31,9 @@ export const useProvideStore = create<ProvideStoreState>((set, get) => ({
   onUserInput: (field: Field, value: string) => {
     set(
       produce((draft) => {
-        draft.fields[field] = value;
+        if (validateNumber(value)) {
+          draft.fields[field] = value;
+        }
       })
     );
   },
