@@ -39,11 +39,10 @@ export default function useAmmData(): [
     watch: true,
   });
 
-  return useMemo(() => {
-    if (!data) return [undefined, undefined];
-    return [
-      data?.[0] as any as CurrencyAmount<Currency>,
-      data?.[1] as any as CurrencyAmount<Currency>,
-    ];
-  }, [data]);
+  if (!data) return [undefined, undefined];
+
+  return [
+    data?.[0] as any as CurrencyAmount<Currency>,
+    data?.[1] as any as CurrencyAmount<Currency>,
+  ];
 }

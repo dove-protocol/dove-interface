@@ -6,12 +6,14 @@ import {
 import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
 import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useMemo } from "react";
+import { BigNumber } from "ethers";
 
-export default function useDammData(): [
-  reserve1: CurrencyAmount<Currency> | undefined,
-  reserve2: CurrencyAmount<Currency> | undefined,
-  totalSupply: CurrencyAmount<Currency> | undefined
-] {
+export default function useDammData(
+  currency1: Currency | undefined,
+  currency2: Currency | undefined
+): {
+  data: CurrencyAmount<Currency>[] | null;
+} {
   const dAMMContract = {
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
@@ -35,12 +37,21 @@ export default function useDammData(): [
     watch: true,
   });
 
-  return useMemo(() => {
-    if (!data) return [undefined, undefined, undefined];
-    return [
-      data?.[0] as any as CurrencyAmount<Currency>,
-      data?.[1] as any as CurrencyAmount<Currency>,
-      data?.[2] as any as CurrencyAmount<Currency>,
-    ];
-  }, [data]);
+  if (!data || !currency1 || !currency2) return { data: null };
+  return {
+    data: [
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[0] as BigNumber).toString()
+      ),
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[1] as BigNumber).toString()
+      ),
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[2] as BigNumber).toString()
+      ),
+    ],
+  };
 }

@@ -20,6 +20,8 @@ import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
 import useMint from "../lib/hooks/mint/useMint";
+import useDammData from "../lib/hooks/data/useDammData";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 
 const DammTabContent = () => {
   //////////////////////////////////////////////////////////
@@ -159,6 +161,12 @@ const DammTabContent = () => {
     mintCallbackB?.();
   };
 
+  // temporarily use currencies from provide (dependent on pool in future?)
+  const { data } = useDammData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
+  );
+
   return (
     <TabSlider tabsData={tabsData}>
       <Tabs.Content value="tab1">
@@ -219,13 +227,13 @@ const DammTabContent = () => {
           text="Withdraw"
         />
       </Tabs.Content>
-      {/* <Tabs.Content value="tab3">
+      <Tabs.Content value="tab3">
         <div className="flex w-full flex-col items-start">
           <p className="mb-2 font-thin tracking-widest text-white">
             Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {reserve1?.div(10 ** 6).toString()}
+            {data?.[0] && formatCurrencyAmount(data[0], 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -233,11 +241,20 @@ const DammTabContent = () => {
           <p className="mb-2 font-thin tracking-widest text-white">
             Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
-          <h3 className="mb-2 text-white">
-            {reserve0?.div(10 ** 6).toString()}
+          <h3 className="mb-8 text-white">
+            {data?.[1] && formatCurrencyAmount(data[1], 6)}
           </h3>
         </div>
-      </Tabs.Content> */}
+        <div className="flex w-full flex-col items-start">
+          <div className="mb-8 h-px w-full bg-white/5" />
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Total Supply <span className="text-white/50">(DAMM-LP)</span>
+          </p>
+          <h3 className="mb-2 text-white">
+            {data?.[2] && formatCurrencyAmount(data[2], 6)}
+          </h3>
+        </div>
+      </Tabs.Content>
       <Tabs.Content value="tab4">
         <InputWithBalance
           currency={mintCurrency[Field.CURRENCY_A]}
