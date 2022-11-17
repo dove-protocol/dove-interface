@@ -23,6 +23,7 @@ import useApproveToken from "../hooks/useApproveToken";
 import { BigNumber } from "ethers";
 import useAMMReserves from "../hooks/useAMMReserves";
 import useAMMSwap from "../hooks/useAMMSwap";
+import usedAMMData from "../hooks/usedAMMData";
 import useBurnVouchers from "../hooks/useBurnVouchers";
 import useTriggerToast from "../hooks/useTriggerToast";
 
@@ -37,8 +38,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const [amount0, setAmount0] = useState<string>("");
   const [amount1, setAmount1] = useState<string>("");
 
-  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("");
-  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("");
+  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("0");
+  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("0");
 
   const [USDCToMint, setUSDCToMint] = useState<string>("");
   const [USDTToMint, setUSDTToMint] = useState<string>("");
@@ -63,6 +64,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     });
 
   const { sync } = useSyncToL1();
+  const dAMMData = usedAMMData();
 
   const usdcData = useBalance({ isUSDC: true });
   const usdtData = useBalance({ isUSDC: false });
@@ -141,6 +143,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     {
       id: "tab1",
       label: "Swap",
+      content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab5",
+      label: "Reserves",
       content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
@@ -290,7 +297,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <div className="relative">
           <InteractButton
             expectedChainId={expectedChainId}
-            onClick={sync}
+            onClick={() => sync()}
             text="Sync to L1"
           />
         </div>
@@ -317,24 +324,37 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             text="Burn Vouchers"
           >
             {/* {(() => {
-              if (amount0 === "" || amount1 === "") {
-                return <Button disabled text="Enter an amount" />;
-              }
-              if (!isSwapped) {
-                if (!isApprovedAmount0) {
-                  return (
-                    <Button onClick={approveAmount0} text="Approve USDT" />
-                  );
-                }
-              } else {
-                if (!isApprovedAmount1) {
-                  return (
-                    <Button onClick={approveAmount1} text="Approve USDC" />
-                  );
-                }
+              if (
+                dAMMData.marked0?.lt(
+                  BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
+                ) ||
+                dAMMData.marked1?.lt(
+                  BigNumber.from(parseFloat(vUSDTToBurn) * 10 ** 6)
+                )
+              ) {
+                return <Button disabled text="Sync before." />;
               }
             })()} */}
           </InteractButton>
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="tab5">
+        <div className="flex w-full flex-col items-start">
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
+          </p>
+          <h3 className="mb-8 text-white">
+            {reserve1?.div(10 ** 6).toString()}
+          </h3>
+        </div>
+        <div className="flex w-full flex-col items-start">
+          <div className="mb-8 h-px w-full bg-white/5" />
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
+          </p>
+          <h3 className="mb-2 text-white">
+            {reserve0?.div(10 ** 6).toString()}
+          </h3>
         </div>
       </Tabs.Content>
     </Tabs.Root>

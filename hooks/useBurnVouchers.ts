@@ -4,9 +4,10 @@ import {
   useNetwork,
   useWaitForTransaction,
 } from "wagmi";
+import { utils } from "ethers";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
-  FUJI_AMM_CONTRACT_ADDRESS,
+  POLYGON_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import AMMInterface from "../abis/AMM.json";
 import { useEffect } from "react";
@@ -22,6 +23,7 @@ export default function ({
   burn: () => void;
 } {
   let ammAddress = "";
+  let lzFee = utils.parseEther("0.1");
   const { chain: currentChain, chains } = useNetwork();
   const { trigger } = useTriggerToast();
 
@@ -31,15 +33,19 @@ export default function ({
       break;
     }
     case chains?.[2]?.id: {
-      ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
+      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
+      lzFee = utils.parseEther("0.2");
       break;
     }
   }
   const { config } = usePrepareContractWrite({
-    addressOrName: ammAddress,
-    contractInterface: AMMInterface,
+    address: ammAddress,
+    abi: AMMInterface,
     functionName: "burnVouchers",
     args: [10121, vUSDCToBurn, vUSDTToBurn],
+    overrides: {
+      value: lzFee,
+    },
   });
   const { data: burnTxData, write } = useContractWrite(config);
 

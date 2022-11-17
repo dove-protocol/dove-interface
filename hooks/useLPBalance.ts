@@ -9,7 +9,7 @@ export default function (): {
   const { address } = useAccount();
 
   const { data, isError, isLoading } = useBalance({
-    addressOrName: address,
+    address: address,
     token: DAMM_CONTRACT_ADDRESS,
     watch: true,
   });

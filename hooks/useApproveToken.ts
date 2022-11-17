@@ -31,8 +31,8 @@ export default function useApproveToken({
   const { trigger } = useTriggerToast();
 
   const tokenContract = {
-    addressOrName: token,
-    contractInterface: erc20ABI,
+    address: token,
+    abi: erc20ABI,
   };
 
   const { data, isError, isLoading } = useContractReads({
@@ -83,8 +83,6 @@ export default function useApproveToken({
   function approveToken() {
     approve?.();
   }
-
-  console.log(data);
 
   return {
     approve: () => approveToken(),

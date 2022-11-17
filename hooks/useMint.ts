@@ -9,11 +9,10 @@ import {
   USDT_GOERLI_ADDRESS,
   USDC_ARBI_ADDRESS,
   USDT_ARBI_ADDRESS,
-  USDC_FUJI_ADDRESS,
-  USDT_FUJI_ADDRESS,
+  USDC_POLYGON_ADDRESS,
+  USDT_POLYGON_ADDRESS,
 } from "../lib/contracts";
 import MintableERC20 from "../abis/ERC20.json";
-import { avalancheChain } from "../pages/_app";
 import { getTokenAddress } from "../lib/utils";
 import { BigNumber, BigNumberish } from "ethers";
 
@@ -33,8 +32,8 @@ export default function ({
   const { address } = useAccount();
   // assume correct chain id will be selected as it's enforced on each tab
   const { config } = usePrepareContractWrite({
-    addressOrName: tokenAddress,
-    contractInterface: MintableERC20,
+    address: tokenAddress,
+    abi: MintableERC20,
     functionName: "mint",
     args: [address, BigNumber.from(amount).mul(10 ** 6)],
   });

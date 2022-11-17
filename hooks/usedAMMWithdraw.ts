@@ -14,8 +14,8 @@ export default function ({ amount }: { amount: BigNumberish }): {
 } {
   const { trigger } = useTriggerToast();
   const { config } = usePrepareContractWrite({
-    addressOrName: DAMM_CONTRACT_ADDRESS,
-    contractInterface: dAMMContractInterface,
+    address: DAMM_CONTRACT_ADDRESS,
+    abi: dAMMContractInterface,
     functionName: "withdraw",
     args: [amount],
   });

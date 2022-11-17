@@ -2,10 +2,10 @@ import { BigNumber } from "ethers";
 import { useAccount, useBalance, useNetwork } from "wagmi";
 import {
   USDC_ARBI_ADDRESS,
-  USDC_FUJI_ADDRESS,
+  USDC_POLYGON_ADDRESS,
   USDC_GOERLI_ADDRESS,
   USDT_ARBI_ADDRESS,
-  USDT_FUJI_ADDRESS,
+  USDT_POLYGON_ADDRESS,
   USDT_GOERLI_ADDRESS,
 } from "../lib/contracts";
 
@@ -28,13 +28,13 @@ export default function ({ isUSDC }: { isUSDC: boolean | undefined }): {
       break;
     }
     case chains?.[2]?.id: {
-      tokenAddress = isUSDC ? USDC_FUJI_ADDRESS : USDT_FUJI_ADDRESS;
+      tokenAddress = isUSDC ? USDC_POLYGON_ADDRESS : USDT_POLYGON_ADDRESS;
       break;
     }
   }
 
   const { data, isError, isLoading } = useBalance({
-    addressOrName: address,
+    address: address,
     token: tokenAddress,
     watch: true,
   });

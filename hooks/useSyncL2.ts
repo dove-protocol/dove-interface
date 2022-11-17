@@ -2,7 +2,7 @@ import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import {
   ARBI_AMM_CONTRACT_ADDRESS,
   DAMM_CONTRACT_ADDRESS,
-  FUJI_AMM_CONTRACT_ADDRESS,
+  POLYGON_AMM_CONTRACT_ADDRESS,
 } from "../lib/contracts";
 import dAMMContractInterface from "../abis/dAMM.json";
 import { BigNumberish, ethers } from "ethers";
@@ -22,15 +22,15 @@ export default function ({ chainId }: { chainId: BigNumberish }): {
       break;
     }
     case chains?.[2]?.id: {
-      ammAddress = FUJI_AMM_CONTRACT_ADDRESS;
-      layerZeroChainId = 10106;
+      ammAddress = POLYGON_AMM_CONTRACT_ADDRESS;
+      layerZeroChainId = 10109;
       break;
     }
   }
 
   const { config } = usePrepareContractWrite({
-    addressOrName: DAMM_CONTRACT_ADDRESS,
-    contractInterface: dAMMContractInterface,
+    address: DAMM_CONTRACT_ADDRESS,
+    abi: dAMMContractInterface,
     functionName: "syncL2",
     args: [layerZeroChainId, ammAddress],
     overrides: {
