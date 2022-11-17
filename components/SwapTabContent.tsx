@@ -14,7 +14,7 @@ import {
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
 import InputWithBalance from "./InputWithBalance";
-import useApproveToken from "../lib/hooks/useApproval";
+import useApproveToken, { ApprovalState } from "../lib/hooks/useApproval";
 import { BigNumber } from "ethers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
 import JSBI from "jsbi";
@@ -34,6 +34,8 @@ import useBurn from "../lib/hooks/burn/useBurn";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
 import useDammData from "../lib/hooks/data/useDammData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const tabsData = [
@@ -65,6 +67,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   ];
 
   /////////////////////////////
+
+  useChainDefaults();
 
   const { callback: toastCallback } = useTriggerToast();
 
@@ -176,6 +180,12 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     currencyBalances: burnBalances,
   } = useDerivedBurnInfo();
 
+  const { callback: approveCallbackVoucherA, state: approveVoucherStateA } =
+    useTokenApproval(burnAmounts[Field.CURRENCY_A]);
+
+  const { callback: approveCallbackVoucherB, state: approveVoucherStateB } =
+    useTokenApproval(burnAmounts[Field.CURRENCY_B]);
+
   const { callback: burnCallback } = useBurn(
     burnAmounts[Field.CURRENCY_A],
     burnAmounts[Field.CURRENCY_B]
@@ -187,6 +197,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const handleTypeBurnB = (value: string) => {
     onUserInputBurn(Field.CURRENCY_B, value);
+  };
+
+  const handleApproveVoucherA = () => {
+    approveCallbackVoucherA?.();
+  };
+
+  const handleApproveVoucherB = () => {
+    approveCallbackVoucherB?.();
   };
 
   const handleBurn = () => {
@@ -285,13 +303,13 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDC</p>
           <p className="text-sm text-white">
-            {data?.[3] && formatCurrencyAmount(data[3], 6)}
+            {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
           </p>
         </div>
         <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDT</p>
           <p className="text-sm text-white">
-            {data?.[4] && formatCurrencyAmount(data[4], 6)}
+            {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
           </p>
         </div>
         <InputWithBalance
@@ -313,31 +331,44 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           onConfirm={handleBurn}
           text="Burn Vouchers"
         >
-          {/* {(() => {
-              if (
-                BigNumber.from(parseFloat(vUSDCToBurn || "0") * 10 ** 6).gt(
-                  dAMMData.marked0 || BigNumber.from(0)
-                ) ||
-                BigNumber.from(parseFloat(vUSDTToBurn || "0") * 10 ** 6).gt(
-                  dAMMData.marked1 || BigNumber.from(0)
-                )
-              ) {
-                return <Button disabled text="Sync before." />;
-              }
-              if (!isSwapped) {
-                if (!isApprovedAmount0) {
-                  return (
-                    <Button onClick={approveAmount0} text="Approve USDT" />
-                  );
-                }
-              } else {
-                if (!isApprovedAmount1) {
-                  return (
-                    <Button onClick={approveAmount1} text="Approve USDC" />
-                  );
-                }
-              }
-            })()} */}
+          {(() => {
+            if (
+              !data?.marked0 ||
+              !data?.marked1 ||
+              !burnAmounts[Field.CURRENCY_A] ||
+              !burnAmounts[Field.CURRENCY_B]
+            )
+              return;
+
+            if (
+              burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
+              burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
+            ) {
+              return <Button disabled text="Sync before" />;
+            }
+            if (
+              !burnAmounts[Field.CURRENCY_A] ||
+              !burnAmounts[Field.CURRENCY_B]
+            ) {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveVoucherA}
+                  text={`Approve ${burnCurrencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
+            }
+            if (approveVoucherStateB === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveVoucherB}
+                  text={`Approve ${burnCurrencies[Field.CURRENCY_B]?.symbol}`}
+                />
+              );
+            }
+          })()}
         </InteractButton>
       </Tabs.Content>
 
@@ -347,7 +378,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {data?.[0] && formatCurrencyAmount(data[0], 6)}
+            {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -356,7 +387,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {data?.[1] && formatCurrencyAmount(data[1], 1)}
+            {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
           </h3>
         </div>
       </Tabs.Content>

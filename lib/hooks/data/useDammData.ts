@@ -20,7 +20,13 @@ export default function useDammData(
   currency2: Currency | undefined,
   totalSupplyCurrency: Currency | undefined
 ): {
-  data: CurrencyAmount<Currency>[] | null;
+  data: {
+    reserve0: CurrencyAmount<Currency> | undefined;
+    reserve1: CurrencyAmount<Currency> | undefined;
+    totalSupply: CurrencyAmount<Currency> | undefined;
+    marked0: CurrencyAmount<Currency> | undefined;
+    marked1: CurrencyAmount<Currency> | undefined;
+  } | null;
 } {
   const { chain } = useNetwork();
 
@@ -83,27 +89,27 @@ export default function useDammData(
   )
     return { data: null };
   return {
-    data: [
-      CurrencyAmount.fromRawAmount(
+    data: {
+      reserve0: CurrencyAmount.fromRawAmount(
         currency1,
         (data[0] as BigNumber).toString()
       ),
-      CurrencyAmount.fromRawAmount(
+      reserve1: CurrencyAmount.fromRawAmount(
         currency2,
         (data[1] as BigNumber).toString()
       ),
-      CurrencyAmount.fromRawAmount(
+      totalSupply: CurrencyAmount.fromRawAmount(
         totalSupplyCurrency,
         (data[2] as BigNumber).toString()
       ),
-      CurrencyAmount.fromRawAmount(
+      marked0: CurrencyAmount.fromRawAmount(
         currency1,
         (data[3] as BigNumber).toString()
       ),
-      CurrencyAmount.fromRawAmount(
+      marked1: CurrencyAmount.fromRawAmount(
         currency2,
         (data[4] as BigNumber).toString()
       ),
-    ],
+    },
   };
 }

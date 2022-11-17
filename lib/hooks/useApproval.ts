@@ -12,6 +12,7 @@ import {
 import { Currency, CurrencyAmount } from "../../sdk";
 import useTriggerToast from "./useTriggerToast";
 import { MaxUint256 } from "@ethersproject/constants";
+import { SendTransactionResult } from "@wagmi/core";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -23,9 +24,10 @@ export enum ApprovalState {
 export default function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined
-): [() => void, ApprovalState] {
-  const { trigger } = useTriggerToast();
-
+): {
+  callback: null | (() => Promise<SendTransactionResult>);
+  state: ApprovalState;
+} {
   const tokenContract = {
     address: amountToApprove?.currency?.isToken
       ? amountToApprove.currency.address
@@ -38,20 +40,21 @@ export default function useApproval(
   const { config: approvalConfig } = usePrepareContractWrite({
     ...tokenContract,
     functionName: "approve",
-    args: [spender as `0x${string}`, MaxUint256],
+    args: [
+      spender as `0x${string}`,
+      amountToApprove?.numerator.toString() as any,
+    ],
   });
 
-  const {
-    data: approveTxData,
-    write: approve,
-    isSuccess,
-  } = useContractWrite(approvalConfig);
+  const { writeAsync } = useContractWrite(approvalConfig);
 
-  const approveCallback = useCallback(() => {
-    approve?.();
-  }, [approve]);
+  if (!writeAsync || !amountToApprove)
+    return { callback: null, state: approvalState };
 
-  return [approveCallback, approvalState];
+  return {
+    callback: async () => await writeAsync(),
+    state: approvalState,
+  };
 }
 
 function useApprovalStateForSpender(
@@ -63,26 +66,22 @@ function useApprovalStateForSpender(
   const tokenContract = {
     address: amountToApprove?.currency?.isToken
       ? amountToApprove.currency.address
-      : "",
+      : undefined,
     abi: erc20ABI,
   };
 
-  const { data: currentAllowance } = useContractRead({
+  const { data: allowance } = useContractRead({
     ...tokenContract,
     functionName: "allowance",
     args: [address!, spender as `0x${string}`],
     watch: true,
   });
 
-  return useMemo(() => {
-    if (!amountToApprove) return ApprovalState.UNKNOWN;
-    if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
-    if (!currentAllowance) return ApprovalState.UNKNOWN;
+  if (!amountToApprove) return ApprovalState.UNKNOWN;
+  if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
+  if (!allowance) return ApprovalState.UNKNOWN;
 
-    return currentAllowance.lt(
-      BigNumber.from(amountToApprove.numerator.toString())
-    )
-      ? ApprovalState.NOT_APPROVED
-      : ApprovalState.APPROVED;
-  }, [amountToApprove, currentAllowance]);
+  return allowance.lt(BigNumber.from(amountToApprove.numerator.toString()))
+    ? ApprovalState.NOT_APPROVED
+    : ApprovalState.APPROVED;
 }

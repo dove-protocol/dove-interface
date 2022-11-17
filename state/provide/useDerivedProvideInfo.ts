@@ -29,8 +29,8 @@ export function useDerivedProvideInfo(): {
       currencies[Field.CURRENCY_A]
     ),
     [Field.CURRENCY_B]: tryParseCurrencyAmount(
-      fields[Field.CURRENCY_A],
-      currencies[Field.CURRENCY_A]
+      fields[Field.CURRENCY_B],
+      currencies[Field.CURRENCY_B]
     ),
   };
 

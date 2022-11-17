@@ -15,7 +15,7 @@ export function useChainDefaults() {
   );
   const setMintCurrencies = useMintStore((store) => store.setCurrencies);
   const setSwapCurrencies = useSwapStore((store) => store.setCurrencies);
-  const setBurnFields = useBurnStore((store) => store.setCurrencies);
+  const setBurnCurrencies = useBurnStore((store) => store.setCurrencies);
 
   useEffect(() => {
     if (!chain) return;
@@ -34,7 +34,7 @@ export function useChainDefaults() {
       [Field.CURRENCY_A]: USDC[chain.id],
       [Field.CURRENCY_B]: USDT[chain.id],
     });
-    setBurnFields({
+    setBurnCurrencies({
       [Field.CURRENCY_A]: vUSDC[chain.id],
       [Field.CURRENCY_B]: vUSDT[chain.id],
     });

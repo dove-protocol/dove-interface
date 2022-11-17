@@ -23,6 +23,8 @@ import useMint from "../lib/hooks/mint/useMint";
 import useDammData from "../lib/hooks/data/useDammData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useSyncL2 from "../lib/hooks/sync/useSyncL2";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import { ApprovalState } from "../lib/hooks/useApproval";
 
 const DammTabContent = () => {
   //////////////////////////////////////////////////////////
@@ -70,6 +72,14 @@ const DammTabContent = () => {
   const { parsedAmounts, currencies, currencyBalances } =
     useDerivedProvideInfo();
 
+  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_A]
+  );
+
+  const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
   // load up liquidity callback
   const { callback } = useProvideLiquidity(
     parsedAmounts[Field.CURRENCY_A],
@@ -86,6 +96,14 @@ const DammTabContent = () => {
 
   const handleProvideLiquidity = () => {
     callback?.();
+  };
+
+  const handleApproveA = () => {
+    approveCallbackA?.();
+  };
+
+  const handleApproveB = () => {
+    approveCallbackB?.();
   };
 
   const handleMax = () => {
@@ -206,15 +224,28 @@ const DammTabContent = () => {
           text="Add Liquidity"
         >
           {(() => {
-            // if (amount1 === "" || amount2 === "") {
-            //   return <Button disabled text="Enter an amount" />;
-            // }
-            // if (!isApprovedUSDC) {
-            //   return <Button onClick={approveUSDC} text="Approve USDC" />;
-            // }
-            // if (!isApprovedUSDT) {
-            //   return <Button onClick={approveUSDT} text="Approve USDT" />;
-            // }
+            if (
+              !parsedAmounts[Field.CURRENCY_A] ||
+              !parsedAmounts[Field.CURRENCY_B]
+            ) {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (approveStateA !== ApprovalState.APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveA}
+                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
+            }
+            if (approveStateB !== ApprovalState.APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveB}
+                  text={`Approve ${currencies[Field.CURRENCY_B]?.symbol}`}
+                />
+              );
+            }
           })()}
         </InteractButton>
       </Tabs.Content>
@@ -248,7 +279,7 @@ const DammTabContent = () => {
             Reserve 1 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {data?.[0] && formatCurrencyAmount(data[0], 6)}
+            {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -257,7 +288,7 @@ const DammTabContent = () => {
             Reserve 2 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {data?.[1] && formatCurrencyAmount(data[1], 6)}
+            {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -266,7 +297,7 @@ const DammTabContent = () => {
             Total Supply <span className="text-white/50">(DAMM-LP)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {data?.[2] && data?.[2].toExact()}
+            {data?.totalSupply && data.totalSupply.toExact()}
           </h3>
         </div>
       </Tabs.Content>
