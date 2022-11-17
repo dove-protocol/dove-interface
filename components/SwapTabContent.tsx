@@ -9,6 +9,7 @@ import {
   BiDownload,
   BiReceipt,
   BiCreditCardFront,
+  BiStats,
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
@@ -42,9 +43,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
+      id: "tab4",
+      title: "Burn",
+      icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
       id: "tab5",
       title: "Reserves",
-      icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
+      icon: <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
       id: "tab2",
@@ -55,11 +61,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       id: "tab3",
       title: "Sync",
       icon: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab4",
-      title: "Vouchers",
-      icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
   ];
 
@@ -254,45 +255,39 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <div className="relative">
-          <div className="flex w-full flex-row justify-center">
-            <div className="basis-1/2">
-              <p className="mb-2 font-thin tracking-widest text-white">
-                Available on dAMM <span className="text-white/50">(USDC)</span>
-              </p>
-              <h3 className="mb-4 text-white">
-                {data?.[3] && formatCurrencyAmount(data[3], 6)}
-              </h3>
-            </div>
-            <div>
-              <p className="mb-2 font-thin tracking-widest text-white">
-                Available on dAMM <span className="text-white/50">(USDT)</span>
-              </p>
-              <h3 className="mb-4 text-white">
-                {data?.[4] && formatCurrencyAmount(data[4], 6)}
-              </h3>
-            </div>
-          </div>
-          <InputWithBalance
-            currency={burnCurrencies[Field.CURRENCY_A]}
-            balance={burnBalances[Field.CURRENCY_A]}
-            onUserInput={handleTypeBurnA}
-            showMaxButton={false}
-            value={burnFields[Field.CURRENCY_A]}
-          />
-          <InputWithBalance
-            currency={burnCurrencies[Field.CURRENCY_B]}
-            balance={burnBalances[Field.CURRENCY_B]}
-            onUserInput={handleTypeBurnB}
-            showMaxButton={false}
-            value={burnFields[Field.CURRENCY_B]}
-          />
-          <InteractButton
-            expectedChainId={expectedChainId}
-            onConfirm={handleBurn}
-            text="Burn Vouchers"
-          >
-            {/* {(() => {
+        <p className="mb-2 text-white ">dAMM Available Reserves</p>
+        <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
+          <p className="text-sm text-white/50">USDC</p>
+          <p className="text-sm text-white">
+            {data?.[3] && formatCurrencyAmount(data[3], 6)}
+          </p>
+        </div>
+        <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
+          <p className="text-sm text-white/50">USDT</p>
+          <p className="text-sm text-white">
+            {data?.[4] && formatCurrencyAmount(data[4], 6)}
+          </p>
+        </div>
+        <InputWithBalance
+          currency={burnCurrencies[Field.CURRENCY_A]}
+          balance={burnBalances[Field.CURRENCY_A]}
+          onUserInput={handleTypeBurnA}
+          showMaxButton={false}
+          value={burnFields[Field.CURRENCY_A]}
+        />
+        <InputWithBalance
+          currency={burnCurrencies[Field.CURRENCY_B]}
+          balance={burnBalances[Field.CURRENCY_B]}
+          onUserInput={handleTypeBurnB}
+          showMaxButton={false}
+          value={burnFields[Field.CURRENCY_B]}
+        />
+        <InteractButton
+          expectedChainId={expectedChainId}
+          onConfirm={handleBurn}
+          text="Burn Vouchers"
+        >
+          {/* {(() => {
               if (
                 BigNumber.from(parseFloat(vUSDCToBurn || "0") * 10 ** 6).gt(
                   dAMMData.marked0 || BigNumber.from(0)
@@ -317,8 +312,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
                 }
               }
             })()} */}
-          </InteractButton>
-        </div>
+        </InteractButton>
       </Tabs.Content>
 
       <Tabs.Content value="tab5">

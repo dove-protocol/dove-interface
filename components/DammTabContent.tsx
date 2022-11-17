@@ -168,7 +168,6 @@ const DammTabContent = () => {
     currencies[Field.CURRENCY_B],
     DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
-  console.log(data?.[2].toExact());
 
   //////////////////////////////////////////////////////////
 
