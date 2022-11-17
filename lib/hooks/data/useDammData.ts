@@ -37,7 +37,8 @@ export default function useDammData(
     watch: true,
   });
 
-  if (!data || !currency1 || !currency2) return { data: null };
+  if (!data?.[0] || !data?.[1] || !data?.[2] || !currency1 || !currency2)
+    return { data: null };
   return {
     data: [
       CurrencyAmount.fromRawAmount(
