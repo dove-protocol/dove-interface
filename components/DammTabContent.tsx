@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef, useCallback, useMemo } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
@@ -60,15 +60,15 @@ const DammTabContent = () => {
   // load up default tokens for chain
   useChainDefaults();
 
-  // load up token info
-  const { parsedAmounts, currencies, currencyBalances } =
-    useDerivedProvideInfo();
-
   // load up state
   const [fields, onUserInput] = useProvideStore((state) => [
     state.fields,
     state.onUserInput,
   ]);
+
+  // load up token info
+  const { parsedAmounts, currencies, currencyBalances } =
+    useDerivedProvideInfo();
 
   // load up liquidity callback
   const { callback } = useProvideLiquidity(
@@ -98,16 +98,16 @@ const DammTabContent = () => {
 
   //////////////////////////////////////////////////////////
 
+  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
   const {
     parsedAmounts: withdrawAmounts,
     currencies: withdrawCurrency,
     currencyBalances: withdrawBalance,
   } = useDerivedWithdrawInfo();
-
-  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
 
   const { callback: withdrawCallback } = useWithdrawLiquidity(
     withdrawAmounts[Field.CURRENCY_A]

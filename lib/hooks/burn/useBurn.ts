@@ -8,11 +8,14 @@ import {
 } from "../../../sdk";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
+import { utils } from "ethers";
 
-export default function useBurnVouchers(
-  voucher1ToBurn: CurrencyAmount<Currency>,
-  voucher2ToBurn: CurrencyAmount<Currency>
-): () => void {
+export default function useBurn(
+  voucher1ToBurn: CurrencyAmount<Currency> | undefined,
+  voucher2ToBurn: CurrencyAmount<Currency> | undefined
+): {
+  callback: null | (() => void);
+} {
   const { chain } = useNetwork();
 
   const ammAddress = useMemo(() => {
@@ -33,18 +36,21 @@ export default function useBurnVouchers(
 
   const { config } = usePrepareContractWrite({
     ...AMMContract,
-    functionName: "burnVouchers",
+    functionName: "burn",
     args: [
       LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
-      voucher1ToBurn.numerator.toString(),
-      voucher2ToBurn.numerator.toString(),
+      voucher1ToBurn?.quotient.toString(),
+      voucher2ToBurn?.quotient.toString(),
     ],
+    overrides: {
+      value: utils.parseEther("0.1"),
+    },
   });
 
   const { write } = useContractWrite(config);
 
-  return useCallback(() => {
-    if (!voucher1ToBurn || !voucher2ToBurn) return;
-    write?.();
-  }, [voucher1ToBurn, voucher2ToBurn]);
+  if (!write || !voucher1ToBurn || !voucher2ToBurn) return { callback: null };
+  return {
+    callback: () => write(),
+  };
 }

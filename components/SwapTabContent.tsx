@@ -27,6 +27,9 @@ import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { useMintStore } from "../state/mint/useMintStore";
 import useMint from "../lib/hooks/mint/useMint";
 import useSyncL1 from "../lib/hooks/sync/useSyncL1";
+import useSwap from "../lib/hooks/swap/useSwap";
+import { useBurnStore } from "../state/burn/useBurnStore";
+import useBurn from "../lib/hooks/burn/useBurn";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const tabsData = [
@@ -63,6 +66,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const { parsedAmounts, currencies, currencyBalances } = useDerivedSwapInfo();
 
+  const { callback: swapCallback } = useSwap(
+    parsedAmounts[Field.CURRENCY_A],
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
   };
@@ -75,20 +83,22 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       );
   };
 
-  const handleSwap = () => {};
+  const handleSwap = () => {
+    swapCallback?.();
+  };
 
   /////////////////////////////
+
+  const [mintFields, onUserInputMint] = useMintStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
 
   const {
     parsedAmounts: mintAmounts,
     currencies: mintCurrency,
     currencyBalances: mintBalance,
   } = useDerivedMintInfo();
-
-  const [mintFields, onUserInputMint] = useMintStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
 
   const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
 
@@ -116,6 +126,36 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const handleSync = () => {
     syncCallback?.();
+  };
+
+  /////////////////////////////
+
+  const [burnFields, onUserInputBurn] = useBurnStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const {
+    parsedAmounts: burnAmounts,
+    currencies: burnCurrencies,
+    currencyBalances: burnBalances,
+  } = useDerivedSwapInfo();
+
+  const { callback: burnCallback } = useBurn(
+    burnBalances[Field.CURRENCY_A],
+    burnBalances[Field.CURRENCY_B]
+  );
+
+  const handleTypeBurnA = (value: string) => {
+    onUserInputBurn(Field.CURRENCY_A, value);
+  };
+
+  const handleTypeBurnB = (value: string) => {
+    onUserInputBurn(Field.CURRENCY_B, value);
+  };
+
+  const handleBurn = () => {
+    burnCallback?.();
   };
 
   return (
@@ -197,28 +237,28 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           text="Sync to L1"
         />
       </Tabs.Content>
-      {/* <Tabs.Content value="tab4">
+      <Tabs.Content value="tab4">
         <div className="relative">
           <InputWithBalance
-            label="vUSDC"
-            expectedChainId={expectedChainId}
-            value={vUSDCToBurn}
-            setValue={setvUSDCToBurn}
-            balance={vUSDCData}
+            currency={burnCurrencies[Field.CURRENCY_A]}
+            balance={burnBalances[Field.CURRENCY_A]}
+            onUserInput={handleTypeBurnA}
+            showMaxButton={false}
+            value={burnFields[Field.CURRENCY_A]}
           />
           <InputWithBalance
-            label="vUSDT"
-            expectedChainId={expectedChainId}
-            value={vUSDTToBurn}
-            setValue={setvUSDTToBurn}
-            balance={vUSDTData}
+            currency={burnCurrencies[Field.CURRENCY_B]}
+            balance={burnBalances[Field.CURRENCY_B]}
+            onUserInput={handleTypeBurnB}
+            showMaxButton={false}
+            value={burnFields[Field.CURRENCY_B]}
           />
           <InteractButton
             expectedChainId={expectedChainId}
-            onClick={burn}
+            onConfirm={handleBurn}
             text="Burn Vouchers"
           >
-            {(() => {
+            {/* {(() => {
               if (
                 dAMMData.marked0?.lt(
                   BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
@@ -242,10 +282,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
                   );
                 }
               }
-            })()} 
-     </InteractButton>
+            })()} */}
+          </InteractButton>
         </div>
-      </Tabs.Content>    */}
+      </Tabs.Content>
     </TabSlider>
   );
 };
