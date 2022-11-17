@@ -5,12 +5,21 @@ import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
-import useProvideLiquidity from "../lib/hooks/damm/useProvideLiquidity";
+import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
 import { Currency, CurrencyAmount } from "../sdk";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import { Field, useProvideStore } from "../state/provide/useProvideStore";
 import TabSlider from "./TabSlider";
+import {
+  Field as WithdrawField,
+  useWithdrawStore,
+} from "../state/withdraw/useWithdrawStore";
+import { useDerivedWithdrawInfo } from "../state/withdraw/useDerivedWithdrawInfo";
+import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
+import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
+import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
+import useMint from "../lib/hooks/mint/useMint";
 
 const DammTabContent = () => {
   //////////////////////////////////////////////////////////
@@ -84,15 +93,71 @@ const DammTabContent = () => {
       );
   };
 
-  // const handleMaxB = () => {
-  //    return (
-  //      currencyBalances[Field.CURRENCY_A] &&
-  //      onUserInput(
-  //        Field.CURRENCY_A,
-  //        currencyBalances[Field.CURRENCY_A]?.toExact()
-  //      )
-  //    );
-  // };
+  //////////////////////////////////////////////////////////
+
+  const {
+    parsedAmounts: withdrawAmounts,
+    currencies: withdrawCurrency,
+    currencyBalances: withdrawBalance,
+  } = useDerivedWithdrawInfo();
+
+  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const { callback: withdrawCallback } = useWithdrawLiquidity(
+    withdrawAmounts[Field.CURRENCY_A]
+  );
+
+  const handleTypeWithdraw = (value: string) => {
+    onUserInputWithdraw(WithdrawField.CURRENCY_A, value);
+  };
+
+  const handleWithdraw = () => {
+    withdrawCallback?.();
+  };
+
+  const handleMaxWithdraw = () => {
+    withdrawBalance[WithdrawField.CURRENCY_A] &&
+      onUserInputWithdraw(
+        WithdrawField.CURRENCY_A,
+        withdrawBalance[WithdrawField.CURRENCY_A].toExact()
+      );
+  };
+
+  //////////////////////////////////////////////////////////
+
+  const {
+    parsedAmounts: mintAmounts,
+    currencies: mintCurrency,
+    currencyBalances: mintBalance,
+  } = useDerivedMintInfo();
+
+  const [mintFields, onUserInputMint] = useMintStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
+
+  const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
+
+  const handleTypeMintA = (value: string) => {
+    onUserInputMint(MintField.CURRENCY_A, value);
+  };
+
+  const handleTypeMintB = (value: string) => {
+    onUserInputMint(MintField.CURRENCY_B, value);
+  };
+
+  const handleMintA = () => {
+    mintCallbackA?.();
+  };
+
+  const handleMintB = () => {
+    mintCallbackB?.();
+  };
 
   return (
     <TabSlider tabsData={tabsData}>
@@ -130,32 +195,31 @@ const DammTabContent = () => {
           })()}
         </InteractButton>
       </Tabs.Content>
-      {/* <Tabs.Content value="tab2">
+      <Tabs.Content value="tab2">
         <InputWithBalance
-          label="DAMM-LP"
-          expectedChainId={chain.goerli.id}
-          value={withdrawAmount}
-          setError={setWithdrawError}
-          setValue={reactiveSetWithdrawAmount}
-          balance={balances[2]}
+          currency={withdrawCurrency[Field.CURRENCY_A]}
+          balance={withdrawBalance[Field.CURRENCY_A]}
+          onUserInput={handleTypeWithdraw}
+          showMaxButton={true}
+          onMax={handleMaxWithdraw}
+          value={withdrawFields[Field.CURRENCY_A]}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDC</p>
-          <p className="text-sm text-white">{expectedUSDCWithdrawn}</p>
+          {/* <p className="text-sm text-white">{expectedUSDCWithdrawn}</p> */}
         </div>
         <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDT</p>
-          <p className="text-sm text-white">{expectedUSDTWithdrawn}</p>
+          {/* <p className="text-sm text-white">{expectedUSDTWithdrawn}</p> */}
         </div>
         <InteractButton
+          onConfirm={handleWithdraw}
           expectedChainId={chain.goerli.id}
-          error={withdrawError}
           text="Withdraw"
-          onClick={withdraw}
         />
       </Tabs.Content>
-      <Tabs.Content value="tab3">
+      {/* <Tabs.Content value="tab3">
         <div className="flex w-full flex-col items-start">
           <p className="mb-2 font-thin tracking-widest text-white">
             Reserve 1 <span className="text-white/50">(USDT)</span>
@@ -173,36 +237,36 @@ const DammTabContent = () => {
             {reserve0?.div(10 ** 6).toString()}
           </h3>
         </div>
-      </Tabs.Content>
+      </Tabs.Content> */}
       <Tabs.Content value="tab4">
         <InputWithBalance
-          label="USDT"
-          expectedChainId={chain.goerli.id}
-          value={USDTToMint}
-          setValue={setUSDTToMint}
-          balance={balances[1]}
+          currency={mintCurrency[Field.CURRENCY_A]}
+          balance={mintBalance[Field.CURRENCY_A]}
+          onUserInput={handleTypeMintA}
+          showMaxButton={false}
+          value={mintFields[Field.CURRENCY_A]}
         />
         <div className="relative mb-4">
           <InteractButton
+            onConfirm={handleMintA}
             expectedChainId={chain.goerli.id}
-            onClick={mintUSDT}
-            text="Mint USDT"
+            text="Mint"
           />
         </div>
         <InputWithBalance
-          label="USDC"
-          expectedChainId={chain.goerli.id}
-          value={USDCToMint}
-          setValue={setUSDCToMint}
-          balance={balances[0]}
+          currency={mintCurrency[Field.CURRENCY_B]}
+          balance={mintBalance[Field.CURRENCY_B]}
+          onUserInput={handleTypeMintB}
+          showMaxButton={false}
+          value={mintFields[Field.CURRENCY_B]}
         />
         <InteractButton
+          onConfirm={handleMintB}
           expectedChainId={chain.goerli.id}
-          onClick={mintUSDC}
-          text="Mint USDC"
+          text="Mint"
         />
       </Tabs.Content>
-      <Tabs.Content value="tab5">
+      {/* <Tabs.Content value="tab5">
         <div className="relative mb-4">
           <InteractButton
             expectedChainId={chain.goerli.id}

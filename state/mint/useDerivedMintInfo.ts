@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, Token } from "../../sdk";
 import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
-import { Field, useProvideStore } from "./useProvideStore";
 import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
+import { Field, useMintStore } from "./useMintStore";
 
-export function useDerivedProvideInfo(): {
+export function useDerivedMintInfo(): {
   currencies: { [field in Field]?: Currency | undefined };
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> | undefined };
   parsedAmounts: {
@@ -12,7 +12,7 @@ export function useDerivedProvideInfo(): {
   };
 } {
   const { address } = useAccount();
-  const [fields, currencies] = useProvideStore((state) => [
+  const [fields, currencies] = useMintStore((state) => [
     state.fields,
     state.currencies,
   ]);

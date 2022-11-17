@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, Token } from "../../sdk";
 import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
-import { Field, useProvideStore } from "./useProvideStore";
 import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
+import { Field, useWithdrawStore } from "./useWithdrawStore";
 
-export function useDerivedProvideInfo(): {
+export function useDerivedWithdrawInfo(): {
   currencies: { [field in Field]?: Currency | undefined };
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> | undefined };
   parsedAmounts: {
@@ -12,14 +12,14 @@ export function useDerivedProvideInfo(): {
   };
 } {
   const { address } = useAccount();
-  const [fields, currencies] = useProvideStore((state) => [
+  const [fields, currencies] = useWithdrawStore((state) => [
     state.fields,
     state.currencies,
   ]);
 
   // TODO: useTokenBalances should be able to take an array of tokens
   const relevantTokenBalances = useTokenBalances(
-    [currencies.CURRENCY_A as Token, currencies.CURRENCY_B as Token],
+    [currencies.CURRENCY_A as Token],
     address
   );
 
@@ -28,15 +28,10 @@ export function useDerivedProvideInfo(): {
       fields[Field.CURRENCY_A],
       currencies[Field.CURRENCY_A]
     ),
-    [Field.CURRENCY_B]: tryParseCurrencyAmount(
-      fields[Field.CURRENCY_A],
-      currencies[Field.CURRENCY_A]
-    ),
   };
 
   const currencyBalances = {
     [Field.CURRENCY_A]: relevantTokenBalances[0],
-    [Field.CURRENCY_B]: relevantTokenBalances[1],
   };
 
   return {

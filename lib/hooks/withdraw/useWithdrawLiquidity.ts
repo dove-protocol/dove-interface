@@ -4,19 +4,22 @@ import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useCallback } from "react";
 
 export default function useWithdrawLiquidity(
-  amount: CurrencyAmount<Currency>
-): () => void {
+  amount: CurrencyAmount<Currency> | undefined
+): {
+  callback: null | (() => void);
+} {
   const { config } = usePrepareContractWrite({
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
-    functionName: "provide",
-    args: [amount.numerator.toString()],
+    functionName: "withdraw",
+    args: [amount?.numerator.toString()],
   });
 
   const { write } = useContractWrite(config);
 
-  return useCallback(() => {
-    if (!amount) return;
-    write?.();
-  }, [amount]);
+  if (!write || !amount) return { callback: null };
+
+  return {
+    callback: () => write(),
+  };
 }
