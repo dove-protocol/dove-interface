@@ -6,7 +6,7 @@ import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
-import { Currency, CurrencyAmount } from "../sdk";
+import { ChainId, Currency, CurrencyAmount } from "../sdk";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import { Field, useProvideStore } from "../state/provide/useProvideStore";
@@ -22,6 +22,7 @@ import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
 import useMint from "../lib/hooks/mint/useMint";
 import useDammData from "../lib/hooks/data/useDammData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 
 const DammTabContent = () => {
   //////////////////////////////////////////////////////////
@@ -167,6 +168,19 @@ const DammTabContent = () => {
     currencies[Field.CURRENCY_B]
   );
 
+  //////////////////////////////////////////////////////////
+
+  const { callback: arbiCallback } = useSyncL2(ChainId.ARBITRUM_GOERLI);
+  const { callback: polygonCallback } = useSyncL2(ChainId.POLYGON_MUMBAI);
+
+  const handleArbiSync = () => {
+    arbiCallback?.();
+  };
+
+  const handlePolygonSync = () => {
+    polygonCallback?.();
+  };
+
   return (
     <TabSlider tabsData={tabsData}>
       <Tabs.Content value="tab1">
@@ -283,22 +297,22 @@ const DammTabContent = () => {
           text="Mint"
         />
       </Tabs.Content>
-      {/* <Tabs.Content value="tab5">
+      <Tabs.Content value="tab5">
         <div className="relative mb-4">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={syncArbi}
+            onConfirm={handleArbiSync}
             text="Sync to Arbitrum AMM"
           />
         </div>
         <div className="relative">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={syncPolygon}
+            onConfirm={handlePolygonSync}
             text="Sync to Polygon AMM"
           />
         </div>
-      </Tabs.Content> */}
+      </Tabs.Content>
     </TabSlider>
   );
 };

@@ -4,7 +4,9 @@ import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
 
-export default function useSyncL2(chainToSync: ChainId): () => void {
+export default function useSyncL2(chainToSync: ChainId): {
+  callback: null | (() => void);
+} {
   const dAMMContract = {
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
@@ -27,7 +29,9 @@ export default function useSyncL2(chainToSync: ChainId): () => void {
 
   const { write } = useContractWrite(config);
 
-  return useCallback(() => {
-    write?.();
-  }, [write]);
+  if (!write) return { callback: null };
+
+  return {
+    callback: () => write(),
+  };
 }
