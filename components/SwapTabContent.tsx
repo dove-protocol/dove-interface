@@ -258,7 +258,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           <div className="flex w-full flex-row justify-center">
             <div className="basis-1/2">
               <p className="mb-2 font-thin tracking-widest text-white">
-                Available on dAMM <span className="text-white/50">(USDT)</span>
+                Available on dAMM <span className="text-white/50">(USDC)</span>
               </p>
               <h3 className="mb-4 text-white">
                 {data?.[3] && formatCurrencyAmount(data[3], 6)}
