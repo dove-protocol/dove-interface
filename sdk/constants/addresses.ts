@@ -1,14 +1,14 @@
 import { ChainId } from "../enums/chainId";
 
 export const DAMM_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0xaf60B0564a0Ca22202FdfB3146eBE8315a67361d",
+  [ChainId.ETHEREUM_GOERLI]: "0xaEBeDEcFFe73e25C767F80577efF3F72A0FFA4c3",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.ARBITRUM_GOERLI]: "",
 };
 
 export const AMM_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.POLYGON_MUMBAI]: "0x5f49059B1a0761C12Dd5dB52A3da12e538c962F8",
+  [ChainId.POLYGON_MUMBAI]: "0x27436a1e6afa9887175D2bDA5541A3985a129484",
   [ChainId.ARBITRUM_GOERLI]: "0x78A7c23A8893fB2E16C12b8802015c0418a7F758",
 };
 
@@ -26,8 +26,8 @@ export const USDT_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const vUSDC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.POLYGON_MUMBAI]: "0x1E70F31de87252E6fBa96E1001c95392B580417e",
-  [ChainId.ARBITRUM_GOERLI]: "0xbBcD4CBc5aCe379BeD76C340117F932A64cDa256",
+  [ChainId.POLYGON_MUMBAI]: "0xf19C3Bc06bB1d65F0Fa81032eBB22D7610b36653",
+  [ChainId.ARBITRUM_GOERLI]: "0x509e57ab1fb8b728666e3E87Bff1D19b49e3d81b",
 };
 
 export const vUSDT_ADDRESS: { [chainId in ChainId]: string } = {

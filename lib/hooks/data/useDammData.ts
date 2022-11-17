@@ -1,6 +1,7 @@
 import {
   useContractReads,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
 import {
@@ -17,15 +18,28 @@ import { BigNumber } from "ethers";
 export default function useDammData(
   currency1: Currency | undefined,
   currency2: Currency | undefined,
-  totalSupplyCurrency: Currency | undefined,
-  chainId: ChainId[]
+  totalSupplyCurrency: Currency | undefined
 ): {
   data: CurrencyAmount<Currency>[] | null;
 } {
+  const { chain } = useNetwork();
+
   const dAMMContract = {
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
+    chainId: ChainId.ETHEREUM_GOERLI,
   };
+
+  const lzChainId = useMemo(() => {
+    if (!chain) return;
+
+    if (chain.id === ChainId.ARBITRUM_GOERLI) {
+      return LZ_CHAIN[ChainId.ARBITRUM_GOERLI];
+    }
+    if (chain.id === ChainId.POLYGON_MUMBAI) {
+      return LZ_CHAIN[ChainId.POLYGON_MUMBAI];
+    }
+  }, [chain]);
 
   const { data, isError, isLoading } = useContractReads({
     contracts: [
@@ -44,12 +58,12 @@ export default function useDammData(
       {
         ...dAMMContract,
         functionName: "marked0",
-        args: [LZ_CHAIN[chainId[0]]],
+        args: [lzChainId],
       },
       {
         ...dAMMContract,
         functionName: "marked1",
-        args: [LZ_CHAIN[chainId[1]]],
+        args: [lzChainId],
       },
     ],
     watch: true,

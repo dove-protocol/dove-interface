@@ -166,8 +166,7 @@ const DammTabContent = () => {
   const { data } = useDammData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
-    DAMM_LP[ChainId.ETHEREUM_GOERLI],
-    [ChainId.ARBITRUM_GOERLI, ChainId.POLYGON_MUMBAI]
+    DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   //////////////////////////////////////////////////////////
