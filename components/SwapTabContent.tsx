@@ -30,6 +30,7 @@ import useSyncL1 from "../lib/hooks/sync/useSyncL1";
 import useSwap from "../lib/hooks/swap/useSwap";
 import { useBurnStore } from "../state/burn/useBurnStore";
 import useBurn from "../lib/hooks/burn/useBurn";
+import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const tabsData = [
@@ -139,11 +140,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     parsedAmounts: burnAmounts,
     currencies: burnCurrencies,
     currencyBalances: burnBalances,
-  } = useDerivedSwapInfo();
+  } = useDerivedBurnInfo();
 
   const { callback: burnCallback } = useBurn(
-    burnBalances[Field.CURRENCY_A],
-    burnBalances[Field.CURRENCY_B]
+    burnAmounts[Field.CURRENCY_A],
+    burnAmounts[Field.CURRENCY_B]
   );
 
   const handleTypeBurnA = (value: string) => {
