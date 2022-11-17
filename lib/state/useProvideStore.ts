@@ -13,7 +13,7 @@ interface ProvideStoreState {
   setCurrencies: (currencies: {
     [field in Field]?: Currency | undefined;
   }) => void;
-  input: string;
+  fields: { [field in Field]?: string };
   onUserInput: (field: Field, value: string) => void;
 }
 
@@ -23,8 +23,15 @@ export const useProvideStore = create<ProvideStoreState>((set, get) => ({
     [Field.DEPENDENT]: undefined,
   },
   setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
-  input: "",
+  fields: {
+    [Field.INDEPENDENT]: "",
+    [Field.DEPENDENT]: "",
+  },
   onUserInput: (field: Field, value: string) => {
-    set(() => ({ input: value }));
+    set(
+      produce((draft) => {
+        draft.fields[field] = value;
+      })
+    );
   },
 }));

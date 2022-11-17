@@ -11,7 +11,7 @@ const InputWithBalance = ({
   onUserInput,
 }: {
   currency: Currency | undefined;
-  value: string;
+  value: string | undefined;
   onUserInput: (value: string) => void;
 }) => {
   const { chain } = useNetwork();
@@ -30,14 +30,16 @@ const InputWithBalance = ({
         onChange={(e) => onUserInput(e.target.value)}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
-        <h4
-          className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
-            error ? "text-white/50" : "bg-black/10 text-white"
-          }`}
-        >
-          <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
-          {currency?.symbol}
-        </h4>
+        {currency && (
+          <h4
+            className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
+              error ? "text-white/50" : "bg-black/10 text-white"
+            }`}
+          >
+            <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
+            {currency?.symbol}
+          </h4>
+        )}
         {!error && (
           <div className="flex items-center space-x-2">
             {/* {balance && (

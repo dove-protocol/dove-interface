@@ -74,8 +74,12 @@ const DammTabContent = () => {
 
   // load up default tokens for chain
   useDefaults();
+
+  // get the token info for the selected tokens
   const { currencies } = useDerivedTokenInfo();
-  const { onUserInput } = useProvideStore();
+
+  // get the store
+  const { onUserInput, fields } = useProvideStore();
 
   const formattedAmounts = useMemo(() => {
     return {
@@ -84,11 +88,13 @@ const DammTabContent = () => {
     };
   }, []);
 
-  const handleTypeIndependent = useCallback(() => {
-    (value: string) => {
-      onUserInput(Field.INDEPENDENT, value);
-    };
-  }, [onUserInput]);
+  const handleTypeIndependent = (value: string) => {
+    onUserInput(Field.INDEPENDENT, value);
+  };
+
+  const handleTypeDependent = (value: string) => {
+    onUserInput(Field.DEPENDENT, value);
+  };
 
   return (
     <Tabs.Root
@@ -122,12 +128,12 @@ const DammTabContent = () => {
         <InputWithBalance
           currency={currencies[Field.INDEPENDENT]}
           onUserInput={handleTypeIndependent}
-          value={formattedAmounts[Field.INDEPENDENT]}
+          value={fields[Field.INDEPENDENT]}
         />
         <InputWithBalance
           currency={currencies[Field.DEPENDENT]}
-          onUserInput={handleTypeIndependent}
-          value={formattedAmounts[Field.DEPENDENT]}
+          onUserInput={handleTypeDependent}
+          value={fields[Field.DEPENDENT]}
         />
         <InteractButton
           onClick={() => {}}
