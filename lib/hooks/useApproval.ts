@@ -10,7 +10,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { Currency, CurrencyAmount } from "../../sdk";
-import useTriggerToast from "../../hooks/useTriggerToast";
+import useTriggerToast from "./useTriggerToast";
 import { MaxUint256 } from "@ethersproject/constants";
 
 export enum ApprovalState {

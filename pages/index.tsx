@@ -3,7 +3,7 @@ import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useEffect, useRef } from "react";
 import { chain, useSwitchNetwork } from "wagmi";
-import { useIsMounted } from "../hooks/useIsMounted";
+import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { BiCog } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";

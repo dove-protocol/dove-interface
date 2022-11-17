@@ -16,7 +16,7 @@ import { useState, useRef } from "react";
 import InputWithBalance from "./InputWithBalance";
 import useApproveToken from "../lib/hooks/useApproval";
 import { BigNumber } from "ethers";
-import useTriggerToast from "../hooks/useTriggerToast";
+import useTriggerToast from "../lib/hooks/useTriggerToast";
 import JSBI from "jsbi";
 import { ChainId, CurrencyAmount } from "../sdk";
 import { DAMM_LP, USDC } from "../sdk/constants";
@@ -44,7 +44,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     },
     {
       id: "tab4",
-      title: "Burn",
+      title: "Vouchers",
       icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
@@ -65,6 +65,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   ];
 
   /////////////////////////////
+
+  const { callback: toastCallback } = useTriggerToast();
 
   const [isSwapped, toggleSwap, fields, onUserInput] = useSwapStore((state) => [
     state.isSwapped,
@@ -122,11 +124,35 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.();
+    mintCallbackA?.().then((txid) => {
+      if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
+        return;
+      toastCallback?.({
+        title: "Minted",
+        description: `You minted ${formatCurrencyAmount(
+          mintAmounts[Field.CURRENCY_A],
+          6
+        )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+        txid: txid.hash,
+        type: "success",
+      });
+    });
   };
 
   const handleMintB = () => {
-    mintCallbackB?.();
+    mintCallbackB?.().then((txid) => {
+      if (!mintAmounts[Field.CURRENCY_B] || !mintCurrency[Field.CURRENCY_B])
+        return;
+      toastCallback?.({
+        title: "Minted",
+        description: `You minted ${formatCurrencyAmount(
+          mintAmounts[Field.CURRENCY_B],
+          6
+        )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+        txid: txid.hash,
+        type: "success",
+      });
+    });
   };
 
   /////////////////////////////
