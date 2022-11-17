@@ -10,6 +10,8 @@ import { Field, useProvideStore } from "../lib/state/useProvideStore";
 import useDerivedTokenInfo, {
   useDefaults,
 } from "../lib/hooks/useDerivedTokenInfo";
+import useProvideLiquidity from "../lib/hooks/damm/useProvideLiquidity";
+import { CurrencyAmount } from "../sdk";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -81,19 +83,32 @@ const DammTabContent = () => {
   // get the store
   const { onUserInput, fields } = useProvideStore();
 
+  // const provideLiquidity = useProvideLiquidity(
+  //   CurrencyAmount.fromFractionalAmount(
+  //     currencies[Field.CURRENCY_A]!,
+  //     10 ** 6,
+  //     10 ** currencies[Field.CURRENCY_A]!.decimals
+  //   ),
+  //   CurrencyAmount.fromFractionalAmount(
+  //     currencies[Field.CURRENCY_A]!,
+  //     10 ** 6,
+  //     10 ** currencies[Field.CURRENCY_A]!.decimals
+  //   )
+  // );
+
   const formattedAmounts = useMemo(() => {
     return {
-      [Field.INDEPENDENT]: "",
-      [Field.DEPENDENT]: "",
+      [Field.CURRENCY_A]: "",
+      [Field.CURRENCY_B]: "",
     };
   }, []);
 
-  const handleTypeIndependent = (value: string) => {
-    onUserInput(Field.INDEPENDENT, value);
+  const handleTypeA = (value: string) => {
+    onUserInput(Field.CURRENCY_A, value);
   };
 
-  const handleTypeDependent = (value: string) => {
-    onUserInput(Field.DEPENDENT, value);
+  const handleTypeB = (value: string) => {
+    onUserInput(Field.CURRENCY_B, value);
   };
 
   return (
@@ -126,14 +141,14 @@ const DammTabContent = () => {
       </Tabs.List>
       <Tabs.Content value="tab1">
         <InputWithBalance
-          currency={currencies[Field.INDEPENDENT]}
-          onUserInput={handleTypeIndependent}
-          value={fields[Field.INDEPENDENT]}
+          currency={currencies[Field.CURRENCY_A]}
+          onUserInput={handleTypeA}
+          value={fields[Field.CURRENCY_A]}
         />
         <InputWithBalance
-          currency={currencies[Field.DEPENDENT]}
-          onUserInput={handleTypeDependent}
-          value={fields[Field.DEPENDENT]}
+          currency={currencies[Field.CURRENCY_B]}
+          onUserInput={handleTypeB}
+          value={fields[Field.CURRENCY_B]}
         />
         <InteractButton
           onClick={() => {}}

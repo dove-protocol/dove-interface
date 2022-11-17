@@ -4,8 +4,8 @@ import { ToastContent } from "../types";
 import { Currency } from "../../sdk";
 
 export enum Field {
-  INDEPENDENT = "INDEPENDENT",
-  DEPENDENT = "DEPENDENT",
+  CURRENCY_A = "CURRENCY_A",
+  CURRENCY_B = "CURRENCY_B",
 }
 
 interface ProvideStoreState {
@@ -19,13 +19,13 @@ interface ProvideStoreState {
 
 export const useProvideStore = create<ProvideStoreState>((set, get) => ({
   currencies: {
-    [Field.INDEPENDENT]: undefined,
-    [Field.DEPENDENT]: undefined,
+    [Field.CURRENCY_A]: undefined,
+    [Field.CURRENCY_B]: undefined,
   },
   setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
   fields: {
-    [Field.INDEPENDENT]: "",
-    [Field.DEPENDENT]: "",
+    [Field.CURRENCY_A]: "",
+    [Field.CURRENCY_B]: "",
   },
   onUserInput: (field: Field, value: string) => {
     set(

@@ -24,8 +24,8 @@ export function useDefaults() {
   useEffect(() => {
     if (!chain) return;
     setCurrencies({
-      [Field.INDEPENDENT]: USDC[chain.id],
-      [Field.DEPENDENT]: USDT[chain.id],
+      [Field.CURRENCY_A]: USDC[chain.id],
+      [Field.CURRENCY_B]: USDT[chain.id],
     });
   }, [chain]);
 }
