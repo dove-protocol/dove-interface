@@ -9,6 +9,7 @@ import {
   BiDownload,
   BiReceipt,
   BiCreditCardFront,
+  BiStats,
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
@@ -42,9 +43,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
+      id: "tab4",
+      title: "Burn",
+      icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
       id: "tab5",
       title: "Reserves",
-      icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
+      icon: <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
       id: "tab2",
@@ -55,11 +61,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       id: "tab3",
       title: "Sync",
       icon: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab4",
-      title: "Vouchers",
-      icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
   ];
 
