@@ -52,7 +52,7 @@ const InputWithBalance = ({
               </p>
             )}
             {showMaxButton && balance && (
-              <button onClick={() => {}}>
+              <button onClick={onMax}>
                 <p className="text-sm text-white">Max</p>
               </button>
             )}
