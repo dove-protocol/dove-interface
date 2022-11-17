@@ -14,18 +14,14 @@ export function useTokenBalance(
     watch: true,
   });
 
-  return useMemo(() => {
-    if (token && data) {
-      return CurrencyAmount.fromRawAmount(token, data.value.toString());
-    }
-  }, [token, data]);
+  if (token && data) {
+    return CurrencyAmount.fromRawAmount(token, data.value.toString());
+  }
 }
 
 export function useTokenBalances(
   tokens: Token[] | undefined,
   account?: string
 ): (CurrencyAmount<Currency> | undefined)[] {
-  return useMemo(() => {
-    return tokens?.map((token) => useTokenBalance(token, account)) ?? [];
-  }, [tokens, account]);
+  return tokens?.map((token) => useTokenBalance(token, account)) ?? [];
 }

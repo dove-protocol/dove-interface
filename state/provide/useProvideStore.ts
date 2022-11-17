@@ -1,8 +1,7 @@
 import create from "zustand";
 import produce from "immer";
-import { ToastContent } from "../types";
 import { Currency, CurrencyAmount } from "../../sdk";
-import { validateNumber } from "../utils";
+import { validateNumber } from "../../lib/utils/validateNumber";
 
 export enum Field {
   CURRENCY_A = "CURRENCY_A",
@@ -20,6 +19,7 @@ interface ProvideStoreState {
   }) => void;
   fields: { [field in Field]?: string };
   onUserInput: (field: Field, value: string) => void;
+  onSwitchTokens: () => void;
 }
 
 export const useProvideStore = create<ProvideStoreState>((set, get) => ({
@@ -37,4 +37,5 @@ export const useProvideStore = create<ProvideStoreState>((set, get) => ({
       })
     );
   },
+  onSwitchTokens: () => {},
 }));

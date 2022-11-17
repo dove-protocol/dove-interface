@@ -8,18 +8,19 @@ import {
 const InteractButton = ({
   text,
   expectedChainId,
-  onClick,
-  error = undefined,
+  onConfirm,
   children,
 }: {
   text: string;
   expectedChainId: number;
   error?: string;
-  onClick: () => void;
+  onConfirm: () => void;
   children?: React.ReactNode;
 }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
+
+  const error = false;
 
   return (
     <>
@@ -36,7 +37,7 @@ const InteractButton = ({
             return <>{children}</>;
           }
 
-          return <Button onClick={onClick} text={text} />;
+          return <Button onClick={onConfirm} text={text} />;
         } else {
           return <InteractConnectButton />;
         }

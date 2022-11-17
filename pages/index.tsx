@@ -9,11 +9,11 @@ import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
-import { useUserStore } from "../lib/state/useUserStore";
 import { GiPeaceDove } from "react-icons/gi";
+import { useUserStore } from "../state/user/useUserStore";
 
 export default function Home() {
-  const { isAutoSwitch } = useUserStore();
+  const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
   const timerRef = useRef(0);
 

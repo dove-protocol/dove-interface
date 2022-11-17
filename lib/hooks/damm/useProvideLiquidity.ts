@@ -1,12 +1,12 @@
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
 import dAMMContractInterface from "../../../abis/dAMM.json";
-import { useCallback } from "react";
+import { useMemo } from "react";
 
 export default function useProvideLiquidity(
   amount1: CurrencyAmount<Currency> | undefined,
   amount2: CurrencyAmount<Currency> | undefined
-): () => void {
+): { callback: null | (() => void) } {
   const { config } = usePrepareContractWrite({
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
@@ -16,9 +16,9 @@ export default function useProvideLiquidity(
 
   const { write } = useContractWrite(config);
 
-  return useCallback(() => {
-    if (!amount1) return;
-    if (!amount2) return;
-    write?.();
-  }, [amount1, amount2]);
+  if (!write || !amount1 || !amount2) return { callback: null };
+
+  return {
+    callback: write,
+  };
 }

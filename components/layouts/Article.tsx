@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { transitionAnimation } from "../../lib/utils";
 import Navbar from "../Navbar";
 import { GiPeaceDove } from "react-icons/gi";
 import * as Toast from "@radix-ui/react-toast";
 import { BiCheck, BiLinkExternal, BiX } from "react-icons/bi";
 import { useNetwork } from "wagmi";
-import { useUserStore } from "../../lib/state/useUserStore";
+import { transitionAnimation } from "../../lib/utils/transitionAnimation";
+import { useUserStore } from "../../state/user/useUserStore";
 
 const Article = ({ children }: { children: React.ReactNode }) => {
   const { isOpen, setOpen, toastContent } = useUserStore();

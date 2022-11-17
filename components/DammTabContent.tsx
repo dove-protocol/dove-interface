@@ -6,19 +6,37 @@ import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
-import { Field, useProvideStore } from "../lib/state/useProvideStore";
-import useDerivedTokenInfo, {
-  useChainDefaults,
-} from "../lib/hooks/useDerivedTokenInfo";
 import useProvideLiquidity from "../lib/hooks/damm/useProvideLiquidity";
-import { CurrencyAmount } from "../sdk";
+import { Currency, CurrencyAmount } from "../sdk";
+import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
+import { Field, useProvideStore } from "../state/provide/useProvideStore";
 
 const DammTabContent = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  // load up default tokens for chain
+  useChainDefaults();
 
+  // load up token info
+  const { parsedAmounts, currencies, currencyBalances } =
+    useDerivedProvideInfo();
+
+  // load up state
+  const [fields, onUserInput] = useProvideStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  // load up liquidity callback
+  const { callback } = useProvideLiquidity(
+    parsedAmounts[Field.CURRENCY_A],
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
+  //////////////////////////////////////////////////////////
+
+  const [activeTab, setActiveTab] = useState("tab1");
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
-
   const [tabBoundingBox, setTabBoundingBox] = useState<DOMRect | null>(null);
   const [wrapperBoundingBox, setWrapperBoundingBox] = useState<DOMRect | null>(
     null
@@ -74,26 +92,7 @@ const DammTabContent = () => {
     },
   ];
 
-  // load up default tokens for chain
-  useChainDefaults();
-
-  // get the token info for the selected tokens
-  const { currencies } = useDerivedTokenInfo();
-
-  // get the store
-  const { onUserInput, fields, amounts } = useProvideStore();
-
-  const provideLiquidity = useProvideLiquidity(
-    amounts[Field.CURRENCY_A],
-    amounts[Field.CURRENCY_B]
-  );
-
-  const formattedAmounts = useMemo(() => {
-    return {
-      [Field.CURRENCY_A]: "",
-      [Field.CURRENCY_B]: "",
-    };
-  }, []);
+  //////////////////////////////////////////////////////////
 
   const handleTypeA = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
@@ -101,6 +100,10 @@ const DammTabContent = () => {
 
   const handleTypeB = (value: string) => {
     onUserInput(Field.CURRENCY_B, value);
+  };
+
+  const handleProvideLiquidity = () => {
+    callback?.();
   };
 
   return (
@@ -134,16 +137,20 @@ const DammTabContent = () => {
       <Tabs.Content value="tab1">
         <InputWithBalance
           currency={currencies[Field.CURRENCY_A]}
+          balance={currencyBalances[Field.CURRENCY_A]}
           onUserInput={handleTypeA}
+          showMaxButton={true}
           value={fields[Field.CURRENCY_A]}
         />
         <InputWithBalance
           currency={currencies[Field.CURRENCY_B]}
+          balance={currencyBalances[Field.CURRENCY_B]}
           onUserInput={handleTypeB}
+          showMaxButton={false}
           value={fields[Field.CURRENCY_B]}
         />
         <InteractButton
-          onClick={provideLiquidity}
+          onConfirm={handleProvideLiquidity}
           expectedChainId={chain.goerli.id}
           text="Add Liquidity"
         >

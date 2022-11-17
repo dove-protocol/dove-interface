@@ -1,6 +1,6 @@
 import create from "zustand";
 import produce from "immer";
-import { ToastContent } from "../types";
+import { ToastContent } from "../../lib/types";
 
 interface UserStoreState {
   isAutoSwitch: boolean;

@@ -2,20 +2,24 @@ import { BigNumber } from "ethers";
 import React from "react";
 import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
-import { validateNumber } from "../lib/utils";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import { Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
   currency,
+  balance,
   value,
   onUserInput,
+  showMaxButton,
+  onMax,
 }: {
   currency: Currency | undefined;
+  balance: CurrencyAmount<Currency> | undefined;
   value: string | undefined;
   onUserInput: (value: string) => void;
+  showMaxButton: boolean;
+  onMax?: () => void;
 }) => {
-  const { chain } = useNetwork();
-
   const error = false;
 
   return (
@@ -42,23 +46,16 @@ const InputWithBalance = ({
         )}
         {!error && (
           <div className="flex items-center space-x-2">
-            {/* {balance && (
+            {balance && (
               <p className="text-sm text-white/50">
-                Balance: {parseFloat(parseFloat(balance.formatted).toFixed(6))}
+                Balance: {formatCurrencyAmount(balance, 6)}
               </p>
             )}
-            {maxEnabled && balance && (
-              <button
-                onClick={() => {
-                  console.log("max");
-                  setValue(
-                    balance.value.div(BigNumber.from(10).pow(6)).toString()
-                  );
-                }}
-              >
+            {showMaxButton && balance && (
+              <button onClick={() => {}}>
                 <p className="text-sm text-white">Max</p>
               </button>
-            )} */}
+            )}
           </div>
         )}
       </div>

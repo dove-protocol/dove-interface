@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import * as Switch from "@radix-ui/react-switch";
-import { useStore } from "../lib/state/useSwapStore";
+import { useUserStore } from "../state/user/useUserStore";
 
 const SettingsTabContent = () => {
-  const isAutoSwitch = useStore((state) => state.isAutoSwitch);
-  const setAutoSwitch = useStore((state) => state.setAutoSwitch);
+  const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
+  const setAutoSwitch = useUserStore((state) => state.setAutoSwitch);
 
   return (
     <>
