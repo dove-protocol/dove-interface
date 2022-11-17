@@ -17,8 +17,8 @@ import useApproveToken from "../lib/hooks/useApproval";
 import { BigNumber } from "ethers";
 import useTriggerToast from "../hooks/useTriggerToast";
 import JSBI from "jsbi";
-import { CurrencyAmount } from "../sdk";
-import { USDC } from "../sdk/constants";
+import { ChainId, CurrencyAmount } from "../sdk";
+import { DAMM_LP, USDC } from "../sdk/constants";
 import { useTokenBalances } from "../lib/hooks/useTokenBalance";
 import TabSlider from "./TabSlider";
 import { Field, useSwapStore } from "../state/swap/useSwapStore";
@@ -31,12 +31,19 @@ import useSwap from "../lib/hooks/swap/useSwap";
 import { useBurnStore } from "../state/burn/useBurnStore";
 import useBurn from "../lib/hooks/burn/useBurn";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
+import useDammData from "../lib/hooks/data/useDammData";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
   const tabsData = [
     {
       id: "tab1",
       title: "Swap",
+      icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
+      id: "tab5",
+      title: "Reserves",
       icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
@@ -159,6 +166,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
     burnCallback?.();
   };
 
+  /////////////////////////////
+
+  const { data } = useDammData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B],
+    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+  );
+
   return (
     <TabSlider tabsData={tabsData}>
       <Tabs.Content value="tab1">
@@ -240,6 +255,24 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       </Tabs.Content>
       <Tabs.Content value="tab4">
         <div className="relative">
+          <div className="flex w-full flex-row justify-center">
+            <div className="basis-1/2">
+              <p className="mb-2 font-thin tracking-widest text-white">
+                Available on dAMM <span className="text-white/50">(USDT)</span>
+              </p>
+              <h3 className="mb-4 text-white">
+                {data?.[3] && formatCurrencyAmount(data[3], 6)}
+              </h3>
+            </div>
+            <div>
+              <p className="mb-2 font-thin tracking-widest text-white">
+                Available on dAMM <span className="text-white/50">(USDT)</span>
+              </p>
+              <h3 className="mb-4 text-white">
+                {data?.[4] && formatCurrencyAmount(data[4], 6)}
+              </h3>
+            </div>
+          </div>
           <InputWithBalance
             currency={burnCurrencies[Field.CURRENCY_A]}
             balance={burnBalances[Field.CURRENCY_A]}
@@ -261,11 +294,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           >
             {/* {(() => {
               if (
-                dAMMData.marked0?.lt(
-                  BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
+                BigNumber.from(parseFloat(vUSDCToBurn || "0") * 10 ** 6).gt(
+                  dAMMData.marked0 || BigNumber.from(0)
                 ) ||
-                dAMMData.marked1?.lt(
-                  BigNumber.from(parseFloat(vUSDTToBurn) * 10 ** 6)
+                BigNumber.from(parseFloat(vUSDTToBurn || "0") * 10 ** 6).gt(
+                  dAMMData.marked1 || BigNumber.from(0)
                 )
               ) {
                 return <Button disabled text="Sync before." />;
@@ -285,6 +318,26 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
               }
             })()} */}
           </InteractButton>
+        </div>
+      </Tabs.Content>
+
+      <Tabs.Content value="tab5">
+        <div className="flex w-full flex-col items-start">
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
+          </p>
+          <h3 className="mb-8 text-white">
+            {data?.[0] && formatCurrencyAmount(data[0], 6)}
+          </h3>
+        </div>
+        <div className="flex w-full flex-col items-start">
+          <div className="mb-8 h-px w-full bg-white/5" />
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
+          </p>
+          <h3 className="mb-2 text-white">
+            {data?.[1] && formatCurrencyAmount(data[1], 6)}
+          </h3>
         </div>
       </Tabs.Content>
     </TabSlider>
