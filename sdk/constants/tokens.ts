@@ -1,4 +1,10 @@
-import { DAMM_ADDRESS, USDC_ADDRESS, USDT_ADDRESS } from "./addresses";
+import {
+  DAMM_ADDRESS,
+  USDC_ADDRESS,
+  USDT_ADDRESS,
+  vUSDC_ADDRESS,
+  vUSDT_ADDRESS,
+} from "./addresses";
 
 import { ChainId } from "../enums";
 import { Token } from "../entities/token";
@@ -59,5 +65,39 @@ export const DAMM_LP: TokenMap = {
     6,
     "DAMM-LP",
     "DAMM LP"
+  ),
+};
+
+export const vUSDC: TokenMap = {
+  [ChainId.POLYGON_MUMBAI]: new Token(
+    ChainId.POLYGON_MUMBAI,
+    vUSDC_ADDRESS[ChainId.POLYGON_MUMBAI],
+    6,
+    "vUSDC",
+    "vUSDC"
+  ),
+  [ChainId.ARBITRUM_GOERLI]: new Token(
+    ChainId.ARBITRUM_GOERLI,
+    vUSDC_ADDRESS[ChainId.ARBITRUM_GOERLI],
+    6,
+    "vUSDC",
+    "vUSDC"
+  ),
+};
+
+export const vUSDT: TokenMap = {
+  [ChainId.POLYGON_MUMBAI]: new Token(
+    ChainId.POLYGON_MUMBAI,
+    vUSDT_ADDRESS[ChainId.POLYGON_MUMBAI],
+    6,
+    "vUSDT",
+    "vUSDT"
+  ),
+  [ChainId.ARBITRUM_GOERLI]: new Token(
+    ChainId.ARBITRUM_GOERLI,
+    vUSDT_ADDRESS[ChainId.ARBITRUM_GOERLI],
+    6,
+    "vUSDT",
+    "vUSDT"
   ),
 };

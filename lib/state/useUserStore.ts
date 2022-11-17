@@ -1,8 +1,8 @@
 import create from "zustand";
 import produce from "immer";
-import { ToastContent } from "./types";
+import { ToastContent } from "../types";
 
-interface StoreState {
+interface UserStoreState {
   isAutoSwitch: boolean;
   setAutoSwitch: (isAutoSwitch: boolean) => void;
   isOpen: boolean;
@@ -11,12 +11,11 @@ interface StoreState {
   setToastContent: (toastContent: ToastContent) => void;
 }
 
-export const useStore = create<StoreState>((set, get) => ({
+export const useUserStore = create<UserStoreState>((set, get) => ({
   isAutoSwitch: false,
-  setAutoSwitch: (isAutoSwitch) =>
-    set((state) => ({ isAutoSwitch: isAutoSwitch })),
+  setAutoSwitch: (isAutoSwitch) => set(() => ({ isAutoSwitch: isAutoSwitch })),
   isOpen: false,
-  setOpen: (isOpen) => set((state) => ({ isOpen: isOpen })),
+  setOpen: (isOpen) => set(() => ({ isOpen: isOpen })),
   toastContent: {
     title: "",
     description: "",
@@ -24,5 +23,5 @@ export const useStore = create<StoreState>((set, get) => ({
     type: "success",
   },
   setToastContent: (toastContent: ToastContent) =>
-    set((state) => ({ toastContent: toastContent })),
+    set(() => ({ toastContent: toastContent })),
 }));

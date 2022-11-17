@@ -47,32 +47,6 @@ export default function useApproval(
     isSuccess,
   } = useContractWrite(approvalConfig);
 
-  const {
-    data: txData,
-    isError,
-    isLoading,
-  } = useWaitForTransaction({
-    hash: approveTxData?.hash,
-  });
-
-  useEffect(() => {
-    if (txData && !isError && !isLoading) {
-      trigger({
-        description: `Approved ${amountToApprove?.currency?.symbol}`,
-        title: "Success",
-        txid: approveTxData?.hash || "",
-        type: "success",
-      });
-    } else if (isError) {
-      trigger({
-        description: `Failed to approve ${amountToApprove?.currency?.symbol}`,
-        title: "Error",
-        txid: approveTxData?.hash || "",
-        type: "error",
-      });
-    }
-  }, [txData]);
-
   const approveCallback = useCallback(() => {
     approve?.();
   }, [approve]);

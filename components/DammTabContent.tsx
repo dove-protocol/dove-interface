@@ -7,12 +7,7 @@ import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
 import { validateNumber } from "../lib/utils";
-import usedAMM from "../hooks/usedAMMProvide";
-import usedAMMWithdraw from "../hooks/usedAMMWithdraw";
-import usedAMMData from "../hooks/usedAMMData";
-import useMint from "../hooks/useMint";
 import { useTokenBalances } from "../lib/hooks/useTokenBalance";
-import useSyncL2 from "../hooks/useSyncL2";
 import { BigNumber } from "ethers";
 import useApproveToken from "../lib/hooks/useApproval";
 import { USDC, USDT } from "../sdk/constants";
@@ -21,92 +16,81 @@ import useAllTokens from "../lib/hooks/useAllTokens";
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
 
-  const { reserve0, reserve1, totalSupply } = usedAMMData();
-  const [amount1, setAmount1] = useState<string>("");
-  // wrapper around setAmount1
-  // automatically sets other field
-  const reactiveSetAmount1 = (value: string) => {
-    setAmount1(value);
-    if (reserve1 && reserve0) {
-      const amount0 = value === "" ? 0 : BigNumber.from(value);
-      setAmount2(
-        value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
-      );
-    }
-  };
+  // const [amount1, setAmount1] = useState<string>("");
+  // // wrapper around setAmount1
+  // // automatically sets other field
+  // const reactiveSetAmount1 = (value: string) => {
+  //   setAmount1(value);
+  //   if (reserve1 && reserve0) {
+  //     const amount0 = value === "" ? 0 : BigNumber.from(value);
+  //     setAmount2(
+  //       value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
+  //     );
+  //   }
+  // };
 
-  const [amount2, setAmount2] = useState<string>("");
-  const reactiveSetAmount2 = (value: string) => {
-    setAmount2(value);
-    if (reserve1 && reserve0) {
-      const amount1 = value === "" ? 0 : BigNumber.from(value);
-      setAmount1(
-        value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
-      );
-    }
-  };
+  // const [amount2, setAmount2] = useState<string>("");
+  // const reactiveSetAmount2 = (value: string) => {
+  //   setAmount2(value);
+  //   if (reserve1 && reserve0) {
+  //     const amount1 = value === "" ? 0 : BigNumber.from(value);
+  //     setAmount1(
+  //       value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
+  //     );
+  //   }
+  // };
 
-  const [USDCToMint, setUSDCToMint] = useState<string>("");
-  const [USDTToMint, setUSDTToMint] = useState<string>("");
+  // const [USDCToMint, setUSDCToMint] = useState<string>("");
+  // const [USDTToMint, setUSDTToMint] = useState<string>("");
 
-  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
-  const [withdrawAmountAsBN, setWithdrawAmountAsBN] = useState<BigNumber>(
-    BigNumber.from(0)
-  );
-  const [expectedUSDCWithdrawn, setExpectedUSDCWithdrawn] =
-    useState<string>("");
-  const [expectedUSDTWithdrawn, setExpectedUSDTWithdrawn] =
-    useState<string>("");
+  // const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  // const [withdrawAmountAsBN, setWithdrawAmountAsBN] = useState<BigNumber>(
+  //   BigNumber.from(0)
+  // );
+  // const [expectedUSDCWithdrawn, setExpectedUSDCWithdrawn] =
+  //   useState<string>("");
+  // const [expectedUSDTWithdrawn, setExpectedUSDTWithdrawn] =
+  //   useState<string>("");
 
-  const reactiveSetWithdrawAmount = (value: string) => {
-    const bigValue =
-      value === ""
-        ? BigNumber.from(0)
-        : BigNumber.from(parseFloat(value) * 10 ** 18);
-    setWithdrawAmount(value);
-    setWithdrawAmountAsBN(bigValue);
-    const shares = bigValue;
-    if (totalSupply && reserve0 && reserve1) {
-      setExpectedUSDCWithdrawn(
-        (shares.mul(reserve0).div(totalSupply).toNumber() / 10 ** 6).toString()
-      );
-      setExpectedUSDTWithdrawn(
-        (shares.mul(reserve1).div(totalSupply).toNumber() / 10 ** 6).toString()
-      );
-    }
-  };
+  // const reactiveSetWithdrawAmount = (value: string) => {
+  //   const bigValue =
+  //     value === ""
+  //       ? BigNumber.from(0)
+  //       : BigNumber.from(parseFloat(value) * 10 ** 18);
+  //   setWithdrawAmount(value);
+  //   setWithdrawAmountAsBN(bigValue);
+  //   const shares = bigValue;
+  //   if (totalSupply && reserve0 && reserve1) {
+  //     setExpectedUSDCWithdrawn(
+  //       (shares.mul(reserve0).div(totalSupply).toNumber() / 10 ** 6).toString()
+  //     );
+  //     setExpectedUSDTWithdrawn(
+  //       (shares.mul(reserve1).div(totalSupply).toNumber() / 10 ** 6).toString()
+  //     );
+  //   }
+  // };
 
-  const [provideError, setProvideError] = useState<string | undefined>();
-  const [withdrawError, setWithdrawError] = useState<string | undefined>();
+  // const [provideError, setProvideError] = useState<string | undefined>();
+  // const [withdrawError, setWithdrawError] = useState<string | undefined>();
 
-  const { approve: approveUSDC, isApproved: isApprovedUSDC } = useApproveToken({
-    token: getTokenAddress(true),
-    spender: DAMM_CONTRACT_ADDRESS,
-    amountRequested: amount1,
-  });
-  const { approve: approveUSDT, isApproved: isApprovedUSDT } = useApproveToken({
-    token: getTokenAddress(false),
-    spender: DAMM_CONTRACT_ADDRESS,
-    amountRequested: amount2,
-  });
-  const balances = useTokenBalances(useAllTokens());
-  const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
-  const { sync: syncPolygon } = useSyncL2({ chainId: chain.polygonMumbai.id });
-  const { provide } = usedAMM({
-    amount1: amount1 === "" ? "0" : amount1,
-    amount2: amount2 === "" ? "0" : amount2,
-  });
-  const { withdraw } = usedAMMWithdraw({
-    amount: withdrawAmountAsBN.toString(),
-  });
-  const { mint: mintUSDC } = useMint({
-    amount: USDCToMint === "" ? "0" : USDCToMint,
-    isUSDC: true,
-  });
-  const { mint: mintUSDT } = useMint({
-    amount: USDTToMint === "" ? "0" : USDTToMint,
-    isUSDC: false,
-  });
+  // const balances = useTokenBalances(useAllTokens());
+  // const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
+  // const { sync: syncPolygon } = useSyncL2({ chainId: chain.polygonMumbai.id });
+  // const { provide } = usedAMM({
+  //   amount1: amount1 === "" ? "0" : amount1,
+  //   amount2: amount2 === "" ? "0" : amount2,
+  // });
+  // const { withdraw } = usedAMMWithdraw({
+  //   amount: withdrawAmountAsBN.toString(),
+  // });
+  // const { mint: mintUSDC } = useMint({
+  //   amount: USDCToMint === "" ? "0" : USDCToMint,
+  //   isUSDC: true,
+  // });
+  // const { mint: mintUSDT } = useMint({
+  //   amount: USDTToMint === "" ? "0" : USDTToMint,
+  //   isUSDC: false,
+  // });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);

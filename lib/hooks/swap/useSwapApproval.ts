@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useNetwork } from "wagmi";
-import { ChainId, Currency, CurrencyAmount } from "../../../sdk";
-import { DAMM_ADDRESS } from "../../../sdk/constants";
+import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
 import { MaxUint256 } from "@ethersproject/constants";
 import useApproval from "../useApproval";
 

@@ -1,4 +1,4 @@
-import { useStore } from "../lib/store";
+import { useStore } from "../lib/state/useSwapStore";
 import { ToastContent } from "../lib/types";
 
 export default function (): {

@@ -4,7 +4,7 @@ import { transitionAnimation } from "../../lib/utils";
 import Navbar from "../Navbar";
 import { GiPeaceDove } from "react-icons/gi";
 import * as Toast from "@radix-ui/react-toast";
-import { useStore } from "../../lib/store";
+import { useStore } from "../../lib/state/useSwapStore";
 import { BiCheck, BiLinkExternal, BiX } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 

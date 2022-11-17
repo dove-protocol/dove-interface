@@ -9,7 +9,7 @@ import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
-import { useStore } from "../lib/store";
+import { useStore } from "../lib/state/useSwapStore";
 import { GiPeaceDove } from "react-icons/gi";
 
 export default function Home() {

@@ -1,7 +1,7 @@
 import { useNetwork } from "wagmi";
 import { useMemo } from "react";
 import { ChainId, Token } from "../../sdk";
-import { DAMM_LP, USDC, USDT } from "../../sdk/constants";
+import { DAMM_LP, USDC, USDT, vUSDC, vUSDT } from "../../sdk/constants";
 
 export default function useAllTokens(): Token[] {
   const { chain } = useNetwork();
@@ -14,6 +14,12 @@ export default function useAllTokens(): Token[] {
     tokens.push(USDC[chain.id], USDT[chain.id]);
     if (chain.id === ChainId.ETHEREUM_GOERLI) {
       tokens.push(DAMM_LP[chain.id]);
+    }
+    if (
+      chain.id === ChainId.POLYGON_MUMBAI ||
+      chain.id === ChainId.ARBITRUM_GOERLI
+    ) {
+      tokens.push(vUSDC[chain.id], vUSDT[chain.id]);
     }
 
     return tokens;
