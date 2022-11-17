@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef, useCallback, useMemo } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
@@ -6,7 +6,7 @@ import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
-import { ChainId, Currency, CurrencyAmount } from "../sdk";
+import { ChainId, Currency, CurrencyAmount, DAMM_LP } from "../sdk";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import { Field, useProvideStore } from "../state/provide/useProvideStore";
@@ -165,7 +165,9 @@ const DammTabContent = () => {
   // temporarily use currencies from provide (dependent on pool in future?)
   const { data } = useDammData(
     currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B]
+    currencies[Field.CURRENCY_B],
+    DAMM_LP[ChainId.ETHEREUM_GOERLI],
+    [ChainId.ARBITRUM_GOERLI, ChainId.POLYGON_MUMBAI]
   );
 
   //////////////////////////////////////////////////////////

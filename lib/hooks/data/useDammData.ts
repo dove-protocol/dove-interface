@@ -3,14 +3,22 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  DAMM_ADDRESS,
+  LZ_CHAIN,
+} from "../../../sdk";
 import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useMemo } from "react";
 import { BigNumber } from "ethers";
 
 export default function useDammData(
   currency1: Currency | undefined,
-  currency2: Currency | undefined
+  currency2: Currency | undefined,
+  totalSupplyCurrency: Currency | undefined,
+  chainId: ChainId[]
 ): {
   data: CurrencyAmount<Currency>[] | null;
 } {
@@ -33,11 +41,30 @@ export default function useDammData(
         ...dAMMContract,
         functionName: "totalSupply",
       },
+      {
+        ...dAMMContract,
+        functionName: "marked0",
+        args: [LZ_CHAIN[chainId[0]]],
+      },
+      {
+        ...dAMMContract,
+        functionName: "marked1",
+        args: [LZ_CHAIN[chainId[1]]],
+      },
     ],
     watch: true,
   });
 
-  if (!data?.[0] || !data?.[1] || !data?.[2] || !currency1 || !currency2)
+  if (
+    !data?.[0] ||
+    !data?.[1] ||
+    !data?.[2] ||
+    !data?.[3] ||
+    !data?.[4] ||
+    !currency1 ||
+    !currency2 ||
+    !totalSupplyCurrency
+  )
     return { data: null };
   return {
     data: [
@@ -46,12 +73,20 @@ export default function useDammData(
         (data[0] as BigNumber).toString()
       ),
       CurrencyAmount.fromRawAmount(
-        currency1,
+        currency2,
         (data[1] as BigNumber).toString()
       ),
       CurrencyAmount.fromRawAmount(
-        currency1,
+        totalSupplyCurrency,
         (data[2] as BigNumber).toString()
+      ),
+      CurrencyAmount.fromRawAmount(
+        currency1,
+        (data[3] as BigNumber).toString()
+      ),
+      CurrencyAmount.fromRawAmount(
+        currency2,
+        (data[4] as BigNumber).toString()
       ),
     ],
   };

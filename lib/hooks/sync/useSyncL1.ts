@@ -5,7 +5,9 @@ import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { ethers } from "ethers";
 
-export default function useSyncL1(): () => void {
+export default function useSyncL1(): {
+  callback: null | (() => void);
+} {
   const { chain } = useNetwork();
 
   const ammAddress = useMemo(() => {
@@ -35,7 +37,8 @@ export default function useSyncL1(): () => void {
 
   const { write } = useContractWrite(config);
 
-  return useCallback(() => {
-    write?.();
-  }, [write]);
+  if (!write) return { callback: null };
+  return {
+    callback: () => write(),
+  };
 }

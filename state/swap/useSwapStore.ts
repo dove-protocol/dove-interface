@@ -4,8 +4,8 @@ import { Currency, CurrencyAmount } from "../../sdk";
 import { validateNumber } from "../../lib/utils/validateNumber";
 
 export enum Field {
-  INPUT = "INPUT",
-  OUTPUT = "OUTPUT",
+  CURRENCY_A = "CURRENCY_A",
+  CURRENCY_B = "CURRENCY_B",
 }
 
 interface SwapStoreState {
@@ -20,6 +20,8 @@ interface SwapStoreState {
   fields: { [field in Field]?: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
+  isSwapped: boolean;
+  toggleSwap: () => void;
 }
 
 export const useSwapStore = create<SwapStoreState>((set, get) => ({
@@ -38,4 +40,6 @@ export const useSwapStore = create<SwapStoreState>((set, get) => ({
     );
   },
   onSwitchTokens: () => {},
+  isSwapped: false,
+  toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),
 }));
