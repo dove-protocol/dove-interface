@@ -310,6 +310,24 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       </Tabs.Content>
       <Tabs.Content value="tab4">
         <div className="relative">
+          <div className="flex w-full flex-row justify-center">
+            <div className="basis-1/2">
+              <p className="mb-2 font-thin tracking-widest text-white">
+                Available on dAMM <span className="text-white/50">(USDT)</span>
+              </p>
+              <h3 className="mb-4 text-white">
+                {dAMMData.marked1?.div(10 ** 6).toString()}
+              </h3>
+            </div>
+            <div>
+              <p className="mb-2 font-thin tracking-widest text-white">
+                Available on dAMM <span className="text-white/50">(USDT)</span>
+              </p>
+              <h3 className="mb-4 text-white">
+                {dAMMData.marked0?.div(10 ** 6).toString()}
+              </h3>
+            </div>
+          </div>
           <InputWithBalance
             label="vUSDC"
             expectedChainId={expectedChainId}
