@@ -81,20 +81,12 @@ const DammTabContent = () => {
   const { currencies } = useDerivedTokenInfo();
 
   // get the store
-  const { onUserInput, fields } = useProvideStore();
+  const { onUserInput, fields, amounts } = useProvideStore();
 
-  // const provideLiquidity = useProvideLiquidity(
-  //   CurrencyAmount.fromFractionalAmount(
-  //     currencies[Field.CURRENCY_A]!,
-  //     10 ** 6,
-  //     10 ** currencies[Field.CURRENCY_A]!.decimals
-  //   ),
-  //   CurrencyAmount.fromFractionalAmount(
-  //     currencies[Field.CURRENCY_A]!,
-  //     10 ** 6,
-  //     10 ** currencies[Field.CURRENCY_A]!.decimals
-  //   )
-  // );
+  const provideLiquidity = useProvideLiquidity(
+    amounts[Field.CURRENCY_A],
+    amounts[Field.CURRENCY_B]
+  );
 
   const formattedAmounts = useMemo(() => {
     return {
@@ -151,7 +143,7 @@ const DammTabContent = () => {
           value={fields[Field.CURRENCY_B]}
         />
         <InteractButton
-          onClick={() => {}}
+          onClick={provideLiquidity}
           expectedChainId={chain.goerli.id}
           text="Add Liquidity"
         >
