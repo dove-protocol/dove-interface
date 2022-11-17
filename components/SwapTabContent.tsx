@@ -133,7 +133,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   return (
     <TabSlider tabsData={tabsData}>
-      {/* <Tabs.Content value="tab1">
+     <Tabs.Content value="tab1">
         {!isSwapped ? (
           <InputWithBalance
             label="USDT"
@@ -200,8 +200,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             }
           })()}
         </InteractButton>
-      </Tabs.Content> */}
-      {/* <Tabs.Content value="tab2">
+      </Tabs.Content>
+      <Tabs.Content value="tab2">
         <InputWithBalance
           label="USDT"
           expectedChainId={expectedChainId}
@@ -238,7 +238,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
           />
         </div>
       </Tabs.Content> */}
-      {/* <Tabs.Content value="tab4">
+    <Tabs.Content value="tab4">
         <div className="relative">
           <InputWithBalance
             label="vUSDC"
@@ -259,9 +259,16 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             onClick={burn}
             text="Burn Vouchers"
           >
-            {/* {(() => {
-              if (amount0 === "" || amount1 === "") {
-                return <Button disabled text="Enter an amount" />;
+            {(() => {
+              if (
+                dAMMData.marked0?.lt(
+                  BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
+                ) ||
+                dAMMData.marked1?.lt(
+                  BigNumber.from(parseFloat(vUSDTToBurn) * 10 ** 6)
+                )
+              ) {
+                return <Button disabled text="Sync before." />;
               }
               if (!isSwapped) {
                 if (!isApprovedAmount0) {
@@ -276,10 +283,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
                   );
                 }
               }
-            })()} */}
-      {/* </InteractButton>
+            })()} 
+     </InteractButton>
         </div>
-      </Tabs.Content>  */}
+      </Tabs.Content>  
     </TabSlider>
   );
 };
