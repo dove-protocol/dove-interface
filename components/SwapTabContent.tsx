@@ -146,6 +146,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
       content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
     },
     {
+      id: "tab5",
+      label: "Reserves",
+      content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
+    },
+    {
       id: "tab2",
       label: "Mint",
       content: <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />,
@@ -318,7 +323,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             onClick={burn}
             text="Burn Vouchers"
           >
-            {(() => {
+            {/* {(() => {
               if (
                 dAMMData.marked0?.lt(
                   BigNumber.from(parseFloat(vUSDCToBurn) * 10 ** 6)
@@ -329,8 +334,27 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
               ) {
                 return <Button disabled text="Sync before." />;
               }
-            })()}
+            })()} */}
           </InteractButton>
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="tab5">
+        <div className="flex w-full flex-col items-start">
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
+          </p>
+          <h3 className="mb-8 text-white">
+            {reserve1?.div(10 ** 6).toString()}
+          </h3>
+        </div>
+        <div className="flex w-full flex-col items-start">
+          <div className="mb-8 h-px w-full bg-white/5" />
+          <p className="mb-2 font-thin tracking-widest text-white">
+            Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
+          </p>
+          <h3 className="mb-2 text-white">
+            {reserve0?.div(10 ** 6).toString()}
+          </h3>
         </div>
       </Tabs.Content>
     </Tabs.Root>
