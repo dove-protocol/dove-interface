@@ -9,11 +9,11 @@ import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
-import { useStore } from "../lib/state/useSwapStore";
+import { useUserStore } from "../lib/state/useUserStore";
 import { GiPeaceDove } from "react-icons/gi";
 
 export default function Home() {
-  const isAutoSwitch = useStore((state) => state.isAutoSwitch);
+  const { isAutoSwitch } = useUserStore();
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
   const timerRef = useRef(0);
 
@@ -100,12 +100,12 @@ export default function Home() {
                 </Tabs.Content>
                 <Tabs.Content value="polygon">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={chain.polygonMumbai.id} />
+                    {/* <SwapTabContent expectedChainId={chain.polygonMumbai.id} /> */}
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} />
+                    {/* <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} /> */}
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="settings">

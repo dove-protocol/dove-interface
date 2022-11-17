@@ -1,96 +1,16 @@
 import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import Tab from "./Tab";
-import { validateNumber } from "../lib/utils";
-import { useTokenBalances } from "../lib/hooks/useTokenBalance";
-import { BigNumber } from "ethers";
-import useApproveToken from "../lib/hooks/useApproval";
-import { USDC, USDT } from "../sdk/constants";
-import useAllTokens from "../lib/hooks/useAllTokens";
+import { Field, useProvideStore } from "../lib/state/useProvideStore";
+import useDerivedTokenInfo from "../lib/hooks/useDerivedTokenInfo";
 
 const DammTabContent = () => {
   const [activeTab, setActiveTab] = useState("tab1");
-
-  // const [amount1, setAmount1] = useState<string>("");
-  // // wrapper around setAmount1
-  // // automatically sets other field
-  // const reactiveSetAmount1 = (value: string) => {
-  //   setAmount1(value);
-  //   if (reserve1 && reserve0) {
-  //     const amount0 = value === "" ? 0 : BigNumber.from(value);
-  //     setAmount2(
-  //       value === "" ? "" : reserve1?.mul(amount0).div(reserve0).toString()
-  //     );
-  //   }
-  // };
-
-  // const [amount2, setAmount2] = useState<string>("");
-  // const reactiveSetAmount2 = (value: string) => {
-  //   setAmount2(value);
-  //   if (reserve1 && reserve0) {
-  //     const amount1 = value === "" ? 0 : BigNumber.from(value);
-  //     setAmount1(
-  //       value === "" ? "" : reserve0?.mul(amount1).div(reserve1).toString()
-  //     );
-  //   }
-  // };
-
-  // const [USDCToMint, setUSDCToMint] = useState<string>("");
-  // const [USDTToMint, setUSDTToMint] = useState<string>("");
-
-  // const [withdrawAmount, setWithdrawAmount] = useState<string>("");
-  // const [withdrawAmountAsBN, setWithdrawAmountAsBN] = useState<BigNumber>(
-  //   BigNumber.from(0)
-  // );
-  // const [expectedUSDCWithdrawn, setExpectedUSDCWithdrawn] =
-  //   useState<string>("");
-  // const [expectedUSDTWithdrawn, setExpectedUSDTWithdrawn] =
-  //   useState<string>("");
-
-  // const reactiveSetWithdrawAmount = (value: string) => {
-  //   const bigValue =
-  //     value === ""
-  //       ? BigNumber.from(0)
-  //       : BigNumber.from(parseFloat(value) * 10 ** 18);
-  //   setWithdrawAmount(value);
-  //   setWithdrawAmountAsBN(bigValue);
-  //   const shares = bigValue;
-  //   if (totalSupply && reserve0 && reserve1) {
-  //     setExpectedUSDCWithdrawn(
-  //       (shares.mul(reserve0).div(totalSupply).toNumber() / 10 ** 6).toString()
-  //     );
-  //     setExpectedUSDTWithdrawn(
-  //       (shares.mul(reserve1).div(totalSupply).toNumber() / 10 ** 6).toString()
-  //     );
-  //   }
-  // };
-
-  // const [provideError, setProvideError] = useState<string | undefined>();
-  // const [withdrawError, setWithdrawError] = useState<string | undefined>();
-
-  // const balances = useTokenBalances(useAllTokens());
-  // const { sync: syncArbi } = useSyncL2({ chainId: chain.arbitrumGoerli.id });
-  // const { sync: syncPolygon } = useSyncL2({ chainId: chain.polygonMumbai.id });
-  // const { provide } = usedAMM({
-  //   amount1: amount1 === "" ? "0" : amount1,
-  //   amount2: amount2 === "" ? "0" : amount2,
-  // });
-  // const { withdraw } = usedAMMWithdraw({
-  //   amount: withdrawAmountAsBN.toString(),
-  // });
-  // const { mint: mintUSDC } = useMint({
-  //   amount: USDCToMint === "" ? "0" : USDCToMint,
-  //   isUSDC: true,
-  // });
-  // const { mint: mintUSDT } = useMint({
-  //   amount: USDTToMint === "" ? "0" : USDTToMint,
-  //   isUSDC: false,
-  // });
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const highlightRef = useRef<HTMLDivElement>(null);
@@ -150,6 +70,22 @@ const DammTabContent = () => {
     },
   ];
 
+  const { currencies } = useDerivedTokenInfo();
+  const { onUserInput } = useProvideStore();
+
+  const formattedAmounts = useMemo(() => {
+    return {
+      [Field.INDEPENDENT]: "",
+      [Field.DEPENDENT]: "",
+    };
+  }, []);
+
+  const handleTypeIndependent = useCallback(() => {
+    (value: string) => {
+      onUserInput(Field.INDEPENDENT, value);
+    };
+  }, [onUserInput]);
+
   return (
     <Tabs.Root
       defaultValue="tab1"
@@ -180,41 +116,34 @@ const DammTabContent = () => {
       </Tabs.List>
       <Tabs.Content value="tab1">
         <InputWithBalance
-          label="USDT"
-          expectedChainId={chain.goerli.id}
-          value={amount1}
-          setError={setProvideError}
-          setValue={reactiveSetAmount1}
-          balance={balances[0]}
+          currency={currencies[Field.INDEPENDENT]}
+          onUserInput={handleTypeIndependent}
+          value={formattedAmounts[Field.INDEPENDENT]}
         />
         <InputWithBalance
-          label="USDC"
-          expectedChainId={chain.goerli.id}
-          value={amount2}
-          setError={setProvideError}
-          setValue={reactiveSetAmount2}
-          balance={balances[1]}
+          currency={currencies[Field.DEPENDENT]}
+          onUserInput={handleTypeIndependent}
+          value={formattedAmounts[Field.DEPENDENT]}
         />
         <InteractButton
+          onClick={() => {}}
           expectedChainId={chain.goerli.id}
-          error={provideError}
-          onClick={provide}
           text="Add Liquidity"
         >
           {(() => {
-            if (amount1 === "" || amount2 === "") {
-              return <Button disabled text="Enter an amount" />;
-            }
-            if (!isApprovedUSDC) {
-              return <Button onClick={approveUSDC} text="Approve USDC" />;
-            }
-            if (!isApprovedUSDT) {
-              return <Button onClick={approveUSDT} text="Approve USDT" />;
-            }
+            // if (amount1 === "" || amount2 === "") {
+            //   return <Button disabled text="Enter an amount" />;
+            // }
+            // if (!isApprovedUSDC) {
+            //   return <Button onClick={approveUSDC} text="Approve USDC" />;
+            // }
+            // if (!isApprovedUSDT) {
+            //   return <Button onClick={approveUSDT} text="Approve USDT" />;
+            // }
           })()}
         </InteractButton>
       </Tabs.Content>
-      <Tabs.Content value="tab2">
+      {/* <Tabs.Content value="tab2">
         <InputWithBalance
           label="DAMM-LP"
           expectedChainId={chain.goerli.id}
@@ -301,7 +230,7 @@ const DammTabContent = () => {
             text="Sync to Polygon AMM"
           />
         </div>
-      </Tabs.Content>
+      </Tabs.Content> */}
     </Tabs.Root>
   );
 };

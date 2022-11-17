@@ -4,4 +4,4 @@ import { ToastContent } from "../types";
 
 interface SwapStoreState {}
 
-export const useStore = create<SwapStoreState>((set, get) => ({}));
+export const useSwapStore = create<SwapStoreState>((set, get) => ({}));

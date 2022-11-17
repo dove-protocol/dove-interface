@@ -6,40 +6,17 @@ import { validateNumber } from "../lib/utils";
 import { Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
-  label,
-  expectedChainId,
-  balance,
+  currency,
   value,
-  setValue,
-  setError,
-  maxEnabled = false,
+  onUserInput,
 }: {
-  label: string;
-  expectedChainId: number;
-  balance?: CurrencyAmount<Currency>;
+  currency: Currency | undefined;
   value: string;
-  setValue: (value: string) => void;
-  setError?: (error: string | undefined) => void;
-  maxEnabled?: boolean;
+  onUserInput: (value: string) => void;
 }) => {
   const { chain } = useNetwork();
 
-  let error = chain?.id !== expectedChainId;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setValue(e.target.value);
-      if (setError && balance && e.target.value !== "") {
-        const value = parseFloat(e.target.value) * 10 ** 6;
-        if (BigNumber.from(value).gt(balance.value)) {
-          console.log("error");
-          setError("Insufficient balance");
-        } else {
-          setError(undefined);
-        }
-      }
-    }
-  };
+  const error = false;
 
   return (
     <div className="relative mb-4">
@@ -50,7 +27,7 @@ const InputWithBalance = ({
         } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
         value={value}
-        onChange={handleChange}
+        onChange={(e) => onUserInput(e.target.value)}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
         <h4
@@ -59,11 +36,11 @@ const InputWithBalance = ({
           }`}
         >
           <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
-          {label}
+          {currency?.symbol}
         </h4>
         {!error && (
           <div className="flex items-center space-x-2">
-            {balance && (
+            {/* {balance && (
               <p className="text-sm text-white/50">
                 Balance: {parseFloat(parseFloat(balance.formatted).toFixed(6))}
               </p>
@@ -79,7 +56,7 @@ const InputWithBalance = ({
               >
                 <p className="text-sm text-white">Max</p>
               </button>
-            )}
+            )} */}
           </div>
         )}
       </div>
