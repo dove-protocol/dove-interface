@@ -8,7 +8,10 @@ export default function useAmmData(
   currency1: Currency | undefined,
   currency2: Currency | undefined
 ): {
-  data: CurrencyAmount<Currency>[] | null;
+  data: {
+    reserve0: CurrencyAmount<Currency> | undefined;
+    reserve1: CurrencyAmount<Currency> | undefined;
+  } | null;
 } {
   const { chain } = useNetwork();
 
@@ -45,15 +48,15 @@ export default function useAmmData(
   if (!data?.[0] || !data?.[1] || !currency1 || !currency2)
     return { data: null };
   return {
-    data: [
-      CurrencyAmount.fromRawAmount(
+    data: {
+      reserve0: CurrencyAmount.fromRawAmount(
         currency1,
         (data[0] as BigNumber).toString()
       ),
-      CurrencyAmount.fromRawAmount(
+      reserve1: CurrencyAmount.fromRawAmount(
         currency1,
         (data[1] as BigNumber).toString()
       ),
-    ],
+    },
   };
 }
