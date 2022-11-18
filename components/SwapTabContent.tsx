@@ -33,6 +33,7 @@ import { useBurnStore } from "../state/burn/useBurnStore";
 import useBurn from "../lib/hooks/burn/useBurn";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
 import useDammData from "../lib/hooks/data/useDammData";
+import useAmmData from "../lib/hooks/data/useAmmData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
@@ -241,6 +242,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
 
+  const { data: ammData } = useAmmData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
+  );
+
   return (
     <TabSlider tabsData={tabsData}>
       <Tabs.Content value="tab1">
@@ -337,7 +343,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <p className="mb-2 text-white ">dAMM Available Reserves</p>
+        <p className="mb-2 text-white ">dAMM Available Claims</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
           <p className="text-sm text-white/50">USDC</p>
           <p className="text-sm text-white">
@@ -412,7 +418,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
             Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
+            {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -421,7 +427,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
             Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
+            {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
           </h3>
         </div>
       </Tabs.Content>
