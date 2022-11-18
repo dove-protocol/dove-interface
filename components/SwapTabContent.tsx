@@ -1,16 +1,7 @@
 import React from "react";
 import { chain, useAccount } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
-import {
-  BiExpandAlt,
-  BiRefresh,
-  BiCog,
-  BiDollar,
-  BiDownload,
-  BiReceipt,
-  BiCreditCardFront,
-  BiStats,
-} from "react-icons/bi";
+import { BiExpandAlt } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef } from "react";
 import InputWithBalance from "./InputWithBalance";
@@ -37,38 +28,9 @@ import useAmmData from "../lib/hooks/data/useAmmData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
+import { dammTabsData } from "../constants/tabs";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
-  const tabsData = [
-    {
-      id: "tab1",
-      title: "Swap",
-      icon: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab4",
-      title: "Vouchers",
-      icon: <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab5",
-      title: "Reserves",
-      icon: <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab2",
-      title: "Mint",
-      icon: <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab3",
-      title: "Sync",
-      icon: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-  ];
-
-  /////////////////////////////
-
   useChainDefaults();
 
   const { callback: toastCallback } = useTriggerToast();
@@ -248,7 +210,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   );
 
   return (
-    <TabSlider tabsData={tabsData}>
+    <TabSlider tabsData={dammTabsData}>
       <Tabs.Content value="tab1">
         <InputWithBalance
           currency={currencies[Field.CURRENCY_A]}

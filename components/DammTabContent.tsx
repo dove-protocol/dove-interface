@@ -1,7 +1,6 @@
 import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useRef, useCallback, useMemo } from "react";
-import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
 import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
@@ -26,40 +25,9 @@ import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import JSBI from "jsbi";
+import { ammTabsData } from "../constants/tabs";
 
 const DammTabContent = () => {
-  //////////////////////////////////////////////////////////
-
-  const tabsData = [
-    {
-      id: "tab1",
-      title: "Provide",
-      icon: <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab2",
-      title: "Withdraw",
-      icon: <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab3",
-      title: "Reserves",
-      icon: <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab4",
-      title: "Mint",
-      icon: <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab5",
-      title: "Sync",
-      icon: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-  ];
-
-  //////////////////////////////////////////////////////////
-
   // load up default tokens for chain
   useChainDefaults();
 
@@ -202,7 +170,7 @@ const DammTabContent = () => {
   };
 
   return (
-    <TabSlider tabsData={tabsData}>
+    <TabSlider tabsData={ammTabsData}>
       <Tabs.Content value="tab1">
         <InputWithBalance
           currency={currencies[Field.CURRENCY_A]}
