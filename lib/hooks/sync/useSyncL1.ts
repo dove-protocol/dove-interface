@@ -33,6 +33,7 @@ export default function useSyncL1(): {
     overrides: {
       value: ethers.utils.parseEther("0.1"),
     },
+    enabled: !!chain,
   });
 
   const { writeAsync } = useContractWrite(config);

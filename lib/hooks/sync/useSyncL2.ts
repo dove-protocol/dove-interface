@@ -25,6 +25,7 @@ export default function useSyncL2(chainToSync: ChainId): {
     overrides: {
       value: ethers.utils.parseEther("0.1"),
     },
+    enabled: !!chainToSync,
   });
 
   const { write } = useContractWrite(config);

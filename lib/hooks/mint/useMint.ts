@@ -19,6 +19,7 @@ export default function useMint(
     abi: MintableERC20,
     functionName: "mint",
     args: [account ?? address, amountToMint?.numerator.toString()],
+    enabled: !!amountToMint,
   });
 
   const { writeAsync } = useContractWrite(config);

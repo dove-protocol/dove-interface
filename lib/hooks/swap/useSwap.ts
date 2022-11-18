@@ -31,6 +31,7 @@ export default function useSwap(
     ...AMMContract,
     functionName: "swap",
     args: [amountIn?.quotient.toString(), amountOut?.quotient.toString()],
+    enabled: !!amountIn && !!amountOut,
   });
 
   const { write } = useContractWrite(config);

@@ -13,6 +13,7 @@ export default function useWithdrawLiquidity(
     abi: dAMMContractInterface,
     functionName: "withdraw",
     args: [amount?.numerator.toString()],
+    enabled: !!amount,
   });
 
   const { write } = useContractWrite(config);

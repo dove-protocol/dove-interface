@@ -72,8 +72,6 @@ const DammTabContent = () => {
   const { parsedAmounts, currencies, currencyBalances } =
     useDerivedProvideInfo();
 
-  console.log(parsedAmounts);
-
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );

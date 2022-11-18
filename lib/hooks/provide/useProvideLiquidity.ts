@@ -12,6 +12,7 @@ export default function useProvideLiquidity(
     abi: dAMMContractInterface,
     functionName: "provide",
     args: [amount1?.numerator.toString(), amount2?.numerator.toString()],
+    enabled: !!amount1 && !!amount2,
   });
 
   const { write } = useContractWrite(config);

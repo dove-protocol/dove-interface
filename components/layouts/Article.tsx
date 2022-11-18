@@ -12,11 +12,6 @@ const Article = ({ children }: { children: React.ReactNode }) => {
   const { isOpen, setOpen, toastContent } = useUserStore();
   const { chain } = useNetwork();
 
-  useEffect(() => {
-    console.log(toastContent);
-  }, [toastContent]);
-  console.log(`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`);
-
   return (
     <motion.article
       variants={transitionAnimation}
