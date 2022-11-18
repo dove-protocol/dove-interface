@@ -92,17 +92,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
-
-    if (!parsedAmounts[Field.CURRENCY_A] || !data?.reserve0 || !data?.reserve1)
-      return;
-
-    onUserInput(
-      Field.CURRENCY_B,
-      parsedAmounts[Field.CURRENCY_A]
-        .multiply(data.reserve1)
-        .divide(data.reserve0.add(parsedAmounts[Field.CURRENCY_A]))
-        .toFixed(6)
-    );
   };
 
   const handleMax = () => {
