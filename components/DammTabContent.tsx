@@ -6,7 +6,7 @@ import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
 import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
-import { ChainId, Currency, CurrencyAmount, DAMM_LP } from "../sdk";
+import { ChainId, Currency, CurrencyAmount, DAMM_LP, MaxUint256 } from "../sdk";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import { Field, useProvideStore } from "../state/provide/useProvideStore";
@@ -74,11 +74,13 @@ const DammTabContent = () => {
     useDerivedProvideInfo();
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
-    parsedAmounts[Field.CURRENCY_A]
+    currencies[Field.CURRENCY_A] &&
+      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_A], MaxUint256)
   );
 
   const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
-    parsedAmounts[Field.CURRENCY_B]
+    currencies[Field.CURRENCY_B] &&
+      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_B], MaxUint256)
   );
 
   // load up liquidity callback
@@ -233,6 +235,18 @@ const DammTabContent = () => {
             ) {
               return <Button disabled text="Enter an amount" />;
             }
+            if (
+              currencyBalances[Field.CURRENCY_A] &&
+              currencyBalances[Field.CURRENCY_B] &&
+              (parsedAmounts[Field.CURRENCY_A].greaterThan(
+                currencyBalances[Field.CURRENCY_A]
+              ) ||
+                parsedAmounts[Field.CURRENCY_B].greaterThan(
+                  currencyBalances[Field.CURRENCY_B]
+                ))
+            ) {
+              return <Button disabled text="Insufficient balance" />;
+            }
             if (approveStateA !== ApprovalState.APPROVED) {
               return (
                 <Button
@@ -248,18 +262,6 @@ const DammTabContent = () => {
                   text={`Approve ${currencies[Field.CURRENCY_B]?.symbol}`}
                 />
               );
-            }
-            if (
-              currencyBalances[Field.CURRENCY_A] &&
-              currencyBalances[Field.CURRENCY_B] &&
-              (parsedAmounts[Field.CURRENCY_A].greaterThan(
-                currencyBalances[Field.CURRENCY_A]
-              ) ||
-                parsedAmounts[Field.CURRENCY_B].greaterThan(
-                  currencyBalances[Field.CURRENCY_B]
-                ))
-            ) {
-              return <Button disabled text="Insufficient balance" />;
             }
           })()}
         </InteractButton>

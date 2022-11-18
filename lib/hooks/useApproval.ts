@@ -13,6 +13,7 @@ import { Currency, CurrencyAmount } from "../../sdk";
 import useTriggerToast from "./useTriggerToast";
 import { MaxUint256 } from "@ethersproject/constants";
 import { SendTransactionResult } from "@wagmi/core";
+import JSBI from "jsbi";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -42,8 +43,9 @@ export default function useApproval(
     functionName: "approve",
     args: [
       spender as `0x${string}`,
-      amountToApprove?.numerator.toString() as any,
+      BigNumber.from(amountToApprove?.numerator.toString()),
     ],
+    enabled: !!amountToApprove && approvalState === ApprovalState.NOT_APPROVED,
   });
 
   const { writeAsync } = useContractWrite(approvalConfig);
@@ -81,13 +83,22 @@ function useApprovalStateForSpender(
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
 
+  console.log(amountToApprove.currency.symbol, allowance.toString());
+
   const allowanceAmount = CurrencyAmount.fromRawAmount(
     amountToApprove.currency,
     allowance.toString()
   );
 
-  return allowanceAmount.greaterThan(amountToApprove) ||
-    allowanceAmount.equalTo(amountToApprove)
+  console.log(
+    String(allowanceAmount.numerator),
+    String(amountToApprove.numerator)
+  );
+
+  return JSBI.greaterThanOrEqual(
+    allowanceAmount.numerator,
+    amountToApprove.numerator
+  )
     ? ApprovalState.APPROVED
     : ApprovalState.NOT_APPROVED;
 }
