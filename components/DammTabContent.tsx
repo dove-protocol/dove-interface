@@ -54,13 +54,11 @@ const DammTabContent = () => {
   };
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
-    currencies[Field.CURRENCY_A] &&
-      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_A], MaxUint256)
+    parsedAmounts[Field.CURRENCY_A]
   );
 
   const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
-    currencies[Field.CURRENCY_B] &&
-      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_B], MaxUint256)
+    parsedAmounts[Field.CURRENCY_B]
   );
 
   // load up liquidity callback

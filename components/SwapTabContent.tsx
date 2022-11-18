@@ -115,11 +115,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     currencyBalances: mintBalance,
   } = useDerivedMintInfo();
 
-  const formattedMintAmounts = {
-    [Field.CURRENCY_A]: formatCurrencyAmount(mintAmounts[Field.CURRENCY_A], 6),
-    [Field.CURRENCY_B]: formatCurrencyAmount(mintAmounts[Field.CURRENCY_B], 6),
-  };
-
   const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
 
   const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
@@ -184,11 +179,6 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     currencies: burnCurrencies,
     currencyBalances: burnBalances,
   } = useDerivedBurnInfo();
-
-  const formattedBurnAmounts = {
-    [Field.CURRENCY_A]: formatCurrencyAmount(burnAmounts[Field.CURRENCY_A], 6),
-    [Field.CURRENCY_B]: formatCurrencyAmount(burnAmounts[Field.CURRENCY_B], 6),
-  };
 
   const { callback: approveCallbackVoucherA, state: approveVoucherStateA } =
     useTokenApproval(burnAmounts[Field.CURRENCY_A]);
@@ -298,7 +288,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           balance={mintBalance[Field.CURRENCY_A]}
           onUserInput={handleTypeMintA}
           showMaxButton={false}
-          value={formattedMintAmounts[Field.CURRENCY_A]}
+          value={mintFields[Field.CURRENCY_A]}
           expectedChainId={expectedChainId}
         />
         <div className="relative mb-4">
@@ -313,7 +303,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           balance={mintBalance[Field.CURRENCY_B]}
           onUserInput={handleTypeMintB}
           showMaxButton={false}
-          value={formattedMintAmounts[Field.CURRENCY_B]}
+          value={mintFields[Field.CURRENCY_B]}
           expectedChainId={expectedChainId}
         />
         <InteractButton
@@ -348,7 +338,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           balance={burnBalances[Field.CURRENCY_A]}
           onUserInput={handleTypeBurnA}
           showMaxButton={false}
-          value={formattedBurnAmounts[Field.CURRENCY_A]}
+          value={burnFields[Field.CURRENCY_A]}
           expectedChainId={expectedChainId}
         />
         <InputWithBalance
@@ -356,7 +346,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           balance={burnBalances[Field.CURRENCY_B]}
           onUserInput={handleTypeBurnB}
           showMaxButton={false}
-          value={formattedBurnAmounts[Field.CURRENCY_B]}
+          value={burnFields[Field.CURRENCY_B]}
           expectedChainId={expectedChainId}
         />
         <InteractButton
