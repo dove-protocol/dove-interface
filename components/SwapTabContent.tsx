@@ -1,17 +1,12 @@
 import React from "react";
-import { chain, useAccount } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import { BiExpandAlt } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useRef } from "react";
 import InputWithBalance from "./InputWithBalance";
-import useApproveToken, { ApprovalState } from "../lib/hooks/useApproval";
-import { BigNumber } from "ethers";
+import { ApprovalState } from "../lib/hooks/useApproval";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
-import JSBI from "jsbi";
-import { ChainId, CurrencyAmount } from "../sdk";
-import { DAMM_LP, USDC } from "../sdk/constants";
-import { useTokenBalances } from "../lib/hooks/useTokenBalance";
+import { ChainId } from "../sdk";
+import { DAMM_LP } from "../sdk/constants";
 import TabSlider from "./TabSlider";
 import { Field, useSwapStore } from "../state/swap/useSwapStore";
 import { useDerivedSwapInfo } from "../state/swap/useDerivedSwapInfo";
@@ -28,7 +23,7 @@ import useAmmData from "../lib/hooks/data/useAmmData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
-import { dammTabsData } from "../constants/tabs";
+import { ammTabsData } from "../constants/tabs";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   useChainDefaults();
@@ -55,6 +50,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
+  };
+
+  const handleTypeOutput = (value: string) => {
+    onUserInput(Field.CURRENCY_B, value);
   };
 
   const handleMax = () => {
@@ -210,7 +209,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   );
 
   return (
-    <TabSlider tabsData={dammTabsData}>
+    <TabSlider tabsData={ammTabsData}>
       <Tabs.Content value="tab1">
         <InputWithBalance
           currency={currencies[Field.CURRENCY_A]}
@@ -231,7 +230,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           balance={currencyBalances[Field.CURRENCY_B]}
           showMaxButton={false}
           value={parsedAmounts[Field.CURRENCY_B]}
-          disabled
+          onUserInput={handleTypeOutput}
           expectedChainId={expectedChainId}
         />
         <InteractButton

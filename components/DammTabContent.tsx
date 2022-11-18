@@ -25,7 +25,7 @@ import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import JSBI from "jsbi";
-import { ammTabsData } from "../constants/tabs";
+import { ammTabsData, dammTabsData } from "../constants/tabs";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -170,7 +170,7 @@ const DammTabContent = () => {
   };
 
   return (
-    <TabSlider tabsData={ammTabsData}>
+    <TabSlider tabsData={dammTabsData}>
       <Tabs.Content value="tab1">
         <InputWithBalance
           currency={currencies[Field.CURRENCY_A]}

@@ -63,11 +63,10 @@ const TabSlider = ({
           <Tab
             key={tab.id}
             id={tab.id}
-            label={tab.title}
+            title={tab.title}
+            icon={tab.icon}
             repositionHighlight={repositionHighlight}
-          >
-            {tab.icon}
-          </Tab>
+          />
         ))}
       </Tabs.List>
       {children}
@@ -79,13 +78,13 @@ export default TabSlider;
 
 const Tab = ({
   id,
-  children,
-  label,
+  title,
+  icon,
   repositionHighlight,
 }: {
   id: string;
-  children: React.ReactNode;
-  label: string;
+  title: string;
+  icon: React.ReactNode;
   repositionHighlight: (e: any, id: any) => void;
 }) => {
   return (
@@ -94,8 +93,8 @@ const Tab = ({
       className="relative flex w-full cursor-pointer flex-row items-center justify-center rounded-sm border border-transparent px-4 py-1 transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
       onMouseEnter={(e) => repositionHighlight(e, id)}
     >
-      <p>{label}</p>
-      {children}
+      <p className="mr-2">{title}</p>
+      {icon}
     </Tabs.Trigger>
   );
 };

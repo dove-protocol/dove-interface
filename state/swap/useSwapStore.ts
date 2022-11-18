@@ -22,6 +22,7 @@ interface SwapStoreState {
   onSwitchTokens: () => void;
   isSwapped: boolean;
   toggleSwap: () => void;
+  independentField: Field;
 }
 
 export const useSwapStore = create<SwapStoreState>((set, get) => ({
@@ -32,9 +33,10 @@ export const useSwapStore = create<SwapStoreState>((set, get) => ({
   fields: {},
   onUserInput: (field: Field, value: string) => {
     set(
-      produce((draft) => {
+      produce((state) => {
         if (validateNumber(value)) {
-          draft.fields[field] = value;
+          state.fields[field] = value;
+          state.input = field;
         }
       })
     );
@@ -42,4 +44,5 @@ export const useSwapStore = create<SwapStoreState>((set, get) => ({
   onSwitchTokens: () => {},
   isSwapped: false,
   toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),
+  independentField: Field.CURRENCY_A,
 }));

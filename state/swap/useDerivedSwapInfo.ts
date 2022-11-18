@@ -13,9 +13,10 @@ export function useDerivedSwapInfo(): {
   };
 } {
   const { address } = useAccount();
-  const [fields, currencies] = useSwapStore((state) => [
+  const [fields, currencies, independentField] = useSwapStore((state) => [
     state.fields,
     state.currencies,
+    state.independentField,
   ]);
 
   const { data } = useDammData(
@@ -24,15 +25,16 @@ export function useDerivedSwapInfo(): {
     DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
 
+  const dependentField =
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
+
   const independentAmount = tryParseCurrencyAmount(
-    fields[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_A]
+    fields[independentField],
+    currencies[independentField]
   );
 
-  let dependentAmount = tryParseCurrencyAmount(
-    fields[Field.CURRENCY_B],
-    currencies[Field.CURRENCY_B]
-  );
+  // fallback to undefined if parsing fails?
+  let dependentAmount;
 
   // calculate output amount for swap
   if (data?.reserve0 && data?.reserve1 && independentAmount) {
@@ -41,7 +43,7 @@ export function useDerivedSwapInfo(): {
         .multiply(data.reserve1)
         .divide(data.reserve0.add(independentAmount))
         .toExact(),
-      currencies[Field.CURRENCY_B]
+      currencies[dependentField]
     );
   }
 
@@ -52,8 +54,14 @@ export function useDerivedSwapInfo(): {
   );
 
   const parsedAmounts = {
-    [Field.CURRENCY_A]: independentAmount,
-    [Field.CURRENCY_B]: dependentAmount,
+    [Field.CURRENCY_A]:
+      independentField === Field.CURRENCY_A
+        ? independentAmount
+        : dependentAmount,
+    [Field.CURRENCY_B]:
+      independentField === Field.CURRENCY_B
+        ? independentAmount
+        : dependentAmount,
   };
 
   const currencyBalances = {
