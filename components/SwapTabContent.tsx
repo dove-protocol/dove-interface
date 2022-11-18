@@ -107,7 +107,21 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleSwap = () => {
-    swapCallback?.();
+    swapCallback?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Swap",
+          description: `Swap ${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_A],
+            6
+          )} ${currencies[Field.CURRENCY_A]?.symbol} for ${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_B],
+            6
+          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   /////////////////////////////
@@ -136,7 +150,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.().then((txid) => {
+    mintCallbackA?.().then((tx) => {
       if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
         return;
       toastCallback?.({
@@ -145,7 +159,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           mintAmounts[Field.CURRENCY_A],
           6
         )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-        txid: txid.hash,
+        txid: tx.hash,
         type: "success",
       });
     });

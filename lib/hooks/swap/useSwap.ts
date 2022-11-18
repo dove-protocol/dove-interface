@@ -2,12 +2,13 @@ import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
+import { SendTransactionResult } from "@wagmi/core";
 
 export default function useSwap(
   amountIn: CurrencyAmount<Currency> | undefined,
   amountOut: CurrencyAmount<Currency> | undefined
 ): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
 } {
   const { chain } = useNetwork();
 
@@ -34,10 +35,10 @@ export default function useSwap(
     enabled: !!amountIn && !!amountOut,
   });
 
-  const { write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  if (!write || !amountIn || !amountOut) return { callback: null };
+  if (!writeAsync || !amountIn || !amountOut) return { callback: null };
   return {
-    callback: () => write(),
+    callback: async () => await writeAsync(),
   };
 }
