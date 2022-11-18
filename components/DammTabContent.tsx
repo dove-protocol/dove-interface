@@ -42,11 +42,13 @@ const DammTabContent = () => {
     useDerivedProvideInfo();
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
-    parsedAmounts[Field.CURRENCY_A]
+    currencies[Field.CURRENCY_A] &&
+      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_A], MaxUint256)
   );
 
   const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
-    parsedAmounts[Field.CURRENCY_B]
+    currencies[Field.CURRENCY_B] &&
+      CurrencyAmount.fromRawAmount(currencies[Field.CURRENCY_B], MaxUint256)
   );
 
   // load up liquidity callback

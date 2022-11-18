@@ -13,9 +13,10 @@ export function useDerivedProvideInfo(): {
   };
 } {
   const { address } = useAccount();
-  const [fields, currencies] = useProvideStore((state) => [
+  const [fields, currencies, independentField] = useProvideStore((state) => [
     state.fields,
     state.currencies,
+    state.independentField,
   ]);
 
   const { data } = useDammData(
@@ -24,21 +25,21 @@ export function useDerivedProvideInfo(): {
     DAMM_LP[ChainId.ETHEREUM_GOERLI]
   );
 
+  const dependentField =
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
+
   const independentAmount = tryParseCurrencyAmount(
-    fields[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_A]
+    fields[independentField],
+    currencies[independentField]
   );
 
-  let dependentAmount = tryParseCurrencyAmount(
-    fields[Field.CURRENCY_B],
-    currencies[Field.CURRENCY_B]
-  );
+  let dependentAmount;
 
   // calculate amount of second token to provide
   if (data?.reserve0 && data?.reserve1 && independentAmount) {
     dependentAmount = tryParseCurrencyAmount(
       data.reserve0.multiply(independentAmount).divide(data.reserve1).toExact(),
-      currencies[Field.CURRENCY_B]
+      currencies[dependentField]
     );
   }
 
@@ -49,8 +50,14 @@ export function useDerivedProvideInfo(): {
   );
 
   const parsedAmounts = {
-    [Field.CURRENCY_A]: independentAmount,
-    [Field.CURRENCY_B]: dependentAmount,
+    [Field.CURRENCY_A]:
+      independentField === Field.CURRENCY_A
+        ? independentAmount
+        : dependentAmount,
+    [Field.CURRENCY_B]:
+      independentField === Field.CURRENCY_B
+        ? independentAmount
+        : dependentAmount,
   };
 
   const currencyBalances = {

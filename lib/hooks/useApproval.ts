@@ -83,7 +83,7 @@ function useApprovalStateForSpender(
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
 
-  console.log(amountToApprove.currency.symbol, allowance.toString());
+  // console.log(amountToApprove.currency.symbol, allowance.toString());
 
   const allowanceAmount = CurrencyAmount.fromRawAmount(
     amountToApprove.currency,
