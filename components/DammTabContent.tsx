@@ -30,10 +30,13 @@ import {
   currencyAmountToPreciseFloat,
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
+import useTriggerToast from "../lib/hooks/useTriggerToast";
 
 const DammTabContent = () => {
   // load up default tokens for chain
   useChainDefaults();
+
+  const { callback: toastCallback } = useTriggerToast();
 
   // load up state
   const [fields, onUserInput, independentField] = useProvideStore((state) => [
@@ -77,15 +80,51 @@ const DammTabContent = () => {
   };
 
   const handleProvideLiquidity = () => {
-    callback?.();
+    callback?.().then((tx) => {
+      tx && parsedAmounts[Field.CURRENCY_A] && parsedAmounts[Field.CURRENCY_B];
+      toastCallback?.({
+        title: "Liquidity Added",
+        description: `You added ${formatTransactionAmount(
+          currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+        )} ${
+          currencies[Field.CURRENCY_A]?.symbol
+        } and ${formatTransactionAmount(
+          currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+        )} ${currencies[Field.CURRENCY_B]?.symbol} to the pool.`,
+        txid: tx.hash,
+        type: "success",
+      });
+    });
   };
 
   const handleApproveA = () => {
-    approveCallbackA?.();
+    approveCallbackA?.().then((tx) => {
+      tx &&
+        parsedAmounts[Field.CURRENCY_A] &&
+        toastCallback?.({
+          title: "Token Approved",
+          description: `You approved ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+          )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   const handleApproveB = () => {
-    approveCallbackB?.();
+    approveCallbackB?.().then((tx) => {
+      tx &&
+        parsedAmounts[Field.CURRENCY_B] &&
+        toastCallback?.({
+          title: "Token Approved",
+          description: `You approved ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+          )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   const handleMax = () => {
@@ -118,7 +157,18 @@ const DammTabContent = () => {
   };
 
   const handleWithdraw = () => {
-    withdrawCallback?.();
+    withdrawCallback?.().then((tx) => {
+      tx &&
+        withdrawAmounts[Field.CURRENCY_A] &&
+        toastCallback?.({
+          title: "Liquidity Removed",
+          description: `You removed ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
+          )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol} from the pool.`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   const handleMaxWithdraw = () => {
@@ -155,11 +205,31 @@ const DammTabContent = () => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.();
+    mintCallbackA?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Minted",
+          description: `Minted ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
+          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   const handleMintB = () => {
-    mintCallbackB?.();
+    mintCallbackB?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Minted",
+          description: `Minted ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
+          )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   // temporarily use currencies from provide (dependent on pool in future?)
@@ -175,11 +245,27 @@ const DammTabContent = () => {
   const { callback: polygonCallback } = useSyncL2(ChainId.POLYGON_MUMBAI);
 
   const handleArbiSync = () => {
-    arbiCallback?.();
+    arbiCallback?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Arbitrum Sync",
+          description: `Synced Arbitrum with Ethereum`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   const handlePolygonSync = () => {
-    polygonCallback?.();
+    polygonCallback?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Polygon Sync",
+          description: `Synced Polygon with Ethereum`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
   };
 
   return (

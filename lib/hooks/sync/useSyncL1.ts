@@ -4,9 +4,10 @@ import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { ethers } from "ethers";
+import { SendTransactionResult } from "@wagmi/core";
 
 export default function useSyncL1(): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
 } {
   const { chain } = useNetwork();
 

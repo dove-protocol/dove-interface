@@ -81,7 +81,18 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleApproveA = () => {
-    approveCallbackA?.();
+    approveCallbackA?.().then((txid) => {
+      if (!parsedAmounts[Field.CURRENCY_A]) return;
+      toastCallback?.({
+        title: "Minted",
+        description: `You minted ${formatCurrencyAmount(
+          parsedAmounts[Field.CURRENCY_A],
+          6
+        )} ${currencies[Field.CURRENCY_A]?.symbol}`,
+        txid: txid.hash,
+        type: "success",
+      });
+    });
   };
 
   const handleSwap = () => {
@@ -200,15 +211,51 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleApproveVoucherA = () => {
-    approveCallbackVoucherA?.();
+    approveCallbackVoucherA?.().then((tx) => {
+      if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
+        return;
+      toastCallback?.({
+        title: "Approved",
+        description: `You approved ${formatCurrencyAmount(
+          burnAmounts[Field.CURRENCY_A],
+          6
+        )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
+        txid: tx.hash,
+        type: "success",
+      });
+    });
   };
 
   const handleApproveVoucherB = () => {
-    approveCallbackVoucherB?.();
+    approveCallbackVoucherB?.().then((tx) => {
+      if (!burnAmounts[Field.CURRENCY_B] || !burnCurrencies[Field.CURRENCY_B])
+        return;
+      toastCallback?.({
+        title: "Approved",
+        description: `You approved ${formatCurrencyAmount(
+          burnAmounts[Field.CURRENCY_B],
+          6
+        )} ${burnCurrencies[Field.CURRENCY_B]?.symbol}`,
+        txid: tx.hash,
+        type: "success",
+      });
+    });
   };
 
   const handleBurn = () => {
-    burnCallback?.();
+    burnCallback?.().then((tx) => {
+      if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
+        return;
+      toastCallback?.({
+        title: "Burned",
+        description: `You burned ${formatCurrencyAmount(
+          burnAmounts[Field.CURRENCY_A],
+          6
+        )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
+        txid: tx.hash,
+        type: "success",
+      });
+    });
   };
 
   /////////////////////////////

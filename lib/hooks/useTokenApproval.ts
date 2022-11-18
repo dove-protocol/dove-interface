@@ -9,12 +9,13 @@ import {
   MaxUint256,
 } from "../../sdk";
 import useApproval, { ApprovalState } from "./useApproval";
+import { SendTransactionResult } from "@wagmi/core";
 
 // wraps useApproveCallback in the context of a swap
 export default function useTokenApproval(
   currencyAmount: CurrencyAmount<Currency> | undefined
 ): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
   state: ApprovalState;
 } {
   const { chain } = useNetwork();

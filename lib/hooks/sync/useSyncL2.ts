@@ -3,9 +3,10 @@ import { useMemo, useCallback } from "react";
 import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
+import { SendTransactionResult } from "@wagmi/core";
 
 export default function useSyncL2(chainToSync: ChainId): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
 } {
   const dAMMContract = {
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
@@ -28,11 +29,11 @@ export default function useSyncL2(chainToSync: ChainId): {
     enabled: !!chainToSync,
   });
 
-  const { write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  if (!write) return { callback: null };
+  if (!writeAsync) return { callback: null };
 
   return {
-    callback: () => write(),
+    callback: async () => await writeAsync(),
   };
 }
