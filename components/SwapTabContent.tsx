@@ -24,6 +24,7 @@ import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import { ammTabsData } from "../constants/tabs";
+import { currencyAmountToPreciseFloat } from "../lib/utils/formatNumbers";
 
 const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   useChainDefaults();
@@ -40,13 +41,15 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     ]);
 
   const dependentField =
-    independentField === Field.CURRENCY_A ? Field.CURRENCY_A : Field.CURRENCY_B;
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
 
   const { parsedAmounts, currencies, currencyBalances } = useDerivedSwapInfo();
 
   const formattedAmounts = {
     [independentField]: fields[independentField],
-    [dependentField]: formatCurrencyAmount(parsedAmounts[dependentField], 6),
+    [dependentField]:
+      currencyAmountToPreciseFloat(parsedAmounts[dependentField])?.toString() ??
+      "",
   };
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(

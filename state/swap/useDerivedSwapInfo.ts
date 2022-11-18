@@ -36,12 +36,6 @@ export function useDerivedSwapInfo(): {
   // fallback to undefined if parsing fails?
   let dependentAmount;
 
-  console.log(
-    data?.reserve0?.toExact(),
-    data?.reserve1?.toExact(),
-    independentAmount?.toExact()
-  );
-
   // calculate output amount for swap (mr. tabler wrote proof so it's correct)
 
   // amountIn = (amountOut * reserveIn) / (reserveOut - amountOut)
