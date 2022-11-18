@@ -1,9 +1,9 @@
 import { BigNumber } from "ethers";
-import React from "react";
+import React, { useMemo } from "react";
 import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
-import { Currency, CurrencyAmount } from "../sdk";
+import { ChainId, Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
   currency,
@@ -13,6 +13,7 @@ const InputWithBalance = ({
   showMaxButton,
   onMax,
   disabled = false,
+  expectedChainId,
 }: {
   currency: Currency | undefined;
   balance: CurrencyAmount<Currency> | undefined;
@@ -21,7 +22,14 @@ const InputWithBalance = ({
   showMaxButton: boolean;
   onMax?: () => void;
   disabled?: boolean;
+  expectedChainId: ChainId;
 }) => {
+  const { chain } = useNetwork();
+
+  if (!chain || chain.id !== expectedChainId) {
+    disabled = true;
+  }
+
   return (
     <div className="relative mb-4">
       <input

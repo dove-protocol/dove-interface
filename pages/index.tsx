@@ -11,6 +11,7 @@ import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
 import { useUserStore } from "../state/user/useUserStore";
+import { ChainId } from "../sdk";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -100,12 +101,12 @@ export default function Home() {
                 </Tabs.Content>
                 <Tabs.Content value="polygon">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={chain.polygonMumbai.id} />
+                    <SwapTabContent expectedChainId={ChainId.POLYGON_MUMBAI} />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="arbi">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} />
+                    <SwapTabContent expectedChainId={ChainId.ARBITRUM_GOERLI} />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="settings">

@@ -210,6 +210,7 @@ const DammTabContent = () => {
           showMaxButton={true}
           onMax={handleMax}
           value={fields[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InputWithBalance
           currency={currencies[Field.CURRENCY_B]}
@@ -217,6 +218,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeB}
           showMaxButton={false}
           value={fields[Field.CURRENCY_B]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
           onConfirm={handleProvideLiquidity}
@@ -257,6 +259,7 @@ const DammTabContent = () => {
           showMaxButton={true}
           onMax={handleMaxWithdraw}
           value={withdrawFields[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
@@ -324,6 +327,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeMintA}
           showMaxButton={false}
           value={mintFields[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <div className="relative mb-4">
           <InteractButton
@@ -338,6 +342,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeMintB}
           showMaxButton={false}
           value={mintFields[Field.CURRENCY_B]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
           onConfirm={handleMintB}
