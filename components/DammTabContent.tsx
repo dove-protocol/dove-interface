@@ -88,6 +88,17 @@ const DammTabContent = () => {
 
   const handleTypeA = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
+
+    if (!data?.reserve0 || !data?.reserve1 || !parsedAmounts[Field.CURRENCY_A])
+      return;
+
+    onUserInput(
+      Field.CURRENCY_B,
+      data.reserve0
+        .multiply(parsedAmounts[Field.CURRENCY_A])
+        .divide(data.reserve1)
+        .toFixed(6)
+    );
   };
 
   const handleTypeB = (value: string) => {

@@ -77,8 +77,6 @@ function useApprovalStateForSpender(
     watch: true,
   });
 
-  console.log(allowance);
-
   if (!amountToApprove) return ApprovalState.UNKNOWN;
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
