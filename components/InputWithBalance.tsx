@@ -39,7 +39,11 @@ const InputWithBalance = ({
         } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
         value={value?.toExact()}
-        onChange={(e) => onUserInput && onUserInput(e.target.value)}
+        onChange={(e) => {
+          if (onUserInput) {
+            onUserInput(e.target.value);
+          }
+        }}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
         {currency && (
