@@ -23,7 +23,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
         <Toast.Provider>
           <Toast.Root
-            className="group relative flex w-64 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
+            className="group relative flex w-80 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
             open={isOpen}
             onOpenChange={setOpen}
           >

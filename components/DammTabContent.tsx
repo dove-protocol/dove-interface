@@ -25,6 +25,7 @@ import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { ApprovalState } from "../lib/hooks/useApproval";
+import JSBI from "jsbi";
 
 const DammTabContent = () => {
   //////////////////////////////////////////////////////////
@@ -280,8 +281,20 @@ const DammTabContent = () => {
           </p>
           <p className="text-sm text-white">
             {data?.reserve0 &&
+              data?.totalSupply &&
+              currencies[Field.CURRENCY_A] &&
+              withdrawAmounts[Field.CURRENCY_A] &&
               formatCurrencyAmount(
-                withdrawAmounts[Field.CURRENCY_A]?.multiply(data?.reserve0),
+                CurrencyAmount.fromRawAmount(
+                  currencies[Field.CURRENCY_A],
+                  JSBI.divide(
+                    JSBI.multiply(
+                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                      data.reserve0.numerator
+                    ),
+                    data?.totalSupply.numerator
+                  )
+                ),
                 6
               )}
           </p>
@@ -292,8 +305,20 @@ const DammTabContent = () => {
           </p>
           <p className="text-sm text-white">
             {data?.reserve1 &&
+              data?.totalSupply &&
+              currencies[Field.CURRENCY_B] &&
+              withdrawAmounts[Field.CURRENCY_A] &&
               formatCurrencyAmount(
-                withdrawAmounts[Field.CURRENCY_A]?.multiply(data?.reserve1),
+                CurrencyAmount.fromRawAmount(
+                  currencies[Field.CURRENCY_B],
+                  JSBI.divide(
+                    JSBI.multiply(
+                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                      data.reserve1.numerator
+                    ),
+                    data?.totalSupply.numerator
+                  )
+                ),
                 6
               )}
           </p>

@@ -88,6 +88,7 @@ export default function useDammData(
     !totalSupplyCurrency
   )
     return { data: null };
+
   return {
     data: {
       reserve0: CurrencyAmount.fromRawAmount(
