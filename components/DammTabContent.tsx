@@ -26,7 +26,10 @@ import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import JSBI from "jsbi";
 import { ammTabsData, dammTabsData } from "../constants/tabs";
-import { currencyAmountToPreciseFloat } from "../lib/utils/formatNumbers";
+import {
+  currencyAmountToPreciseFloat,
+  formatTransactionAmount,
+} from "../lib/utils/formatNumbers";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -48,9 +51,7 @@ const DammTabContent = () => {
 
   const formattedAmounts = {
     [independentField]: fields[independentField],
-    [dependentField]:
-      currencyAmountToPreciseFloat(parsedAmounts[dependentField])?.toString() ??
-      "",
+    [dependentField]: parsedAmounts[dependentField]?.toExact() ?? "",
   };
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
@@ -251,7 +252,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeWithdraw}
           showMaxButton={true}
           onMax={handleMaxWithdraw}
-          value={fields[Field.CURRENCY_A]}
+          value={withdrawFields[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
