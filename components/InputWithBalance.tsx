@@ -17,7 +17,7 @@ const InputWithBalance = ({
 }: {
   currency: Currency | undefined;
   balance: CurrencyAmount<Currency> | undefined;
-  value: string | undefined;
+  value: CurrencyAmount<Currency> | undefined;
   onUserInput?: (value: string) => void;
   showMaxButton: boolean;
   onMax?: () => void;
@@ -38,7 +38,7 @@ const InputWithBalance = ({
           disabled ? "bg-transparent" : "bg-black/10"
         } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
-        value={value}
+        value={value?.toExact()}
         onChange={(e) => onUserInput && onUserInput(e.target.value)}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">

@@ -72,6 +72,8 @@ const DammTabContent = () => {
   const { parsedAmounts, currencies, currencyBalances } =
     useDerivedProvideInfo();
 
+  console.log(parsedAmounts);
+
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );
@@ -88,17 +90,6 @@ const DammTabContent = () => {
 
   const handleTypeA = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
-
-    if (!data?.reserve0 || !data?.reserve1 || !parsedAmounts[Field.CURRENCY_A])
-      return;
-
-    onUserInput(
-      Field.CURRENCY_B,
-      data.reserve0
-        .multiply(parsedAmounts[Field.CURRENCY_A])
-        .divide(data.reserve1)
-        .toFixed(6)
-    );
   };
 
   const handleTypeB = (value: string) => {
@@ -220,7 +211,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeA}
           showMaxButton={true}
           onMax={handleMax}
-          value={fields[Field.CURRENCY_A]}
+          value={parsedAmounts[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InputWithBalance
@@ -228,7 +219,7 @@ const DammTabContent = () => {
           balance={currencyBalances[Field.CURRENCY_B]}
           onUserInput={handleTypeB}
           showMaxButton={false}
-          value={fields[Field.CURRENCY_B]}
+          value={parsedAmounts[Field.CURRENCY_B]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
@@ -281,7 +272,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeWithdraw}
           showMaxButton={true}
           onMax={handleMaxWithdraw}
-          value={withdrawFields[Field.CURRENCY_A]}
+          value={withdrawAmounts[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
@@ -349,7 +340,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_A]}
           onUserInput={handleTypeMintA}
           showMaxButton={false}
-          value={mintFields[Field.CURRENCY_A]}
+          value={mintAmounts[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <div className="relative mb-4">
@@ -364,7 +355,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_B]}
           onUserInput={handleTypeMintB}
           showMaxButton={false}
-          value={mintFields[Field.CURRENCY_B]}
+          value={mintAmounts[Field.CURRENCY_B]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton

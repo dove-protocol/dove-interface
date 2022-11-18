@@ -1,8 +1,9 @@
-import { Currency, CurrencyAmount, Token } from "../../sdk";
+import { ChainId, Currency, CurrencyAmount, DAMM_LP, Token } from "../../sdk";
 import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
 import { Field, useProvideStore } from "./useProvideStore";
 import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
+import useDammData from "../../lib/hooks/data/useDammData";
 
 export function useDerivedProvideInfo(): {
   currencies: { [field in Field]?: Currency | undefined };
@@ -17,6 +18,33 @@ export function useDerivedProvideInfo(): {
     state.currencies,
   ]);
 
+  const { data } = useDammData(
+    currencies.CURRENCY_A,
+    currencies.CURRENCY_B,
+    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+  );
+
+  const independentAmount = tryParseCurrencyAmount(
+    fields[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_A]
+  );
+
+  let dependentAmount = tryParseCurrencyAmount(
+    fields[Field.CURRENCY_B],
+    currencies[Field.CURRENCY_B]
+  );
+
+  if (data?.reserve0 && data?.reserve1 && independentAmount) {
+    dependentAmount = data.reserve0
+      .multiply(independentAmount)
+      .divide(data.reserve1);
+  }
+
+  // onUserInput(
+  //   Field.CURRENCY_B,
+
+  // );
+
   // TODO: useTokenBalances should be able to take an array of tokens
   const relevantTokenBalances = useTokenBalances(
     [currencies.CURRENCY_A as Token, currencies.CURRENCY_B as Token],
@@ -24,14 +52,8 @@ export function useDerivedProvideInfo(): {
   );
 
   const parsedAmounts = {
-    [Field.CURRENCY_A]: tryParseCurrencyAmount(
-      fields[Field.CURRENCY_A],
-      currencies[Field.CURRENCY_A]
-    ),
-    [Field.CURRENCY_B]: tryParseCurrencyAmount(
-      fields[Field.CURRENCY_B],
-      currencies[Field.CURRENCY_B]
-    ),
+    [Field.CURRENCY_A]: independentAmount,
+    [Field.CURRENCY_B]: dependentAmount,
   };
 
   const currencyBalances = {
