@@ -35,15 +35,11 @@ export function useDerivedProvideInfo(): {
   );
 
   if (data?.reserve0 && data?.reserve1 && independentAmount) {
-    dependentAmount = data.reserve0
-      .multiply(independentAmount)
-      .divide(data.reserve1);
+    dependentAmount = tryParseCurrencyAmount(
+      data.reserve0.multiply(independentAmount).divide(data.reserve1).toExact(),
+      currencies[Field.CURRENCY_B]
+    );
   }
-
-  // onUserInput(
-  //   Field.CURRENCY_B,
-
-  // );
 
   // TODO: useTokenBalances should be able to take an array of tokens
   const relevantTokenBalances = useTokenBalances(
