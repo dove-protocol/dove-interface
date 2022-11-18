@@ -43,7 +43,7 @@ export default function useApproval(
     functionName: "approve",
     args: [
       spender as `0x${string}`,
-      BigNumber.from(amountToApprove?.numerator.toString()),
+      amountToApprove?.numerator.toString() as any,
     ],
     enabled: !!amountToApprove && approvalState === ApprovalState.NOT_APPROVED,
   });
@@ -90,15 +90,8 @@ function useApprovalStateForSpender(
     allowance.toString()
   );
 
-  console.log(
-    String(allowanceAmount.numerator),
-    String(amountToApprove.numerator)
-  );
-
-  return JSBI.greaterThanOrEqual(
-    allowanceAmount.numerator,
-    amountToApprove.numerator
-  )
+  return allowanceAmount.greaterThan(amountToApprove) ||
+    allowanceAmount.equalTo(amountToApprove)
     ? ApprovalState.APPROVED
     : ApprovalState.NOT_APPROVED;
 }
