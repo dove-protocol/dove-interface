@@ -2,6 +2,7 @@ import create from "zustand";
 import produce from "immer";
 import { Currency, CurrencyAmount } from "../../sdk";
 import { validateNumber } from "../../lib/utils/validateNumber";
+import { devtools } from "zustand/middleware";
 
 export enum Field {
   CURRENCY_A = "CURRENCY_A",
@@ -20,22 +21,35 @@ interface ProvideStoreState {
   fields: { [field in Field]?: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
+  independentField: Field;
 }
 
-export const useProvideStore = create<ProvideStoreState>((set, get) => ({
-  amounts: {},
-  setAmounts: (amounts) => set(() => ({ amounts: amounts })),
-  currencies: {},
-  setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
-  fields: {},
-  onUserInput: (field: Field, value: string) => {
-    set(
-      produce((draft) => {
-        if (validateNumber(value)) {
-          draft.fields[field] = value;
-        }
-      })
-    );
-  },
-  onSwitchTokens: () => {},
-}));
+export const useProvideStore = create<ProvideStoreState>(
+  devtools(
+    (set, get) => ({
+      amounts: {},
+      setAmounts: (amounts) => set(() => ({ amounts: amounts })),
+      currencies: {},
+      setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
+      fields: {
+        [Field.CURRENCY_A]: "",
+        [Field.CURRENCY_B]: "",
+      },
+      onUserInput: (field: Field, value: string) => {
+        set(
+          produce((draft) => {
+            if (validateNumber(value)) {
+              draft.fields[field] = value;
+              draft.independentField = field;
+            }
+          })
+        );
+      },
+      onSwitchTokens: () => {},
+      independentField: Field.CURRENCY_A,
+    }),
+    {
+      name: "ProvideStore",
+    }
+  )
+);

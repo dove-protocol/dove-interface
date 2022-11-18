@@ -2,6 +2,7 @@ import create from "zustand";
 import produce from "immer";
 import { Currency, CurrencyAmount } from "../../sdk";
 import { validateNumber } from "../../lib/utils/validateNumber";
+import { devtools } from "zustand/middleware";
 
 export enum Field {
   CURRENCY_A = "CURRENCY_A",
@@ -25,24 +26,24 @@ interface SwapStoreState {
   independentField: Field;
 }
 
-export const useSwapStore = create<SwapStoreState>((set, get) => ({
-  amounts: {},
-  setAmounts: (amounts) => set(() => ({ amounts: amounts })),
-  currencies: {},
-  setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
-  fields: {},
-  onUserInput: (field: Field, value: string) => {
-    set(
-      produce((state) => {
-        if (validateNumber(value)) {
-          state.fields[field] = value;
-          state.input = field;
-        }
-      })
-    );
-  },
-  onSwitchTokens: () => {},
-  isSwapped: false,
-  toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),
-  independentField: Field.CURRENCY_A,
-}));
+export const useSwapStore = create<SwapStoreState>(
+  devtools(
+    (set, get) => ({
+      amounts: {},
+      setAmounts: (amounts) => set(() => ({ amounts: amounts })),
+      currencies: {},
+      setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
+      fields: {
+        [Field.CURRENCY_A]: "",
+        [Field.CURRENCY_B]: "",
+      },
+      onUserInput: (field: Field, value: string) =>
+        set(() => ({ fields: { [field]: value } })),
+      onSwitchTokens: () => {},
+      isSwapped: false,
+      toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),
+      independentField: Field.CURRENCY_A,
+    }),
+    { name: "SwapStore" }
+  )
+);
