@@ -17,7 +17,7 @@ interface MintStoreState {
   setCurrencies: (currencies: {
     [field in Field]?: Currency;
   }) => void;
-  fields: { [field in Field]?: string };
+  fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
 }
@@ -27,7 +27,10 @@ export const useMintStore = create<MintStoreState>((set, get) => ({
   setAmounts: (amounts) => set(() => ({ amounts: amounts })),
   currencies: {},
   setCurrencies: (currencies) => set(() => ({ currencies: currencies })),
-  fields: {},
+  fields: {
+    [Field.CURRENCY_A]: "",
+    [Field.CURRENCY_B]: "",
+  },
   onUserInput: (field: Field, value: string) => {
     set(
       produce((draft) => {

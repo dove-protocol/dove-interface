@@ -26,20 +26,32 @@ import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import JSBI from "jsbi";
 import { ammTabsData, dammTabsData } from "../constants/tabs";
+import { currencyAmountToPreciseFloat } from "../lib/utils/formatNumbers";
 
 const DammTabContent = () => {
   // load up default tokens for chain
   useChainDefaults();
 
   // load up state
-  const [fields, onUserInput] = useProvideStore((state) => [
+  const [fields, onUserInput, independentField] = useProvideStore((state) => [
     state.fields,
     state.onUserInput,
+    state.independentField,
   ]);
 
   // load up token info
   const { parsedAmounts, currencies, currencyBalances } =
     useDerivedProvideInfo();
+
+  const dependentField =
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
+
+  const formattedAmounts = {
+    [independentField]: fields[independentField],
+    [dependentField]:
+      currencyAmountToPreciseFloat(parsedAmounts[dependentField])?.toString() ??
+      "",
+  };
 
   const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
     currencies[Field.CURRENCY_A] &&
@@ -180,7 +192,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeA}
           showMaxButton={true}
           onMax={handleMax}
-          value={parsedAmounts[Field.CURRENCY_A]}
+          value={formattedAmounts[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InputWithBalance
@@ -188,7 +200,7 @@ const DammTabContent = () => {
           balance={currencyBalances[Field.CURRENCY_B]}
           onUserInput={handleTypeB}
           showMaxButton={false}
-          value={parsedAmounts[Field.CURRENCY_B]}
+          value={formattedAmounts[Field.CURRENCY_B]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
@@ -241,7 +253,7 @@ const DammTabContent = () => {
           onUserInput={handleTypeWithdraw}
           showMaxButton={true}
           onMax={handleMaxWithdraw}
-          value={withdrawAmounts[Field.CURRENCY_A]}
+          value={fields[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
@@ -333,7 +345,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_A]}
           onUserInput={handleTypeMintA}
           showMaxButton={false}
-          value={mintAmounts[Field.CURRENCY_A]}
+          value={fields[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <div className="relative mb-4">
@@ -348,7 +360,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_B]}
           onUserInput={handleTypeMintB}
           showMaxButton={false}
-          value={mintAmounts[Field.CURRENCY_B]}
+          value={fields[Field.CURRENCY_B]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton

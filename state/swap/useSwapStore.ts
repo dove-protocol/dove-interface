@@ -18,7 +18,7 @@ interface SwapStoreState {
   setCurrencies: (currencies: {
     [field in Field]?: Currency;
   }) => void;
-  fields: { [field in Field]?: string };
+  fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
   isSwapped: boolean;
@@ -37,8 +37,16 @@ export const useSwapStore = create<SwapStoreState>(
         [Field.CURRENCY_A]: "",
         [Field.CURRENCY_B]: "",
       },
-      onUserInput: (field: Field, value: string) =>
-        set(() => ({ fields: { [field]: value } })),
+      onUserInput: (field: Field, value: string) => {
+        set(
+          produce((draft) => {
+            if (validateNumber(value)) {
+              draft.fields[field] = value;
+              draft.independentField = field;
+            }
+          })
+        );
+      },
       onSwitchTokens: () => {},
       isSwapped: false,
       toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),

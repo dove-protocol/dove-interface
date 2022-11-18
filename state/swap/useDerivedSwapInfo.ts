@@ -36,12 +36,27 @@ export function useDerivedSwapInfo(): {
   // fallback to undefined if parsing fails?
   let dependentAmount;
 
-  // calculate output amount for swap
+  console.log(
+    data?.reserve0?.toExact(),
+    data?.reserve1?.toExact(),
+    independentAmount?.toExact()
+  );
+
+  // calculate output amount for swap (mr. tabler wrote proof so it's correct)
+
+  // amountIn = (amountOut * reserveIn) / (reserveOut - amountOut)
+  // amountOut = (amountIn * reserveOut) / (reserveIn + amountIn);
   if (data?.reserve0 && data?.reserve1 && independentAmount) {
     dependentAmount = tryParseCurrencyAmount(
       independentAmount
-        .multiply(data.reserve1)
-        .divide(data.reserve0.add(independentAmount))
+        .multiply(
+          dependentField === Field.CURRENCY_A ? data.reserve0 : data.reserve1
+        )
+        .divide(
+          dependentField === Field.CURRENCY_A
+            ? data.reserve1.add(independentAmount)
+            : data.reserve0.subtract(independentAmount)
+        )
         .toExact(),
       currencies[dependentField]
     );

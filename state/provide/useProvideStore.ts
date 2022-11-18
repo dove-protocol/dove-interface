@@ -18,7 +18,7 @@ interface ProvideStoreState {
   setCurrencies: (currencies: {
     [field in Field]?: Currency;
   }) => void;
-  fields: { [field in Field]?: string };
+  fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
   independentField: Field;
