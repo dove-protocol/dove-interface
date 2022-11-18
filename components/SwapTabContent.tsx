@@ -284,6 +284,15 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
                 />
               );
             }
+
+            if (
+              currencyBalances[Field.CURRENCY_A] &&
+              parsedAmounts[Field.CURRENCY_A].greaterThan(
+                currencyBalances[Field.CURRENCY_A]
+              )
+            ) {
+              return <Button disabled text="Insufficient balance" />;
+            }
           })()}
         </InteractButton>
       </Tabs.Content>
@@ -368,18 +377,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
             ) {
               return <Button disabled text="Enter an amount" />;
             }
-
             if (
               burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
               burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
             ) {
               return <Button disabled text="Sync before" />;
-            }
-            if (
-              !burnAmounts[Field.CURRENCY_A] ||
-              !burnAmounts[Field.CURRENCY_B]
-            ) {
-              return <Button disabled text="Enter an amount" />;
             }
             if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
               return (

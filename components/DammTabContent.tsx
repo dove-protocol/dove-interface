@@ -248,6 +248,18 @@ const DammTabContent = () => {
                 />
               );
             }
+            if (
+              currencyBalances[Field.CURRENCY_A] &&
+              currencyBalances[Field.CURRENCY_B] &&
+              (parsedAmounts[Field.CURRENCY_A].greaterThan(
+                currencyBalances[Field.CURRENCY_A]
+              ) ||
+                parsedAmounts[Field.CURRENCY_B].greaterThan(
+                  currencyBalances[Field.CURRENCY_B]
+                ))
+            ) {
+              return <Button disabled text="Insufficient balance" />;
+            }
           })()}
         </InteractButton>
       </Tabs.Content>
