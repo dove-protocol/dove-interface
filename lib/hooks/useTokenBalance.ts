@@ -12,6 +12,8 @@ export function useTokenBalance(
     address: account as `0x${string}`,
     token: token?.address as `0x${string}`,
     watch: true,
+    chainId: token?.chainId,
+    enabled: !!token && !!account,
   });
 
   if (token && data) {
