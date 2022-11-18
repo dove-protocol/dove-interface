@@ -1,84 +1,70 @@
 import { BigNumber } from "ethers";
-import React from "react";
+import React, { useMemo } from "react";
 import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
-import { validateNumber } from "../lib/utils";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import { ChainId, Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
-  label,
-  expectedChainId,
+  currency,
   balance,
   value,
-  setValue,
-  setError,
-  maxEnabled = false,
+  onUserInput,
+  showMaxButton,
+  onMax,
+  disabled = false,
+  expectedChainId,
 }: {
-  label: string;
-  expectedChainId: number;
-  balance?: {
-    formatted: string;
-    value: BigNumber;
-  };
+  currency: Currency | undefined;
+  balance: CurrencyAmount<Currency> | undefined;
   value: string;
-  setValue: (value: string) => void;
-  setError?: (error: string | undefined) => void;
-  maxEnabled?: boolean;
+  onUserInput?: (value: string) => void;
+  showMaxButton: boolean;
+  onMax?: () => void;
+  disabled?: boolean;
+  expectedChainId: ChainId;
 }) => {
   const { chain } = useNetwork();
 
-  let error = chain?.id !== expectedChainId;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setValue(e.target.value);
-      if (setError && balance && e.target.value !== "") {
-        const value = parseFloat(e.target.value) * 10 ** 6;
-        if (BigNumber.from(value).gt(balance.value)) {
-          console.log("error");
-          setError("Insufficient balance");
-        } else {
-          setError(undefined);
-        }
-      }
-    }
-  };
+  if (!chain || chain.id !== expectedChainId) {
+    disabled = true;
+  }
 
   return (
     <div className="relative mb-4">
       <input
-        disabled={error}
+        disabled={disabled}
         className={`flex h-24 w-full items-start justify-between rounded-sm border border-white/5 ${
-          error ? "bg-transparent" : "bg-black/10"
+          disabled ? "bg-transparent" : "bg-black/10"
         } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
         value={value}
-        onChange={handleChange}
+        onChange={(e) => {
+          if (onUserInput) {
+            onUserInput(e.target.value);
+          }
+        }}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
-        <h4
-          className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
-            error ? "text-white/50" : "bg-black/10 text-white"
-          }`}
-        >
-          <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
-          {label}
-        </h4>
-        {!error && (
+        {currency && (
+          <h4
+            className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
+              disabled ? "text-white/50" : "bg-black/10 text-white"
+            }`}
+          >
+            <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
+            {currency?.symbol}
+          </h4>
+        )}
+        {!disabled && (
           <div className="flex items-center space-x-2">
             {balance && (
               <p className="text-sm text-white/50">
-                Balance: {parseFloat(parseFloat(balance.formatted).toFixed(6))}
+                Balance: {formatCurrencyAmount(balance, 6)}
               </p>
             )}
-            {maxEnabled && balance && (
-              <button
-                onClick={() => {
-                  console.log("max");
-                  setValue(
-                    balance.value.div(BigNumber.from(10).pow(6)).toString()
-                  );
-                }}
-              >
+            {showMaxButton && balance && (
+              <button onClick={onMax}>
                 <p className="text-sm text-white">Max</p>
               </button>
             )}

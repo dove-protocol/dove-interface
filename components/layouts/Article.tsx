@@ -1,21 +1,16 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { transitionAnimation } from "../../lib/utils";
 import Navbar from "../Navbar";
 import { GiPeaceDove } from "react-icons/gi";
 import * as Toast from "@radix-ui/react-toast";
-import { useStore } from "../../lib/store";
 import { BiCheck, BiLinkExternal, BiX } from "react-icons/bi";
 import { useNetwork } from "wagmi";
+import { transitionAnimation } from "../../lib/utils/transitionAnimation";
+import { useUserStore } from "../../state/user/useUserStore";
 
 const Article = ({ children }: { children: React.ReactNode }) => {
-  const { isOpen, setOpen, toastContent } = useStore();
+  const { isOpen, setOpen, toastContent } = useUserStore();
   const { chain } = useNetwork();
-
-  useEffect(() => {
-    console.log(toastContent);
-  }, [toastContent]);
-  console.log(`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`);
 
   return (
     <motion.article
@@ -28,7 +23,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
         <Toast.Provider>
           <Toast.Root
-            className="group relative flex w-64 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
+            className="group relative flex w-80 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
             open={isOpen}
             onOpenChange={setOpen}
           >

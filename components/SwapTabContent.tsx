@@ -1,374 +1,411 @@
 import React from "react";
-import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
-import {
-  BiExpandAlt,
-  BiRefresh,
-  BiCog,
-  BiDollar,
-  BiDownload,
-  BiReceipt,
-  BiCreditCardFront,
-} from "react-icons/bi";
+import { BiExpandAlt } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useRef } from "react";
-import { getDammAddress, getTokenAddress, validateNumber } from "../lib/utils";
-import useMint from "../hooks/useMint";
 import InputWithBalance from "./InputWithBalance";
-import Tab from "./Tab";
-import useBalance from "../hooks/useBalance";
-import useVoucherBalance from "../hooks/useVoucherBalance";
-import useSyncToL1 from "../hooks/useSyncToL1";
-import useApproveToken from "../hooks/useApproveToken";
-import { BigNumber } from "ethers";
-import useAMMReserves from "../hooks/useAMMReserves";
-import useAMMSwap from "../hooks/useAMMSwap";
-import usedAMMData from "../hooks/usedAMMData";
-import useBurnVouchers from "../hooks/useBurnVouchers";
-import useTriggerToast from "../hooks/useTriggerToast";
+import { ApprovalState } from "../lib/hooks/useApproval";
+import useTriggerToast from "../lib/hooks/useTriggerToast";
+import { ChainId } from "../sdk";
+import { DAMM_LP } from "../sdk/constants";
+import TabSlider from "./TabSlider";
+import { Field, useSwapStore } from "../state/swap/useSwapStore";
+import { useDerivedSwapInfo } from "../state/swap/useDerivedSwapInfo";
+import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
+import { useMintStore } from "../state/mint/useMintStore";
+import useMint from "../lib/hooks/mint/useMint";
+import useSyncL1 from "../lib/hooks/sync/useSyncL1";
+import useSwap from "../lib/hooks/swap/useSwap";
+import { useBurnStore } from "../state/burn/useBurnStore";
+import useBurn from "../lib/hooks/burn/useBurn";
+import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
+import useDammData from "../lib/hooks/data/useDammData";
+import useAmmData from "../lib/hooks/data/useAmmData";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
+import { ammTabsData } from "../constants/tabs";
+import {
+  currencyAmountToPreciseFloat,
+  formatTransactionAmount,
+} from "../lib/utils/formatNumbers";
 
-const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
-  const [activeTab, setActiveTab] = useState("tab1");
-  const [isSwapped, setIsSwapped] = useState(false);
+const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
+  useChainDefaults();
 
-  // used exclusively for constructor swap calldata
-  const [amount0In, setAmount0In] = useState<string>("");
-  const [amount1In, setAmount1In] = useState<string>("");
+  const { callback: toastCallback } = useTriggerToast();
 
-  const [amount0, setAmount0] = useState<string>("");
-  const [amount1, setAmount1] = useState<string>("");
+  const [isSwapped, toggleSwap, fields, onUserInput, independentField] =
+    useSwapStore((state) => [
+      state.isSwapped,
+      state.toggleSwap,
+      state.fields,
+      state.onUserInput,
+      state.independentField,
+    ]);
 
-  const [vUSDCToBurn, setvUSDCToBurn] = useState<string>("0");
-  const [vUSDTToBurn, setvUSDTToBurn] = useState<string>("0");
+  const dependentField =
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
 
-  const [USDCToMint, setUSDCToMint] = useState<string>("");
-  const [USDTToMint, setUSDTToMint] = useState<string>("");
-  const [swapError, setSwapError] = useState<string | undefined>();
+  const { parsedAmounts, currencies, currencyBalances } = useDerivedSwapInfo();
 
-  const { trigger } = useTriggerToast();
-
-  const { approve: approveAmount0, isApproved: isApprovedAmount0 } =
-    useApproveToken({
-      token: getTokenAddress(false),
-      spender: getDammAddress(),
-      amountRequested:
-        amount0 === "" ? 0 : BigNumber.from(parseFloat(amount0) * 10 ** 6),
-    });
-
-  const { approve: approveAmount1, isApproved: isApprovedAmount1 } =
-    useApproveToken({
-      token: getTokenAddress(true),
-      spender: getDammAddress(),
-      amountRequested:
-        amount1 === "" ? 0 : BigNumber.from(parseFloat(amount0) * 10 ** 6),
-    });
-
-  const { sync } = useSyncToL1();
-  const dAMMData = usedAMMData();
-
-  const usdcData = useBalance({ isUSDC: true });
-  const usdtData = useBalance({ isUSDC: false });
-  const { mint: mintUSDC } = useMint({
-    amount: USDCToMint === "" ? "0" : USDCToMint,
-    isUSDC: true,
-  });
-  const { mint: mintUSDT } = useMint({
-    amount: USDTToMint === "" ? "0" : USDTToMint,
-    isUSDC: false,
-  });
-  const convert = (value: string) => {
-    return (parseFloat(value) * 10 ** 6).toString();
-  };
-  const vUSDCData = useVoucherBalance({ isvUSDC: true });
-  const vUSDTData = useVoucherBalance({ isvUSDC: false });
-  const { swap } = useAMMSwap({ amount0In, amount1In });
-  const { burn } = useBurnVouchers({
-    vUSDCToBurn: convert(vUSDCToBurn),
-    vUSDTToBurn: convert(vUSDTToBurn),
-  });
-  const { reserve0, reserve1 } = useAMMReserves();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const highlightRef = useRef<HTMLDivElement>(null);
-
-  const reactiveSetAmount0 = (value: string) => {
-    setAmount0(value);
-    if (reserve0 && reserve1) {
-      const amountIn =
-        value == ""
-          ? BigNumber.from(0)
-          : BigNumber.from(parseFloat(value) * 10 ** 6);
-      const amountOut = amountIn.mul(reserve1).div(reserve0.add(amountIn));
-      setAmount1((amountOut.toNumber() / 10 ** 6).toString());
-      setAmount0In(amountIn.toString());
-      setAmount1In("0");
-    }
+  const formattedAmounts = {
+    [independentField]: fields[independentField],
+    [dependentField]: formatTransactionAmount(
+      currencyAmountToPreciseFloat(parsedAmounts[dependentField])
+    ),
   };
 
-  const reactiveSetAmount1 = (value: string) => {
-    setAmount1(value);
-    if (reserve0 && reserve1) {
-      const amountIn =
-        value == ""
-          ? BigNumber.from(0)
-          : BigNumber.from(parseFloat(value) * 10 ** 6);
-      const amountOut = amountIn.mul(reserve0).div(reserve1.add(amountIn));
-      setAmount0((amountOut.toNumber() / 10 ** 6).toString());
-      setAmount1In(amountIn.toString());
-      setAmount0In("0");
-    }
-  };
-
-  const [tabBoundingBox, setTabBoundingBox] = useState<DOMRect | null>(null);
-  const [wrapperBoundingBox, setWrapperBoundingBox] = useState<DOMRect | null>(
-    null
+  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_A]
   );
-  const [highlightedTab, setHighlightedTab] = useState<string | null>(null);
-  const [isHoveredFromNull, setIsHoveredFromNull] = useState(true);
 
-  const repositionHighlight = (e: any, id: string) => {
-    if (wrapperRef.current) {
-      setTabBoundingBox(e.target.getBoundingClientRect());
-      setWrapperBoundingBox(wrapperRef.current.getBoundingClientRect());
-      setIsHoveredFromNull(!highlightedTab);
-      setHighlightedTab(id);
-    }
+  const { callback: swapCallback } = useSwap(
+    parsedAmounts[Field.CURRENCY_A],
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
+  const handleTypeInput = (value: string) => {
+    onUserInput(Field.CURRENCY_A, value);
   };
 
-  const highlightStyles: any = {};
+  const handleTypeOutput = (value: string) => {
+    onUserInput(Field.CURRENCY_B, value);
+  };
 
-  if (tabBoundingBox && wrapperBoundingBox) {
-    highlightStyles.transitionDuration = isHoveredFromNull ? "0ms" : "150ms";
-    highlightStyles.opacity = highlightedTab ? 1 : 0;
-    highlightStyles.width = `${tabBoundingBox.width - 1}px`;
-    highlightStyles.transform = `translate(${
-      tabBoundingBox.left - wrapperBoundingBox.left + 1
-    }px)`;
-  }
+  const handleMax = () => {
+    currencyBalances[Field.CURRENCY_A] &&
+      onUserInput(
+        Field.CURRENCY_A,
+        currencyBalances[Field.CURRENCY_A].toExact()
+      );
+  };
 
-  const tabsData = [
-    {
-      id: "tab1",
-      label: "Swap",
-      content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab5",
-      label: "Reserves",
-      content: <BiRefresh className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab2",
-      label: "Mint",
-      content: <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab3",
-      label: "Sync",
-      content: <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />,
-    },
-    {
-      id: "tab4",
-      label: "Vouchers",
-      content: (
-        <BiCreditCardFront className="ml-2 rounded-sm bg-white/5 p-px" />
-      ),
-    },
-  ];
+  const handleApproveA = () => {
+    approveCallbackA?.();
+  };
+
+  const handleSwap = () => {
+    swapCallback?.().then((tx) => {
+      tx &&
+        toastCallback?.({
+          title: "Swap",
+          description: `Swap ${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_A],
+            6
+          )} ${currencies[Field.CURRENCY_A]?.symbol} for ${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_B],
+            6
+          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+    });
+  };
+
+  /////////////////////////////
+
+  const [mintFields, onUserInputMint] = useMintStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const {
+    parsedAmounts: mintAmounts,
+    currencies: mintCurrency,
+    currencyBalances: mintBalance,
+  } = useDerivedMintInfo();
+
+  const formattedMintAmounts = {
+    [Field.CURRENCY_A]: formatCurrencyAmount(mintAmounts[Field.CURRENCY_A], 6),
+    [Field.CURRENCY_B]: formatCurrencyAmount(mintAmounts[Field.CURRENCY_B], 6),
+  };
+
+  const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
+
+  const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
+
+  const handleTypeMintA = (value: string) => {
+    onUserInputMint(Field.CURRENCY_A, value);
+  };
+
+  const handleTypeMintB = (value: string) => {
+    onUserInputMint(Field.CURRENCY_B, value);
+  };
+
+  const handleMintA = () => {
+    mintCallbackA?.().then((tx) => {
+      if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
+        return;
+      toastCallback?.({
+        title: "Minted",
+        description: `You minted ${formatCurrencyAmount(
+          mintAmounts[Field.CURRENCY_A],
+          6
+        )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+        txid: tx.hash,
+        type: "success",
+      });
+    });
+  };
+
+  const handleMintB = () => {
+    mintCallbackB?.().then((txid) => {
+      if (!mintAmounts[Field.CURRENCY_B] || !mintCurrency[Field.CURRENCY_B])
+        return;
+      toastCallback?.({
+        title: "Minted",
+        description: `You minted ${formatCurrencyAmount(
+          mintAmounts[Field.CURRENCY_B],
+          6
+        )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+        txid: txid.hash,
+        type: "success",
+      });
+    });
+  };
+
+  /////////////////////////////
+
+  const { callback: syncCallback } = useSyncL1();
+
+  const handleSync = () => {
+    syncCallback?.();
+  };
+
+  /////////////////////////////
+
+  const [burnFields, onUserInputBurn] = useBurnStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const {
+    parsedAmounts: burnAmounts,
+    currencies: burnCurrencies,
+    currencyBalances: burnBalances,
+  } = useDerivedBurnInfo();
+
+  const formattedBurnAmounts = {
+    [Field.CURRENCY_A]: formatCurrencyAmount(burnAmounts[Field.CURRENCY_A], 6),
+    [Field.CURRENCY_B]: formatCurrencyAmount(burnAmounts[Field.CURRENCY_B], 6),
+  };
+
+  const { callback: approveCallbackVoucherA, state: approveVoucherStateA } =
+    useTokenApproval(burnAmounts[Field.CURRENCY_A]);
+
+  const { callback: approveCallbackVoucherB, state: approveVoucherStateB } =
+    useTokenApproval(burnAmounts[Field.CURRENCY_B]);
+
+  const { callback: burnCallback } = useBurn(
+    burnAmounts[Field.CURRENCY_A],
+    burnAmounts[Field.CURRENCY_B]
+  );
+
+  const handleTypeBurnA = (value: string) => {
+    onUserInputBurn(Field.CURRENCY_A, value);
+  };
+
+  const handleTypeBurnB = (value: string) => {
+    onUserInputBurn(Field.CURRENCY_B, value);
+  };
+
+  const handleApproveVoucherA = () => {
+    approveCallbackVoucherA?.();
+  };
+
+  const handleApproveVoucherB = () => {
+    approveCallbackVoucherB?.();
+  };
+
+  const handleBurn = () => {
+    burnCallback?.();
+  };
+
+  /////////////////////////////
+
+  const { data } = useDammData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B],
+    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+  );
+
+  const { data: ammData } = useAmmData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
+  );
 
   return (
-    <Tabs.Root
-      defaultValue="tab1"
-      value={activeTab}
-      onValueChange={(v) => setActiveTab(v)}
-      className="w-full"
-    >
-      <Tabs.List
-        ref={wrapperRef}
-        onMouseLeave={() => setHighlightedTab(null)}
-        className="relative mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1"
-      >
-        <div
-          className="absolute -left-px h-[34px] translate-y-[4px] rounded-sm bg-white/5 transition"
-          ref={highlightRef}
-          style={highlightStyles}
-        />
-        {tabsData.map((tab) => (
-          <Tab
-            key={tab.id}
-            id={tab.id}
-            label={tab.label}
-            repositionHighlight={repositionHighlight}
-          >
-            {tab.content}
-          </Tab>
-        ))}
-      </Tabs.List>
+    <TabSlider tabsData={ammTabsData}>
       <Tabs.Content value="tab1">
-        {!isSwapped ? (
-          <InputWithBalance
-            label="USDT"
-            expectedChainId={expectedChainId}
-            value={amount1}
-            setValue={reactiveSetAmount1}
-            setError={setSwapError}
-            balance={usdtData}
-            maxEnabled
-          />
-        ) : (
-          <InputWithBalance
-            label="USDC"
-            expectedChainId={expectedChainId}
-            value={amount0}
-            setValue={reactiveSetAmount0}
-            setError={setSwapError}
-            balance={usdcData}
-            maxEnabled
-          />
-        )}
+        <InputWithBalance
+          currency={currencies[Field.CURRENCY_A]}
+          balance={currencyBalances[Field.CURRENCY_A]}
+          onUserInput={handleTypeInput}
+          showMaxButton={true}
+          onMax={handleMax}
+          value={formattedAmounts[Field.CURRENCY_A]}
+          expectedChainId={expectedChainId}
+        />
         <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-          <button className="group" onClick={() => setIsSwapped(!isSwapped)}>
+          <button className="group" onClick={toggleSwap}>
             <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
           </button>
         </div>
-        {!isSwapped ? (
-          <InputWithBalance
-            label="USDC"
-            expectedChainId={expectedChainId}
-            value={amount0}
-            setValue={reactiveSetAmount0}
-            setError={setSwapError}
-            balance={usdcData}
-          />
-        ) : (
-          <InputWithBalance
-            label="USDT"
-            expectedChainId={expectedChainId}
-            value={amount1}
-            setValue={reactiveSetAmount1}
-            setError={setSwapError}
-            balance={usdtData}
-          />
-        )}
+        <InputWithBalance
+          currency={currencies[Field.CURRENCY_B]}
+          balance={currencyBalances[Field.CURRENCY_B]}
+          showMaxButton={false}
+          value={formattedAmounts[Field.CURRENCY_B]}
+          onUserInput={handleTypeOutput}
+          expectedChainId={expectedChainId}
+        />
         <InteractButton
+          onConfirm={handleSwap}
           expectedChainId={expectedChainId}
           text="Swap"
-          error={swapError}
-          onClick={swap}
         >
           {(() => {
-            if (amount0 === "" || amount1 === "") {
+            if (
+              !parsedAmounts[Field.CURRENCY_A] ||
+              !parsedAmounts[Field.CURRENCY_B]
+            ) {
               return <Button disabled text="Enter an amount" />;
             }
-            if (!isSwapped) {
-              if (!isApprovedAmount0) {
-                return <Button onClick={approveAmount0} text="Approve USDT" />;
-              }
-            } else {
-              if (!isApprovedAmount1) {
-                return <Button onClick={approveAmount1} text="Approve USDC" />;
-              }
+
+            if (approveStateA === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveA}
+                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
+            }
+
+            if (
+              currencyBalances[Field.CURRENCY_A] &&
+              parsedAmounts[Field.CURRENCY_A].greaterThan(
+                currencyBalances[Field.CURRENCY_A]
+              )
+            ) {
+              return <Button disabled text="Insufficient balance" />;
             }
           })()}
         </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
         <InputWithBalance
-          label="USDT"
+          currency={mintCurrency[Field.CURRENCY_A]}
+          balance={mintBalance[Field.CURRENCY_A]}
+          onUserInput={handleTypeMintA}
+          showMaxButton={false}
+          value={formattedMintAmounts[Field.CURRENCY_A]}
           expectedChainId={expectedChainId}
-          value={USDTToMint}
-          setValue={setUSDTToMint}
-          balance={usdtData}
         />
         <div className="relative mb-4">
           <InteractButton
+            onConfirm={handleMintA}
             expectedChainId={expectedChainId}
-            onClick={mintUSDT}
-            text="Mint USDT"
+            text="Mint"
           />
         </div>
         <InputWithBalance
-          label="USDC"
+          currency={mintCurrency[Field.CURRENCY_B]}
+          balance={mintBalance[Field.CURRENCY_B]}
+          onUserInput={handleTypeMintB}
+          showMaxButton={false}
+          value={formattedMintAmounts[Field.CURRENCY_B]}
           expectedChainId={expectedChainId}
-          value={USDCToMint}
-          setValue={setUSDCToMint}
-          balance={usdcData}
         />
         <InteractButton
+          onConfirm={handleMintB}
           expectedChainId={expectedChainId}
-          onClick={mintUSDC}
-          text="Mint USDC"
+          text="Mint"
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <div className="relative">
-          <InteractButton
-            expectedChainId={expectedChainId}
-            onClick={() => sync()}
-            text="Sync to L1"
-          />
-        </div>
+        <InteractButton
+          expectedChainId={expectedChainId}
+          onConfirm={handleSync}
+          text="Sync to L1"
+        />
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <div className="relative">
-          <div className="flex w-full flex-row justify-center">
-            <div className="basis-1/2">
-              <p className="mb-2 font-thin tracking-widest text-white">
-                Available on dAMM <span className="text-white/50">(USDT)</span>
-              </p>
-              <h3 className="mb-4 text-white">
-                {dAMMData.marked1?.div(10 ** 6).toString()}
-              </h3>
-            </div>
-            <div>
-              <p className="mb-2 font-thin tracking-widest text-white">
-                Available on dAMM <span className="text-white/50">(USDT)</span>
-              </p>
-              <h3 className="mb-4 text-white">
-                {dAMMData.marked0?.div(10 ** 6).toString()}
-              </h3>
-            </div>
-          </div>
-          <InputWithBalance
-            label="vUSDC"
-            expectedChainId={expectedChainId}
-            value={vUSDCToBurn}
-            setValue={setvUSDCToBurn}
-            balance={vUSDCData}
-          />
-          <InputWithBalance
-            label="vUSDT"
-            expectedChainId={expectedChainId}
-            value={vUSDTToBurn}
-            setValue={setvUSDTToBurn}
-            balance={vUSDTData}
-          />
-          <InteractButton
-            expectedChainId={expectedChainId}
-            onClick={burn}
-            text="Burn Vouchers"
-          >
-            {(() => {
-              if (
-                BigNumber.from(parseFloat(vUSDCToBurn || "0") * 10 ** 6).gt(
-                  dAMMData.marked0 || BigNumber.from(0)
-                ) ||
-                BigNumber.from(parseFloat(vUSDTToBurn || "0") * 10 ** 6).gt(
-                  dAMMData.marked1 || BigNumber.from(0)
-                )
-              ) {
-                return <Button disabled text="Sync before." />;
-              }
-            })()}
-          </InteractButton>
+        <p className="mb-2 text-white ">dAMM Available Claims</p>
+        <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
+          <p className="text-sm text-white/50">USDC</p>
+          <p className="text-sm text-white">
+            {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
+          </p>
         </div>
+        <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
+          <p className="text-sm text-white/50">USDT</p>
+          <p className="text-sm text-white">
+            {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
+          </p>
+        </div>
+        <InputWithBalance
+          currency={burnCurrencies[Field.CURRENCY_A]}
+          balance={burnBalances[Field.CURRENCY_A]}
+          onUserInput={handleTypeBurnA}
+          showMaxButton={false}
+          value={formattedBurnAmounts[Field.CURRENCY_A]}
+          expectedChainId={expectedChainId}
+        />
+        <InputWithBalance
+          currency={burnCurrencies[Field.CURRENCY_B]}
+          balance={burnBalances[Field.CURRENCY_B]}
+          onUserInput={handleTypeBurnB}
+          showMaxButton={false}
+          value={formattedBurnAmounts[Field.CURRENCY_B]}
+          expectedChainId={expectedChainId}
+        />
+        <InteractButton
+          expectedChainId={expectedChainId}
+          onConfirm={handleBurn}
+          text="Burn Vouchers"
+        >
+          {(() => {
+            if (
+              !data?.marked0 ||
+              !data?.marked1 ||
+              !burnAmounts[Field.CURRENCY_A] ||
+              !burnAmounts[Field.CURRENCY_B]
+            ) {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (
+              burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
+              burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
+            ) {
+              return <Button disabled text="Sync before" />;
+            }
+            if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveVoucherA}
+                  text={`Approve ${burnCurrencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
+            }
+            if (approveVoucherStateB === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveVoucherB}
+                  text={`Approve ${burnCurrencies[Field.CURRENCY_B]?.symbol}`}
+                />
+              );
+            }
+          })()}
+        </InteractButton>
       </Tabs.Content>
+
       <Tabs.Content value="tab5">
         <div className="flex w-full flex-col items-start">
           <p className="mb-2 font-thin tracking-widest text-white">
             Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
           </p>
           <h3 className="mb-8 text-white">
-            {reserve1?.div(10 ** 6).toString()}
+            {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
           </h3>
         </div>
         <div className="flex w-full flex-col items-start">
@@ -377,11 +414,11 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
             Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
           </p>
           <h3 className="mb-2 text-white">
-            {reserve0?.div(10 ** 6).toString()}
+            {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
           </h3>
         </div>
       </Tabs.Content>
-    </Tabs.Root>
+    </TabSlider>
   );
 };
 

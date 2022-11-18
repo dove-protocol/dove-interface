@@ -11,11 +11,13 @@ import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
 import { useUserStore } from "../state/user/useUserStore";
-import { ChainId } from "../sdk";
 
-export default function Home() {
-  const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
-  const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
+const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
+  const [isAutoSwitch, activeTab, setActiveTab] = useUserStore((state) => [
+    state.isAutoSwitch,
+    state.activeTab,
+    state.setActiveTab,
+  ]);
   const timerRef = useRef(0);
 
   useEffect(() => {
@@ -27,17 +29,17 @@ export default function Home() {
 
   useEffect(() => {
     if (isAutoSwitch) {
-      if (activeNetworkTab === "damm") {
+      if (activeTab === "damm") {
         switchNetwork?.(chain.goerli.id);
       }
-      if (activeNetworkTab === "polygon") {
+      if (activeTab === "polygon") {
         switchNetwork?.(chain.polygonMumbai.id);
       }
-      if (activeNetworkTab === "arbi") {
+      if (activeTab === "arbi") {
         switchNetwork?.(chain.arbitrumGoerli.id);
       }
     }
-  }, [activeNetworkTab]);
+  }, [activeTab]);
 
   const isMounted = useIsMounted();
 
@@ -54,8 +56,8 @@ export default function Home() {
           <div className="relative flex w-full flex-col items-start px-4 py-4">
             <div className="flex w-full flex-row space-x-4">
               <Tabs.Root
-                value={activeNetworkTab}
-                onValueChange={(v) => setActiveNetworkTab(v)}
+                value={activeTab}
+                onValueChange={(v) => setActiveTab(v)}
                 defaultValue="damm"
                 className="w-full"
               >
@@ -64,7 +66,7 @@ export default function Home() {
                     value="damm"
                     className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
-                    {activeNetworkTab === "damm" && (
+                    {activeTab === "ethereum" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
                     )}
                     <p className="font-normal">dAMM</p>
@@ -73,7 +75,7 @@ export default function Home() {
                     value="polygon"
                     className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
-                    {activeNetworkTab === "polygon" && (
+                    {activeTab === "polygon" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
                     )}
                     <p className="font-normal">Polygon AMM</p>
@@ -82,7 +84,7 @@ export default function Home() {
                     value="arbi"
                     className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
-                    {activeNetworkTab === "arbi" && (
+                    {activeTab === "arbitrum" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
                     )}
                     <p className="font-normal">Arbitrum AMM</p>
@@ -94,19 +96,19 @@ export default function Home() {
                     <BiCog className="" />
                   </Tabs.Trigger>
                 </Tabs.List>
-                <Tabs.Content value="damm">
+                <Tabs.Content value="ethereum">
                   <TabContainer>
                     <DammTabContent />
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="polygon">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={ChainId.POLYGON_MUMBAI} />
+                    {/* <SwapTabContent expectedChainId={chain.polygonMumbai.id} /> */}
                   </TabContainer>
                 </Tabs.Content>
-                <Tabs.Content value="arbi">
+                <Tabs.Content value="arbitrum">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={ChainId.ARBITRUM_GOERLI} />
+                    {/* <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} /> */}
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="settings">
@@ -121,4 +123,6 @@ export default function Home() {
       </Article>
     </Main>
   );
-}
+};
+
+export default PageWrapper;
