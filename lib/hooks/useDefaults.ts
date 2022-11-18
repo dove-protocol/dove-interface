@@ -17,8 +17,13 @@ export function useChainDefaults() {
   const setSwapCurrencies = useSwapStore((store) => store.setCurrencies);
   const setBurnCurrencies = useBurnStore((store) => store.setCurrencies);
 
+  const clearFields = useSwapStore((store) => store.clearFields);
+
   useEffect(() => {
     if (!chain) return;
+
+    clearFields();
+
     setProvideCurrencies({
       [Field.CURRENCY_A]: USDC[chain.id],
       [Field.CURRENCY_B]: USDT[chain.id],

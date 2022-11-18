@@ -24,6 +24,7 @@ interface SwapStoreState {
   isSwapped: boolean;
   toggleSwap: () => void;
   independentField: Field;
+  clearFields: () => void;
 }
 
 export const useSwapStore = create<SwapStoreState>(
@@ -51,6 +52,10 @@ export const useSwapStore = create<SwapStoreState>(
       isSwapped: false,
       toggleSwap: () => set((state) => ({ isSwapped: !state.isSwapped })),
       independentField: Field.CURRENCY_A,
+      clearFields: () =>
+        set(() => ({
+          fields: { [Field.CURRENCY_A]: "", [Field.CURRENCY_B]: "" },
+        })),
     }),
     { name: "SwapStore" }
   )
