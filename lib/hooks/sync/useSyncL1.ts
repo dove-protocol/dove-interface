@@ -35,10 +35,10 @@ export default function useSyncL1(): {
     },
   });
 
-  const { write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  if (!write) return { callback: null };
+  if (!writeAsync) return { callback: null };
   return {
-    callback: () => write(),
+    callback: async () => await writeAsync(),
   };
 }

@@ -260,12 +260,28 @@ const DammTabContent = () => {
         />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDC</p>
-          {/* <p className="text-sm text-white">{expectedUSDCWithdrawn}</p> */}
+          <p className="text-sm text-white/50">
+            {currencies[Field.CURRENCY_A]?.symbol}
+          </p>
+          <p className="text-sm text-white">
+            {data?.reserve0 &&
+              formatCurrencyAmount(
+                withdrawAmounts[Field.CURRENCY_A]?.multiply(data?.reserve0),
+                6
+              )}
+          </p>
         </div>
         <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDT</p>
-          {/* <p className="text-sm text-white">{expectedUSDTWithdrawn}</p> */}
+          <p className="text-sm text-white/50">
+            {currencies[Field.CURRENCY_B]?.symbol}
+          </p>
+          <p className="text-sm text-white">
+            {data?.reserve1 &&
+              formatCurrencyAmount(
+                withdrawAmounts[Field.CURRENCY_A]?.multiply(data?.reserve1),
+                6
+              )}
+          </p>
         </div>
         <InteractButton
           onConfirm={handleWithdraw}

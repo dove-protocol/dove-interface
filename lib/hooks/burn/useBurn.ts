@@ -36,7 +36,7 @@ export default function useBurn(
 
   const { config } = usePrepareContractWrite({
     ...AMMContract,
-    functionName: "burn",
+    functionName: "burnVouchers",
     args: [
       LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
       voucher1ToBurn?.quotient.toString(),

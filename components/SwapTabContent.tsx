@@ -81,6 +81,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const { parsedAmounts, currencies, currencyBalances } = useDerivedSwapInfo();
 
+  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_A]
+  );
+
   const { callback: swapCallback } = useSwap(
     parsedAmounts[Field.CURRENCY_A],
     parsedAmounts[Field.CURRENCY_B]
@@ -88,6 +92,17 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
+
+    if (!parsedAmounts[Field.CURRENCY_A] || !data?.reserve0 || !data?.reserve1)
+      return;
+
+    onUserInput(
+      Field.CURRENCY_B,
+      parsedAmounts[Field.CURRENCY_A]
+        .multiply(data.reserve1)
+        .divide(data.reserve0.add(parsedAmounts[Field.CURRENCY_A]))
+        .toFixed(6)
+    );
   };
 
   const handleMax = () => {
@@ -96,6 +111,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         Field.CURRENCY_A,
         currencyBalances[Field.CURRENCY_A].toExact()
       );
+  };
+
+  const handleApproveA = () => {
+    approveCallbackA?.();
   };
 
   const handleSwap = () => {
@@ -238,29 +257,32 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
         <InputWithBalance
           currency={currencies[Field.CURRENCY_B]}
           balance={currencyBalances[Field.CURRENCY_B]}
-          onUserInput={handleTypeInput}
           showMaxButton={false}
           value={fields[Field.CURRENCY_B]}
+          disabled
         />
         <InteractButton
           onConfirm={handleSwap}
           expectedChainId={expectedChainId}
           text="Swap"
         >
-          {/* {(() => {
-            if (amount0 === "" || amount1 === "") {
+          {(() => {
+            if (
+              !parsedAmounts[Field.CURRENCY_A] ||
+              !parsedAmounts[Field.CURRENCY_B]
+            ) {
               return <Button disabled text="Enter an amount" />;
             }
-            if (!isSwapped) {
-              if (!isApprovedAmount0) {
-                return <Button onClick={approveAmount0} text="Approve USDT" />;
-              }
-            } else {
-              if (!isApprovedAmount1) {
-                return <Button onClick={approveAmount1} text="Approve USDC" />;
-              }
+
+            if (approveStateA === ApprovalState.NOT_APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveA}
+                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
             }
-          })()} */}
+          })()}
         </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
@@ -337,8 +359,9 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: number }) => {
               !data?.marked1 ||
               !burnAmounts[Field.CURRENCY_A] ||
               !burnAmounts[Field.CURRENCY_B]
-            )
-              return;
+            ) {
+              return <Button disabled text="Enter an amount" />;
+            }
 
             if (
               burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
