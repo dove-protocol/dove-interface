@@ -77,11 +77,16 @@ function useApprovalStateForSpender(
     watch: true,
   });
 
+  console.log(allowance);
+
   if (!amountToApprove) return ApprovalState.UNKNOWN;
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
 
-  return allowance.lt(BigNumber.from(amountToApprove.numerator.toString()))
+  return CurrencyAmount.fromRawAmount(
+    amountToApprove.currency,
+    allowance.toString()
+  ).greaterThan(amountToApprove)
     ? ApprovalState.NOT_APPROVED
     : ApprovalState.APPROVED;
 }
