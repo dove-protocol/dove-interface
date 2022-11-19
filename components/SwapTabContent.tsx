@@ -34,6 +34,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import { useNetwork } from "wagmi";
+import TabContentContainer from "./TabContentContainer";
 
 const SwapTabContent = () => {
   const { chain } = useNetwork();
@@ -371,211 +372,218 @@ const SwapTabContent = () => {
   return (
     <TabSlider tabsData={ammTabsData}>
       <Tabs.Content value="tab1">
-        <InputWithBalance
-          currency={currencies[Field.CURRENCY_A]}
-          balance={currencyBalances[Field.CURRENCY_A]}
-          onUserInput={handleTypeInput}
-          showMaxButton={true}
-          onMax={handleMax}
-          value={formattedAmounts[Field.CURRENCY_A]}
-          expectedChainId={expectedChainId}
-        />
-        <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-          <button className="group" onClick={handleSwapCurrency}>
-            <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
-          </button>
-        </div>
-        <InputWithBalance
-          currency={currencies[Field.CURRENCY_B]}
-          balance={currencyBalances[Field.CURRENCY_B]}
-          showMaxButton={false}
-          value={formattedAmounts[Field.CURRENCY_B]}
-          onUserInput={handleTypeOutput}
-          expectedChainId={expectedChainId}
-        />
-        <InteractButton
-          onConfirm={handleSwap}
-          expectedChainId={expectedChainId}
-          text="Swap"
-        >
-          {(() => {
-            if (
-              !parsedAmounts[Field.CURRENCY_A] ||
-              !parsedAmounts[Field.CURRENCY_B]
-            ) {
-              return <Button disabled text="Enter an amount" />;
-            }
+        <TabContentContainer>
+          <InputWithBalance
+            currency={currencies[Field.CURRENCY_A]}
+            balance={currencyBalances[Field.CURRENCY_A]}
+            onUserInput={handleTypeInput}
+            showMaxButton={true}
+            onMax={handleMax}
+            value={formattedAmounts[Field.CURRENCY_A]}
+            expectedChainId={expectedChainId}
+          />
+          <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <button className="group" onClick={handleSwapCurrency}>
+              <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
+            </button>
+          </div>
+          <InputWithBalance
+            currency={currencies[Field.CURRENCY_B]}
+            balance={currencyBalances[Field.CURRENCY_B]}
+            showMaxButton={false}
+            value={formattedAmounts[Field.CURRENCY_B]}
+            onUserInput={handleTypeOutput}
+            expectedChainId={expectedChainId}
+          />
+          <InteractButton
+            onConfirm={handleSwap}
+            expectedChainId={expectedChainId}
+            text="Swap"
+          >
+            {(() => {
+              if (
+                !parsedAmounts[Field.CURRENCY_A] ||
+                !parsedAmounts[Field.CURRENCY_B]
+              ) {
+                return <Button disabled text="Enter an amount" />;
+              }
 
-            if (approveState === ApprovalState.NOT_APPROVED) {
-              return (
-                <Button
-                  onClick={handleApprove}
-                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
-                />
-              );
-            }
+              if (approveState === ApprovalState.NOT_APPROVED) {
+                return (
+                  <Button
+                    onClick={handleApprove}
+                    text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                  />
+                );
+              }
 
-            if (
-              currencyBalances[Field.CURRENCY_A] &&
-              parsedAmounts[Field.CURRENCY_A].greaterThan(
-                currencyBalances[Field.CURRENCY_A]
-              )
-            ) {
-              return <Button disabled text="Insufficient balance" />;
-            }
-          })()}
-        </InteractButton>
+              if (
+                currencyBalances[Field.CURRENCY_A] &&
+                parsedAmounts[Field.CURRENCY_A].greaterThan(
+                  currencyBalances[Field.CURRENCY_A]
+                )
+              ) {
+                return <Button disabled text="Insufficient balance" />;
+              }
+            })()}
+          </InteractButton>
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        <InputWithBalance
-          currency={mintCurrency[Field.CURRENCY_A]}
-          balance={mintBalance[Field.CURRENCY_A]}
-          onUserInput={handleTypeMintA}
-          showMaxButton={false}
-          value={mintFields[Field.CURRENCY_A]}
-          expectedChainId={expectedChainId}
-        />
-        <div className="relative mb-4">
+        <TabContentContainer>
+          <InputWithBalance
+            currency={mintCurrency[Field.CURRENCY_A]}
+            balance={mintBalance[Field.CURRENCY_A]}
+            onUserInput={handleTypeMintA}
+            showMaxButton={false}
+            value={mintFields[Field.CURRENCY_A]}
+            expectedChainId={expectedChainId}
+          />
+          <div className="relative mb-4">
+            <InteractButton
+              onConfirm={handleMintA}
+              expectedChainId={expectedChainId}
+              text="Mint"
+            />
+          </div>
+          <InputWithBalance
+            currency={mintCurrency[Field.CURRENCY_B]}
+            balance={mintBalance[Field.CURRENCY_B]}
+            onUserInput={handleTypeMintB}
+            showMaxButton={false}
+            value={mintFields[Field.CURRENCY_B]}
+            expectedChainId={expectedChainId}
+          />
           <InteractButton
-            onConfirm={handleMintA}
+            onConfirm={handleMintB}
             expectedChainId={expectedChainId}
             text="Mint"
           />
-        </div>
-        <InputWithBalance
-          currency={mintCurrency[Field.CURRENCY_B]}
-          balance={mintBalance[Field.CURRENCY_B]}
-          onUserInput={handleTypeMintB}
-          showMaxButton={false}
-          value={mintFields[Field.CURRENCY_B]}
-          expectedChainId={expectedChainId}
-        />
-        <InteractButton
-          onConfirm={handleMintB}
-          expectedChainId={expectedChainId}
-          text="Mint"
-        />
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <InteractButton
-          expectedChainId={expectedChainId}
-          onConfirm={handleSync}
-          text="Sync to L1"
-        />
-      </Tabs.Content>
-      <Tabs.Content value="tab4">
-        <InputWithBalance
-          currency={burnCurrencies[Field.CURRENCY_A]}
-          balance={burnBalances[Field.CURRENCY_A]}
-          onUserInput={handleTypeBurnA}
-          showMaxButton={true}
-          onMax={handleMaxBurnA}
-          value={burnFields[Field.CURRENCY_A]}
-          expectedChainId={expectedChainId}
-        />
-        <InputWithBalance
-          currency={burnCurrencies[Field.CURRENCY_B]}
-          balance={burnBalances[Field.CURRENCY_B]}
-          onUserInput={handleTypeBurnB}
-          showMaxButton={true}
-          onMax={handleMaxBurnB}
-          value={burnFields[Field.CURRENCY_B]}
-          expectedChainId={expectedChainId}
-        />
-        <InteractButton
-          expectedChainId={expectedChainId}
-          onConfirm={handleBurn}
-          text="Burn Vouchers"
-        >
-          {(() => {
-            if (
-              !data?.marked0 ||
-              !data?.marked1 ||
-              !burnAmounts[Field.CURRENCY_A] ||
-              !burnAmounts[Field.CURRENCY_B]
-            ) {
-              return <Button disabled text="Enter an amount" />;
-            }
-            if (
-              burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
-              burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
-            ) {
-              return <Button disabled text="Sync Before" />;
-            }
-            if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
-              return (
-                <Button
-                  onClick={handleApproveVoucherA}
-                  text={`Approve ${burnCurrencies[Field.CURRENCY_A]?.symbol}`}
-                />
-              );
-            }
-            if (approveVoucherStateB === ApprovalState.NOT_APPROVED) {
-              return (
-                <Button
-                  onClick={handleApproveVoucherB}
-                  text={`Approve ${burnCurrencies[Field.CURRENCY_B]?.symbol}`}
-                />
-              );
-            }
-          })()}
-        </InteractButton>
-        <div className="mb-2 mt-4 h-px w-full bg-white/5" />
-        <p className="mb-2 text-white">Available claims</p>
-        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              USDC
-            </p>
-          </div>
-          <p className="text-sm text-white">
-            {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
-          </p>
-        </div>
-        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              USDT
-            </p>
-          </div>
-          <p className="text-sm text-white">
-            {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
-          </p>
-        </div>
+        <TabContentContainer>
+          <InteractButton
+            expectedChainId={expectedChainId}
+            onConfirm={handleSync}
+            text="Sync to L1"
+          />
+        </TabContentContainer>
       </Tabs.Content>
 
-      <Tabs.Content value="tab5">
-        <div className="mb-4 flex items-center">
-          <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
-          <div className="flex flex-col">
-            <h4 className="text-white">Virtual Reserves</h4>
-            <p className="text-xs text-white/50">Synced reserve balances</p>
-          </div>
-        </div>
-        <div className="relative mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+      <Tabs.Content value="tab4">
+        <TabContentContainer>
+          <InputWithBalance
+            currency={burnCurrencies[Field.CURRENCY_A]}
+            balance={burnBalances[Field.CURRENCY_A]}
+            onUserInput={handleTypeBurnA}
+            showMaxButton={true}
+            onMax={handleMaxBurnA}
+            value={burnFields[Field.CURRENCY_A]}
+            expectedChainId={expectedChainId}
+          />
+          <InputWithBalance
+            currency={burnCurrencies[Field.CURRENCY_B]}
+            balance={burnBalances[Field.CURRENCY_B]}
+            onUserInput={handleTypeBurnB}
+            showMaxButton={true}
+            onMax={handleMaxBurnB}
+            value={burnFields[Field.CURRENCY_B]}
+            expectedChainId={expectedChainId}
+          />
+          <InteractButton
+            expectedChainId={expectedChainId}
+            onConfirm={handleBurn}
+            text="Burn Vouchers"
+          >
+            {(() => {
+              if (
+                !data?.marked0 ||
+                !data?.marked1 ||
+                !burnAmounts[Field.CURRENCY_A] ||
+                !burnAmounts[Field.CURRENCY_B]
+              ) {
+                return <Button disabled text="Enter an amount" />;
+              }
+              if (
+                burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
+                burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
+              ) {
+                return <Button disabled text="Sync Before" />;
+              }
+              if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
+                return (
+                  <Button
+                    onClick={handleApproveVoucherA}
+                    text={`Approve ${burnCurrencies[Field.CURRENCY_A]?.symbol}`}
+                  />
+                );
+              }
+              if (approveVoucherStateB === ApprovalState.NOT_APPROVED) {
+                return (
+                  <Button
+                    onClick={handleApproveVoucherB}
+                    text={`Approve ${burnCurrencies[Field.CURRENCY_B]?.symbol}`}
+                  />
+                );
+              }
+            })()}
+          </InteractButton>
+        </TabContentContainer>
+        <div className="mb-2 h-px w-full bg-white/5" />
+
+        <div className=" flex w-full items-start justify-between px-4 py-1">
+          <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
+            Available claims
+          </p>
           <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
+            <p className="mr-4 text-xs uppercase tracking-widest text-white/50">
               USDC
             </p>
-          </div>
-          <p className="text-sm text-white">
-            {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
-          </p>
-        </div>
-        <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
+            <p className="mr-8 text-xs text-white">
+              {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
+            </p>
+            <p className="mr-4 text-xs uppercase tracking-widest text-white/50">
               USDT
             </p>
+            <p className="text-xs text-white">
+              {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
+            </p>
           </div>
-          <p className="text-sm text-white">
-            {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
-          </p>
         </div>
+      </Tabs.Content>
+      <Tabs.Content value="tab5">
+        <TabContentContainer>
+          <div className="mb-4 flex items-center">
+            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <div className="flex flex-col">
+              <h4 className="text-white">Virtual Reserves</h4>
+              <p className="text-xs text-white/50">Synced reserve balances</p>
+            </div>
+          </div>
+          <div className="relative mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                USDC
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
+            </p>
+          </div>
+          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                USDT
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
+            </p>
+          </div>
+        </TabContentContainer>
       </Tabs.Content>
     </TabSlider>
   );

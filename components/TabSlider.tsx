@@ -54,7 +54,7 @@ const TabSlider = ({
       <Tabs.List
         ref={wrapperRef}
         onMouseLeave={() => setHighlightedTab(null)}
-        className="relative mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1"
+        className="relative flex w-full flex-row rounded-sm bg-black/10 p-1"
       >
         <div
           className="absolute -left-px h-[34px] translate-y-[4px] rounded-sm bg-white/5 transition"

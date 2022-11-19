@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import * as Switch from "@radix-ui/react-switch";
 import { useUserStore } from "../state/user/useUserStore";
+import TabContentContainer from "./TabContentContainer";
 
 const SettingsTabContent = () => {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -10,9 +11,8 @@ const SettingsTabContent = () => {
   const setShowAdvanced = useUserStore((state) => state.setShowAdvanced);
 
   return (
-    <>
+    <TabContentContainer>
       <p className="mb-4 font-normal text-white">Settings</p>
-
       <p className="mb-2 text-white/50">Show Advanced</p>
       <Switch.Root
         className="relative mb-2 h-8 w-16 rounded-sm border border-white/5 bg-black/10"
@@ -32,7 +32,7 @@ const SettingsTabContent = () => {
       </Switch.Root>
 
       {/* <p className="text-white/50">Slippage Tolerance</p> */}
-    </>
+    </TabContentContainer>
   );
 };
 

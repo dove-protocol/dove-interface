@@ -32,6 +32,7 @@ import {
 } from "../lib/utils/formatNumbers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
 import { BiDollar, BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
+import TabContentContainer from "./TabContentContainer";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -339,229 +340,239 @@ const DammTabContent = () => {
   return (
     <TabSlider tabsData={dammTabsData}>
       <Tabs.Content value="tab1">
-        <InputWithBalance
-          currency={currencies[Field.CURRENCY_A]}
-          balance={currencyBalances[Field.CURRENCY_A]}
-          onUserInput={handleTypeA}
-          showMaxButton={true}
-          onMax={handleMax}
-          value={formattedAmounts[Field.CURRENCY_A]}
-          expectedChainId={ChainId.ETHEREUM_GOERLI}
-        />
-        <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-          <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
-          <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
-        </div>
-        <InputWithBalance
-          currency={currencies[Field.CURRENCY_B]}
-          balance={currencyBalances[Field.CURRENCY_B]}
-          onUserInput={handleTypeB}
-          showMaxButton={false}
-          value={formattedAmounts[Field.CURRENCY_B]}
-          expectedChainId={ChainId.ETHEREUM_GOERLI}
-        />
-        <InteractButton
-          onConfirm={handleProvideLiquidity}
-          expectedChainId={chain.goerli.id}
-          text="Add Liquidity"
-        >
-          {(() => {
-            if (
-              !parsedAmounts[Field.CURRENCY_A] ||
-              !parsedAmounts[Field.CURRENCY_B]
-            ) {
-              return <Button disabled text="Enter an amount" />;
-            }
-            if (
-              currencyBalances[Field.CURRENCY_A] &&
-              currencyBalances[Field.CURRENCY_B] &&
-              (parsedAmounts[Field.CURRENCY_A].greaterThan(
-                currencyBalances[Field.CURRENCY_A]
-              ) ||
-                parsedAmounts[Field.CURRENCY_B].greaterThan(
-                  currencyBalances[Field.CURRENCY_B]
-                ))
-            ) {
-              return <Button disabled text="Insufficient balance" />;
-            }
-            if (approveStateA !== ApprovalState.APPROVED) {
-              return (
-                <Button
-                  onClick={handleApproveA}
-                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
-                />
-              );
-            }
-            if (approveStateB !== ApprovalState.APPROVED) {
-              return (
-                <Button
-                  onClick={handleApproveB}
-                  text={`Approve ${currencies[Field.CURRENCY_B]?.symbol}`}
-                />
-              );
-            }
-          })()}
-        </InteractButton>
+        <TabContentContainer>
+          <InputWithBalance
+            currency={currencies[Field.CURRENCY_A]}
+            balance={currencyBalances[Field.CURRENCY_A]}
+            onUserInput={handleTypeA}
+            showMaxButton={true}
+            onMax={handleMax}
+            value={formattedAmounts[Field.CURRENCY_A]}
+            expectedChainId={ChainId.ETHEREUM_GOERLI}
+          />
+          <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
+            <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
+          </div>
+          <InputWithBalance
+            currency={currencies[Field.CURRENCY_B]}
+            balance={currencyBalances[Field.CURRENCY_B]}
+            onUserInput={handleTypeB}
+            showMaxButton={false}
+            value={formattedAmounts[Field.CURRENCY_B]}
+            expectedChainId={ChainId.ETHEREUM_GOERLI}
+          />
+          <InteractButton
+            onConfirm={handleProvideLiquidity}
+            expectedChainId={chain.goerli.id}
+            text="Add Liquidity"
+          >
+            {(() => {
+              if (
+                !parsedAmounts[Field.CURRENCY_A] ||
+                !parsedAmounts[Field.CURRENCY_B]
+              ) {
+                return <Button disabled text="Enter an amount" />;
+              }
+              if (
+                currencyBalances[Field.CURRENCY_A] &&
+                currencyBalances[Field.CURRENCY_B] &&
+                (parsedAmounts[Field.CURRENCY_A].greaterThan(
+                  currencyBalances[Field.CURRENCY_A]
+                ) ||
+                  parsedAmounts[Field.CURRENCY_B].greaterThan(
+                    currencyBalances[Field.CURRENCY_B]
+                  ))
+              ) {
+                return <Button disabled text="Insufficient balance" />;
+              }
+              if (approveStateA !== ApprovalState.APPROVED) {
+                return (
+                  <Button
+                    onClick={handleApproveA}
+                    text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                  />
+                );
+              }
+              if (approveStateB !== ApprovalState.APPROVED) {
+                return (
+                  <Button
+                    onClick={handleApproveB}
+                    text={`Approve ${currencies[Field.CURRENCY_B]?.symbol}`}
+                  />
+                );
+              }
+            })()}
+          </InteractButton>
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        <InputWithBalance
-          currency={withdrawCurrency[Field.CURRENCY_A]}
-          balance={withdrawBalance[Field.CURRENCY_A]}
-          onUserInput={handleTypeWithdraw}
-          showMaxButton={true}
-          onMax={handleMaxWithdraw}
-          value={withdrawFields[Field.CURRENCY_A]}
-          expectedChainId={ChainId.ETHEREUM_GOERLI}
-        />
-        <div className="mb-4">
-          <InteractButton
-            onConfirm={handleWithdraw}
-            expectedChainId={chain.goerli.id}
-            text="Withdraw"
+        <TabContentContainer>
+          <InputWithBalance
+            currency={withdrawCurrency[Field.CURRENCY_A]}
+            balance={withdrawBalance[Field.CURRENCY_A]}
+            onUserInput={handleTypeWithdraw}
+            showMaxButton={true}
+            onMax={handleMaxWithdraw}
+            value={withdrawFields[Field.CURRENCY_A]}
+            expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-        </div>
-        <div className="mb-2 h-px w-full bg-white/5" />
-        <p className="mb-2 text-white">You receive</p>
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              {currencies[Field.CURRENCY_A]?.symbol}
+          <div className="mb-4">
+            <InteractButton
+              onConfirm={handleWithdraw}
+              expectedChainId={chain.goerli.id}
+              text="Withdraw"
+            />
+          </div>
+          <div className="mb-2 h-px w-full bg-white/5" />
+          <p className="mb-2 text-white">You receive</p>
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                {currencies[Field.CURRENCY_A]?.symbol}
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.reserve0 &&
+                data?.totalSupply &&
+                currencies[Field.CURRENCY_A] &&
+                withdrawAmounts[Field.CURRENCY_A] &&
+                formatCurrencyAmount(
+                  CurrencyAmount.fromRawAmount(
+                    currencies[Field.CURRENCY_A],
+                    JSBI.divide(
+                      JSBI.multiply(
+                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                        data.reserve0.numerator
+                      ),
+                      data?.totalSupply.numerator
+                    )
+                  ),
+                  6
+                )}
             </p>
           </div>
-          <p className="text-sm text-white">
-            {data?.reserve0 &&
-              data?.totalSupply &&
-              currencies[Field.CURRENCY_A] &&
-              withdrawAmounts[Field.CURRENCY_A] &&
-              formatCurrencyAmount(
-                CurrencyAmount.fromRawAmount(
-                  currencies[Field.CURRENCY_A],
-                  JSBI.divide(
-                    JSBI.multiply(
-                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                      data.reserve0.numerator
-                    ),
-                    data?.totalSupply.numerator
-                  )
-                ),
-                6
-              )}
-          </p>
-        </div>
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              {currencies[Field.CURRENCY_B]?.symbol}
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                {currencies[Field.CURRENCY_B]?.symbol}
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.reserve1 &&
+                data?.totalSupply &&
+                currencies[Field.CURRENCY_B] &&
+                withdrawAmounts[Field.CURRENCY_A] &&
+                formatCurrencyAmount(
+                  CurrencyAmount.fromRawAmount(
+                    currencies[Field.CURRENCY_B],
+                    JSBI.divide(
+                      JSBI.multiply(
+                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                        data.reserve1.numerator
+                      ),
+                      data?.totalSupply.numerator
+                    )
+                  ),
+                  6
+                )}
             </p>
           </div>
-          <p className="text-sm text-white">
-            {data?.reserve1 &&
-              data?.totalSupply &&
-              currencies[Field.CURRENCY_B] &&
-              withdrawAmounts[Field.CURRENCY_A] &&
-              formatCurrencyAmount(
-                CurrencyAmount.fromRawAmount(
-                  currencies[Field.CURRENCY_B],
-                  JSBI.divide(
-                    JSBI.multiply(
-                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                      data.reserve1.numerator
-                    ),
-                    data?.totalSupply.numerator
-                  )
-                ),
-                6
-              )}
-          </p>
-        </div>
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <div className="mb-4 flex items-center">
-          <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
-          <h4 className="text-white">Primary Reserves</h4>
-        </div>
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              USDC
+        <TabContentContainer>
+          <div className="mb-4 flex items-center">
+            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <h4 className="text-white">Primary Reserves</h4>
+          </div>
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                USDC
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
             </p>
           </div>
-          <p className="text-sm text-white">
-            {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
-          </p>
-        </div>
 
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              USDT
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                USDT
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
             </p>
           </div>
-          <p className="text-sm text-white">
-            {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
-          </p>
-        </div>
-        <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <div className="flex items-center">
-            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white/50">
-              DAMM-LP
+          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                DAMM-LP
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.totalSupply && data.totalSupply.toExact()}
             </p>
           </div>
-          <p className="text-sm text-white">
-            {data?.totalSupply && data.totalSupply.toExact()}
-          </p>
-        </div>
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <InputWithBalance
-          currency={mintCurrency[Field.CURRENCY_A]}
-          balance={mintBalance[Field.CURRENCY_A]}
-          onUserInput={handleTypeMintA}
-          showMaxButton={false}
-          value={mintFields[Field.CURRENCY_A]}
-          expectedChainId={ChainId.ETHEREUM_GOERLI}
-        />
-        <div className="relative mb-4">
+        <TabContentContainer>
+          <InputWithBalance
+            currency={mintCurrency[Field.CURRENCY_A]}
+            balance={mintBalance[Field.CURRENCY_A]}
+            onUserInput={handleTypeMintA}
+            showMaxButton={false}
+            value={mintFields[Field.CURRENCY_A]}
+            expectedChainId={ChainId.ETHEREUM_GOERLI}
+          />
+          <div className="relative mb-4">
+            <InteractButton
+              onConfirm={handleMintA}
+              expectedChainId={chain.goerli.id}
+              text="Mint"
+            />
+          </div>
+          <InputWithBalance
+            currency={mintCurrency[Field.CURRENCY_B]}
+            balance={mintBalance[Field.CURRENCY_B]}
+            onUserInput={handleTypeMintB}
+            showMaxButton={false}
+            value={mintFields[Field.CURRENCY_B]}
+            expectedChainId={ChainId.ETHEREUM_GOERLI}
+          />
           <InteractButton
-            onConfirm={handleMintA}
+            onConfirm={handleMintB}
             expectedChainId={chain.goerli.id}
             text="Mint"
           />
-        </div>
-        <InputWithBalance
-          currency={mintCurrency[Field.CURRENCY_B]}
-          balance={mintBalance[Field.CURRENCY_B]}
-          onUserInput={handleTypeMintB}
-          showMaxButton={false}
-          value={mintFields[Field.CURRENCY_B]}
-          expectedChainId={ChainId.ETHEREUM_GOERLI}
-        />
-        <InteractButton
-          onConfirm={handleMintB}
-          expectedChainId={chain.goerli.id}
-          text="Mint"
-        />
+        </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab5">
-        <div className="relative mb-4">
-          <InteractButton
-            expectedChainId={chain.goerli.id}
-            onConfirm={handleArbiSync}
-            text="Sync to Arbitrum AMM"
-          />
-        </div>
-        <div className="relative">
-          <InteractButton
-            expectedChainId={chain.goerli.id}
-            onConfirm={handlePolygonSync}
-            text="Sync to Polygon AMM"
-          />
-        </div>
+        <TabContentContainer>
+          <div className="relative mb-4">
+            <InteractButton
+              expectedChainId={chain.goerli.id}
+              onConfirm={handleArbiSync}
+              text="Sync to Arbitrum AMM"
+            />
+          </div>
+          <div className="relative">
+            <InteractButton
+              expectedChainId={chain.goerli.id}
+              onConfirm={handlePolygonSync}
+              text="Sync to Polygon AMM"
+            />
+          </div>
+        </TabContentContainer>
       </Tabs.Content>
     </TabSlider>
   );
