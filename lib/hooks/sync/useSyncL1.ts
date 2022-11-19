@@ -4,9 +4,10 @@ import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { ethers } from "ethers";
+import { SendTransactionResult } from "@wagmi/core";
 
 export default function useSyncL1(): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
 } {
   const { chain } = useNetwork();
 
@@ -31,7 +32,7 @@ export default function useSyncL1(): {
     functionName: "syncToL1",
     args: [LZ_CHAIN[ChainId.ETHEREUM_GOERLI], 1, 1, 2, 2],
     overrides: {
-      value: ethers.utils.parseEther("0.1"),
+      value: ethers.utils.parseEther("0.2"),
     },
     enabled: !!chain,
   });

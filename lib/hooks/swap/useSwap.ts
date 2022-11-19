@@ -12,6 +12,8 @@ export default function useSwap(
 } {
   const { chain } = useNetwork();
 
+  console.log(amountIn?.currency.symbol, amountOut?.currency.symbol);
+
   const ammAddress = useMemo(() => {
     if (!chain) return;
 

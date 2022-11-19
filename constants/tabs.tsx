@@ -8,13 +8,14 @@ import {
   BiCog,
   BiReceipt,
   BiCreditCardFront,
+  BiShuffle,
 } from "react-icons/bi";
 
 export const ammTabsData = [
   {
     id: "tab1",
     title: "Swap",
-    icon: <BiRefresh className=" rounded-sm bg-white/5 p-px" />,
+    icon: <BiShuffle className=" rounded-sm bg-white/5 p-px" />,
   },
   {
     id: "tab4",
@@ -34,7 +35,7 @@ export const ammTabsData = [
   {
     id: "tab3",
     title: "Sync",
-    icon: <BiDownload className=" rounded-sm bg-white/5 p-px" />,
+    icon: <BiRefresh className=" rounded-sm bg-white/5 p-px" />,
   },
 ];
 
@@ -62,6 +63,6 @@ export const dammTabsData = [
   {
     id: "tab5",
     title: "Sync",
-    icon: <BiDownload className=" rounded-sm bg-white/5 p-px" />,
+    icon: <BiRefresh className=" rounded-sm bg-white/5 p-px" />,
   },
 ];

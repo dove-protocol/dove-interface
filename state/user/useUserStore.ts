@@ -23,7 +23,6 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
   toastContent: {
     title: "",
     description: "",
-    txid: "",
     type: "success",
   },
   setToastContent: (toastContent: ToastContent) =>
