@@ -31,7 +31,13 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
-import { BiDollar, BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
+import {
+  BiDollar,
+  BiDownArrowAlt,
+  BiExpandAlt,
+  BiPlus,
+  BiStats,
+} from "react-icons/bi";
 import TabContentContainer from "./TabContentContainer";
 
 const DammTabContent = () => {
@@ -417,15 +423,18 @@ const DammTabContent = () => {
             value={withdrawFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="mb-4">
+          <div className="relative z-10 mb-4">
             <InteractButton
               onConfirm={handleWithdraw}
               expectedChainId={chain.goerli.id}
               text="Withdraw"
             />
           </div>
-          <div className="mb-2 h-px w-full bg-white/5" />
-          <p className="mb-2 text-white">You receive</p>
+          <div className="mb-4 h-px w-full bg-white/5" />
+          <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
+            <BiDownArrowAlt className="relative text-2xl text-white/50 transition group-hover:text-white" />
+          </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
@@ -453,7 +462,7 @@ const DammTabContent = () => {
                 )}
             </p>
           </div>
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white/50">
@@ -486,7 +495,10 @@ const DammTabContent = () => {
         <TabContentContainer>
           <div className="mb-4 flex items-center">
             <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
-            <h4 className="text-white">Primary Reserves</h4>
+            <div className="flex flex-col">
+              <h4 className="text-white">Primary Reserves</h4>
+              <p className="text-xs text-white/50">Main reserve balances</p>
+            </div>
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
             <div className="flex items-center">
