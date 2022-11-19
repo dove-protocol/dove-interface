@@ -1,174 +1,550 @@
 import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState } from "react";
-import { BiPlus, BiMinus, BiStats, BiDollar, BiDownload } from "react-icons/bi";
-import InteractButton from "./InteractButton";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { chain } from "wagmi";
-import { validateNumber } from "../lib/utils";
-import usedAMM from "../hooks/usedAMMProvide";
-import useMint from "../hooks/useMint";
+import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
+import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
+import { ChainId, Currency, CurrencyAmount, DAMM_LP, MaxUint256 } from "../sdk";
+import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
+import { Field, useProvideStore } from "../state/provide/useProvideStore";
+import TabSlider from "./TabSlider";
+import {
+  Field as WithdrawField,
+  useWithdrawStore,
+} from "../state/withdraw/useWithdrawStore";
+import { useDerivedWithdrawInfo } from "../state/withdraw/useDerivedWithdrawInfo";
+import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
+import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
+import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
+import useMint from "../lib/hooks/mint/useMint";
+import useDammData from "../lib/hooks/data/useDammData";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import useSyncL2 from "../lib/hooks/sync/useSyncL2";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import { ApprovalState } from "../lib/hooks/useApproval";
+import JSBI from "jsbi";
+import { ammTabsData, dammTabsData } from "../constants/tabs";
+import {
+  currencyAmountToPreciseFloat,
+  formatTransactionAmount,
+} from "../lib/utils/formatNumbers";
+import useTriggerToast from "../lib/hooks/useTriggerToast";
+import { BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
 
 const DammTabContent = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  // load up default tokens for chain
+  useChainDefaults();
 
-  const [amount1, setAmount1] = useState<string>("");
-  const [amount2, setAmount2] = useState<string>("");
-  const [USDCToMint, setUSDCToMint] = useState<string>("");
-  const [USDTToMint, setUSDTToMint] = useState<string>("");
-  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const { callback: toastCallback } = useTriggerToast();
 
-  const { provide } = usedAMM({ amount1, amount2 });
-  const { mint: mintUSDC } = useMint({ amount: USDCToMint, isUSDC: true });
-  const { mint: mintUSDT } = useMint({ amount: USDTToMint, isUSDC: false });
+  // load up state
+  const [fields, onUserInput, independentField] = useProvideStore((state) => [
+    state.fields,
+    state.onUserInput,
+    state.independentField,
+  ]);
+
+  // load up token info
+  const { parsedAmounts, currencies, currencyBalances } =
+    useDerivedProvideInfo();
+
+  const dependentField =
+    independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
+
+  const formattedAmounts = {
+    [independentField]: fields[independentField],
+    [dependentField]: parsedAmounts[dependentField]?.toExact() ?? "",
+  };
+
+  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_A]
+  );
+
+  const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
+  // load up liquidity callback
+  const { callback } = useProvideLiquidity(
+    parsedAmounts[Field.CURRENCY_A],
+    parsedAmounts[Field.CURRENCY_B]
+  );
+
+  const handleTypeA = (value: string) => {
+    onUserInput(Field.CURRENCY_A, value);
+  };
+
+  const handleTypeB = (value: string) => {
+    onUserInput(Field.CURRENCY_B, value);
+  };
+
+  const handleProvideLiquidity = () => {
+    callback?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_A] &&
+          parsedAmounts[Field.CURRENCY_B];
+        toastCallback?.({
+          title: "Liquidity Added",
+          description: `${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+          )} ${
+            currencies[Field.CURRENCY_A]?.symbol
+          } and ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleApproveA = () => {
+    approveCallbackA?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_A] &&
+          toastCallback?.({
+            title: "Token Approved",
+            description: `${formatTransactionAmount(
+              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+            )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleApproveB = () => {
+    approveCallbackB?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_B] &&
+          toastCallback?.({
+            title: "Token Approved",
+            description: `${formatTransactionAmount(
+              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+            )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleMax = () => {
+    currencyBalances[Field.CURRENCY_A] &&
+      onUserInput(
+        Field.CURRENCY_A,
+        currencyBalances[Field.CURRENCY_A].toExact()
+      );
+  };
+
+  //////////////////////////////////////////////////////////
+
+  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const {
+    parsedAmounts: withdrawAmounts,
+    currencies: withdrawCurrency,
+    currencyBalances: withdrawBalance,
+  } = useDerivedWithdrawInfo();
+
+  const { callback: withdrawCallback } = useWithdrawLiquidity(
+    withdrawAmounts[Field.CURRENCY_A]
+  );
+
+  const handleTypeWithdraw = (value: string) => {
+    onUserInputWithdraw(WithdrawField.CURRENCY_A, value);
+  };
+
+  const handleWithdraw = () => {
+    withdrawCallback?.()
+      .then((tx) => {
+        tx &&
+          withdrawAmounts[Field.CURRENCY_A] &&
+          toastCallback?.({
+            title: "Liquidity Removed",
+            description: `${formatTransactionAmount(
+              currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
+            )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol}`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleMaxWithdraw = () => {
+    withdrawBalance[WithdrawField.CURRENCY_A] &&
+      onUserInputWithdraw(
+        WithdrawField.CURRENCY_A,
+        withdrawBalance[WithdrawField.CURRENCY_A].toExact()
+      );
+  };
+
+  //////////////////////////////////////////////////////////
+
+  const {
+    parsedAmounts: mintAmounts,
+    currencies: mintCurrency,
+    currencyBalances: mintBalance,
+  } = useDerivedMintInfo();
+
+  const [mintFields, onUserInputMint] = useMintStore((state) => [
+    state.fields,
+    state.onUserInput,
+  ]);
+
+  const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
+
+  const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
+
+  const handleTypeMintA = (value: string) => {
+    onUserInputMint(MintField.CURRENCY_A, value);
+  };
+
+  const handleTypeMintB = (value: string) => {
+    onUserInputMint(MintField.CURRENCY_B, value);
+  };
+
+  const handleMintA = () => {
+    mintCallbackA?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Minted",
+            description: `${formatTransactionAmount(
+              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
+            )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleMintB = () => {
+    mintCallbackB?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Minted",
+            description: `${formatTransactionAmount(
+              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
+            )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  // temporarily use currencies from provide (dependent on pool in future?)
+  const { data } = useDammData(
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B],
+    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+  );
+
+  //////////////////////////////////////////////////////////
+
+  const { callback: arbiCallback } = useSyncL2(ChainId.ARBITRUM_GOERLI);
+  const { callback: polygonCallback } = useSyncL2(ChainId.POLYGON_MUMBAI);
+
+  const handleArbiSync = () => {
+    arbiCallback?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Synced",
+            description: `Synced Arbitrum with Ethereum`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        console.log("");
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handlePolygonSync = () => {
+    polygonCallback?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Synced",
+            description: `Synced Polygon with Ethereum`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
 
   return (
-    <Tabs.Root
-      defaultValue="tab1"
-      value={activeTab}
-      onValueChange={(v) => setActiveTab(v)}
-      className="w-full"
-    >
-      <Tabs.List className="mb-4 flex w-full flex-row rounded-sm bg-black/10 p-1">
-        <Tabs.Trigger
-          value="tab1"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab1" && ""}`}>Provide</p>
-          <BiPlus className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab2"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab2" && ""}`}>Withdraw</p>
-          <BiMinus className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab3"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab3" && ""}`}>Reserves</p>
-          <BiStats className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab4"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab4" && ""}`}>Mint</p>
-          <BiDollar className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          value="tab5"
-          className="flex cursor-pointer flex-row items-center rounded-sm border border-transparent px-4 py-1 backdrop-blur-lg transition duration-300 ease-linear hover:text-white rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
-        >
-          <p className={`font-light ${activeTab === "tab5" && ""}`}>Sync</p>
-          <BiDownload className="ml-2 rounded-sm bg-white/5 p-px" />
-        </Tabs.Trigger>
-      </Tabs.List>
+    <TabSlider tabsData={dammTabsData}>
       <Tabs.Content value="tab1">
         <InputWithBalance
-          label="USDT"
-          value={amount1}
-          setValue={setAmount1}
-          balance={"100"}
+          currency={currencies[Field.CURRENCY_A]}
+          balance={currencyBalances[Field.CURRENCY_A]}
+          onUserInput={handleTypeA}
+          showMaxButton={true}
+          onMax={handleMax}
+          value={formattedAmounts[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
+        <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+          <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
+          <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
+        </div>
         <InputWithBalance
-          label="USDC"
-          value={amount2}
-          setValue={setAmount2}
-          balance={"200"}
+          currency={currencies[Field.CURRENCY_B]}
+          balance={currencyBalances[Field.CURRENCY_B]}
+          onUserInput={handleTypeB}
+          showMaxButton={false}
+          value={formattedAmounts[Field.CURRENCY_B]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
+          onConfirm={handleProvideLiquidity}
           expectedChainId={chain.goerli.id}
-          onClick={() => {}}
           text="Add Liquidity"
-        />
+        >
+          {(() => {
+            if (
+              !parsedAmounts[Field.CURRENCY_A] ||
+              !parsedAmounts[Field.CURRENCY_B]
+            ) {
+              return <Button disabled text="Enter an amount" />;
+            }
+            if (
+              currencyBalances[Field.CURRENCY_A] &&
+              currencyBalances[Field.CURRENCY_B] &&
+              (parsedAmounts[Field.CURRENCY_A].greaterThan(
+                currencyBalances[Field.CURRENCY_A]
+              ) ||
+                parsedAmounts[Field.CURRENCY_B].greaterThan(
+                  currencyBalances[Field.CURRENCY_B]
+                ))
+            ) {
+              return <Button disabled text="Insufficient balance" />;
+            }
+            if (approveStateA !== ApprovalState.APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveA}
+                  text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
+                />
+              );
+            }
+            if (approveStateB !== ApprovalState.APPROVED) {
+              return (
+                <Button
+                  onClick={handleApproveB}
+                  text={`Approve ${currencies[Field.CURRENCY_B]?.symbol}`}
+                />
+              );
+            }
+          })()}
+        </InteractButton>
       </Tabs.Content>
       <Tabs.Content value="tab2">
-        {/* <p className="mb-2 font-thin tracking-widest text-white/50">
-          <span className="text-white">Total Balance</span> (DAMM-LP)
-        </p>
-        <h3 className="mb-8 text-white">100</h3> */}
         <InputWithBalance
-          label="DAMM-LP"
-          value={withdrawAmount}
-          setValue={setWithdrawAmount}
-          balance={"100"}
+          currency={withdrawCurrency[Field.CURRENCY_A]}
+          balance={withdrawBalance[Field.CURRENCY_A]}
+          onUserInput={handleTypeWithdraw}
+          showMaxButton={true}
+          onMax={handleMaxWithdraw}
+          value={withdrawFields[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
-        <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDC</p>
-          <p className="text-sm text-white">100</p>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            {currencies[Field.CURRENCY_A]?.symbol}
+          </p>
+          <p className="text-sm text-white">
+            {data?.reserve0 &&
+              data?.totalSupply &&
+              currencies[Field.CURRENCY_A] &&
+              withdrawAmounts[Field.CURRENCY_A] &&
+              formatCurrencyAmount(
+                CurrencyAmount.fromRawAmount(
+                  currencies[Field.CURRENCY_A],
+                  JSBI.divide(
+                    JSBI.multiply(
+                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                      data.reserve0.numerator
+                    ),
+                    data?.totalSupply.numerator
+                  )
+                ),
+                6
+              )}
+          </p>
         </div>
-        <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDT</p>
-          <p className="text-sm text-white">100</p>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            {currencies[Field.CURRENCY_B]?.symbol}
+          </p>
+          <p className="text-sm text-white">
+            {data?.reserve1 &&
+              data?.totalSupply &&
+              currencies[Field.CURRENCY_B] &&
+              withdrawAmounts[Field.CURRENCY_A] &&
+              formatCurrencyAmount(
+                CurrencyAmount.fromRawAmount(
+                  currencies[Field.CURRENCY_B],
+                  JSBI.divide(
+                    JSBI.multiply(
+                      withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                      data.reserve1.numerator
+                    ),
+                    data?.totalSupply.numerator
+                  )
+                ),
+                6
+              )}
+          </p>
         </div>
         <InteractButton
+          onConfirm={handleWithdraw}
           expectedChainId={chain.goerli.id}
           text="Withdraw"
-          onClick={() => {}}
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <div className="flex w-full flex-col items-start">
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 1 <span className="text-white/50">(USDT)</span>
-          </p>
-          <h3 className="mb-8 text-white">$139.14</h3>
+        <div className="mb-4 flex items-center">
+          <BiStats className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
+          <h4 className="text-white">Primary Reserves</h4>
         </div>
-        <div className="flex w-full flex-col items-start">
-          <div className="mb-8 h-px w-full bg-white/5" />
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 2 <span className="text-white/50">(USDC)</span>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDC
           </p>
-          <h3 className="mb-2 text-white">$23.64</h3>
+          <p className="text-sm text-white">
+            {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
+          </p>
+        </div>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDT
+          </p>
+          <p className="text-sm text-white">
+            {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
+          </p>
+        </div>
+        <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            DAMM-LP
+          </p>
+          <p className="text-sm text-white">
+            {data?.totalSupply && data.totalSupply.toExact()}
+          </p>
         </div>
       </Tabs.Content>
       <Tabs.Content value="tab4">
         <InputWithBalance
-          label="USDT"
-          value={USDTToMint}
-          setValue={setUSDTToMint}
-          balance="100"
+          currency={mintCurrency[Field.CURRENCY_A]}
+          balance={mintBalance[Field.CURRENCY_A]}
+          onUserInput={handleTypeMintA}
+          showMaxButton={false}
+          value={mintFields[Field.CURRENCY_A]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <div className="relative mb-4">
           <InteractButton
+            onConfirm={handleMintA}
             expectedChainId={chain.goerli.id}
-            onClick={() => mintUSDT()}
-            text="Mint USDT"
+            text="Mint"
           />
         </div>
         <InputWithBalance
-          label="USDC"
-          value={USDCToMint}
-          setValue={setUSDCToMint}
-          balance="100"
+          currency={mintCurrency[Field.CURRENCY_B]}
+          balance={mintBalance[Field.CURRENCY_B]}
+          onUserInput={handleTypeMintB}
+          showMaxButton={false}
+          value={mintFields[Field.CURRENCY_B]}
+          expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton
+          onConfirm={handleMintB}
           expectedChainId={chain.goerli.id}
-          onClick={() => mintUSDC()}
-          text="Mint USDC"
+          text="Mint"
         />
       </Tabs.Content>
       <Tabs.Content value="tab5">
         <div className="relative mb-4">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
+            onConfirm={handleArbiSync}
             text="Sync to Arbitrum AMM"
           />
         </div>
-        <div className="relative mb-4">
+        <div className="relative">
           <InteractButton
             expectedChainId={chain.goerli.id}
-            onClick={() => {}}
-            text="Sync to Fuji AMM"
+            onConfirm={handlePolygonSync}
+            text="Sync to Polygon AMM"
           />
         </div>
       </Tabs.Content>
-    </Tabs.Root>
+    </TabSlider>
   );
 };
 

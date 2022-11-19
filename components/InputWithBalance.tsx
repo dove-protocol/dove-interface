@@ -1,36 +1,75 @@
-import React from "react";
-import { validateNumber } from "../lib/utils";
+import { BigNumber } from "ethers";
+import React, { useMemo } from "react";
+import { BiDollar } from "react-icons/bi";
+import { useNetwork } from "wagmi";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import { ChainId, Currency, CurrencyAmount } from "../sdk";
 
 const InputWithBalance = ({
-  label,
+  currency,
   balance,
   value,
-  setValue,
+  onUserInput,
+  showMaxButton,
+  onMax,
+  disabled = false,
+  expectedChainId,
 }: {
-  label: string;
-  balance: string;
+  currency: Currency | undefined;
+  balance: CurrencyAmount<Currency> | undefined;
   value: string;
-  setValue: (value: string) => void;
+  onUserInput?: (value: string) => void;
+  showMaxButton: boolean;
+  onMax?: () => void;
+  disabled?: boolean;
+  expectedChainId: ChainId | undefined;
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateNumber(e.target.value)) {
-      setValue(e.target.value);
-    }
-  };
+  const { chain } = useNetwork();
+
+  if (!chain || chain.id !== expectedChainId) {
+    disabled = true;
+  }
 
   return (
     <div className="relative mb-4">
       <input
-        className="flex h-24 w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none"
+        disabled={disabled}
+        className={`flex h-24 w-full items-start justify-between rounded-sm border border-white/5 ${
+          disabled ? "bg-transparent" : "bg-black/10"
+        } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
         value={value}
-        onChange={handleChange}
+        onChange={(e) => {
+          if (onUserInput) {
+            onUserInput(e.target.value);
+          }
+        }}
       />
       <div className="absolute top-4 right-4 flex flex-col items-end">
-        <h4 className="mb-2 h-fit rounded-sm border border-white/5 px-2 py-0.5 text-white">
-          {label}
-        </h4>
-        <p className="text-sm text-white/50">Balance: {balance}</p>
+        {currency && (
+          <h4
+            className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
+              disabled ? "text-white/50" : "bg-black/10 text-white"
+            }`}
+          >
+            <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
+            {currency?.symbol}
+          </h4>
+        )}
+        {!disabled && (
+          <div className="flex items-center space-x-2">
+            {balance && (
+              <p className="text-sm text-white/50">
+                Balance: {formatCurrencyAmount(balance, 6)}
+              </p>
+            )}
+            {showMaxButton && balance && (
+              <button onClick={onMax}>
+                <p className="text-sm text-white">Max</p>
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

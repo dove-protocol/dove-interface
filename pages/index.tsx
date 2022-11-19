@@ -1,20 +1,26 @@
 import Main from "../components/layouts/Main";
 import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useEffect } from "react";
-import { chain, useSwitchNetwork } from "wagmi";
-import { useIsMounted } from "../hooks/useIsMounted";
-import { avalancheChain } from "./_app";
+import { useState, useEffect, useRef } from "react";
+import { chain, useNetwork, useSwitchNetwork } from "wagmi";
+import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { BiCog } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
-import { useStore } from "../lib/store";
+import { GiPeaceDove } from "react-icons/gi";
+import { useUserStore } from "../state/user/useUserStore";
+import { ChainId } from "../sdk";
 
 export default function Home() {
-  const isAutoSwitch = useStore((state) => state.isAutoSwitch);
+  const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
+  const timerRef = useRef(0);
+
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
@@ -23,12 +29,6 @@ export default function Home() {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
         switchNetwork?.(chain.goerli.id);
-      }
-      if (activeNetworkTab === "fuji") {
-        switchNetwork?.(43113);
-      }
-      if (activeNetworkTab === "arbi") {
-        switchNetwork?.(chain.arbitrumGoerli.id);
       }
     }
   }, [activeNetworkTab]);
@@ -55,22 +55,22 @@ export default function Home() {
               >
                 <Tabs.List className="relative z-10 flex flex-row">
                   <Tabs.Trigger
+                    value="amm"
+                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
+                  >
+                    {activeNetworkTab === "amm" && (
+                      <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
+                    )}
+                    <p className="font-normal">AMM</p>
+                  </Tabs.Trigger>
+                  <Tabs.Trigger
                     value="damm"
-                    className="w-full cursor-pointer rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
+                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
+                    {activeNetworkTab === "damm" && (
+                      <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
+                    )}
                     <p className="font-normal">dAMM</p>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger
-                    value="fuji"
-                    className="w-full cursor-pointer rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
-                  >
-                    <p className="font-normal">Fuji AMM</p>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger
-                    value="arbi"
-                    className="w-full cursor-pointer rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
-                  >
-                    <p className="font-normal">Arbitrum AMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="settings"
@@ -84,19 +84,9 @@ export default function Home() {
                     <DammTabContent />
                   </TabContainer>
                 </Tabs.Content>
-                <Tabs.Content value="fuji">
+                <Tabs.Content value="amm">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={avalancheChain.id} />
-                  </TabContainer>
-                </Tabs.Content>
-                <Tabs.Content value="arbi">
-                  <TabContainer>
-                    <SwapTabContent expectedChainId={chain.arbitrumGoerli.id} />
-                  </TabContainer>
-                </Tabs.Content>
-                <Tabs.Content value="settings">
-                  <TabContainer>
-                    <SettingsTabContent />
+                    <SwapTabContent />
                   </TabContainer>
                 </Tabs.Content>
               </Tabs.Root>

@@ -1,0 +1,5 @@
+export enum ChainId {
+  ETHEREUM_GOERLI = 5,
+  ARBITRUM_GOERLI = 421613,
+  POLYGON_MUMBAI = 80001,
+}
