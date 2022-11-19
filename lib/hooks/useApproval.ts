@@ -43,9 +43,12 @@ export default function useApproval(
     functionName: "approve",
     args: [
       spender as `0x${string}`,
-      amountToApprove?.numerator.toString() as any,
+      BigNumber.from(amountToApprove?.numerator.toString() || "0"),
     ],
-    enabled: !!amountToApprove && approvalState === ApprovalState.NOT_APPROVED,
+    enabled:
+      !!spender &&
+      !!amountToApprove &&
+      approvalState === ApprovalState.NOT_APPROVED,
   });
 
   const { writeAsync } = useContractWrite(approvalConfig);
@@ -83,12 +86,17 @@ function useApprovalStateForSpender(
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
 
-  // console.log(amountToApprove.currency.symbol, allowance.toString());
-
   const allowanceAmount = CurrencyAmount.fromRawAmount(
     amountToApprove.currency,
     allowance.toString()
   );
+
+  // console.log(
+  //   "maxUint256",
+  //   "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+  // );
+  // console.log("amountToApprove", amountToApprove.numerator.toString());
+  // console.log("allowanceAmount", allowance.toString());
 
   return allowanceAmount.greaterThan(amountToApprove) ||
     allowanceAmount.equalTo(amountToApprove)

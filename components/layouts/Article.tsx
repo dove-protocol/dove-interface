@@ -23,7 +23,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
         <Toast.Provider>
           <Toast.Root
-            className="group relative flex w-80 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
+            className="group relative z-[9999] flex w-80 items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
             open={isOpen}
             onOpenChange={setOpen}
           >
@@ -51,13 +51,15 @@ const Article = ({ children }: { children: React.ReactNode }) => {
                 </p>
               </Toast.Description>
             </div>
-            <a
-              className="mr-2"
-              target="_blank"
-              href={`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`}
-            >
-              <BiLinkExternal className="text-white/50 hover:text-white" />
-            </a>
+            {toastContent.txid && (
+              <a
+                className="mr-2"
+                target="_blank"
+                href={`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`}
+              >
+                <BiLinkExternal className="text-white/50 hover:text-white" />
+              </a>
+            )}
             {/* <Toast.Action altText="" /> */}
             <Toast.Close asChild>
               <button className="absolute -top-2 -right-2 translate-x-1/2 opacity-0 transition ease-in group-hover:opacity-100">

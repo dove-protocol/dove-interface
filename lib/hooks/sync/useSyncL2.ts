@@ -24,7 +24,7 @@ export default function useSyncL2(chainToSync: ChainId): {
     functionName: "syncL2",
     args: [lzChainId, AMM_ADDRESS[chainToSync]],
     overrides: {
-      value: ethers.utils.parseEther("0.1"),
+      value: ethers.utils.parseEther("0.2"),
     },
     enabled: !!chainToSync,
   });

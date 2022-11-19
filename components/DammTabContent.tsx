@@ -80,51 +80,77 @@ const DammTabContent = () => {
   };
 
   const handleProvideLiquidity = () => {
-    callback?.().then((tx) => {
-      tx && parsedAmounts[Field.CURRENCY_A] && parsedAmounts[Field.CURRENCY_B];
-      toastCallback?.({
-        title: "Liquidity Added",
-        description: `You added ${formatTransactionAmount(
-          currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-        )} ${
-          currencies[Field.CURRENCY_A]?.symbol
-        } and ${formatTransactionAmount(
-          currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-        )} ${currencies[Field.CURRENCY_B]?.symbol} to the pool.`,
-        txid: tx.hash,
-        type: "success",
+    callback?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_A] &&
+          parsedAmounts[Field.CURRENCY_B];
+        toastCallback?.({
+          title: "Liquidity Added",
+          description: `You added ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+          )} ${
+            currencies[Field.CURRENCY_A]?.symbol
+          } and ${formatTransactionAmount(
+            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+          )} ${currencies[Field.CURRENCY_B]?.symbol} to the pool.`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
       });
-    });
   };
 
   const handleApproveA = () => {
-    approveCallbackA?.().then((tx) => {
-      tx &&
-        parsedAmounts[Field.CURRENCY_A] &&
+    approveCallbackA?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_A] &&
+          toastCallback?.({
+            title: "Token Approved",
+            description: `You approved ${formatTransactionAmount(
+              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
+            )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Token Approved",
-          description: `You approved ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-          )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   const handleApproveB = () => {
-    approveCallbackB?.().then((tx) => {
-      tx &&
-        parsedAmounts[Field.CURRENCY_B] &&
+    approveCallbackB?.()
+      .then((tx) => {
+        tx &&
+          parsedAmounts[Field.CURRENCY_B] &&
+          toastCallback?.({
+            title: "Token Approved",
+            description: `You approved ${formatTransactionAmount(
+              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
+            )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Token Approved",
-          description: `You approved ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-          )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   const handleMax = () => {
@@ -157,18 +183,26 @@ const DammTabContent = () => {
   };
 
   const handleWithdraw = () => {
-    withdrawCallback?.().then((tx) => {
-      tx &&
-        withdrawAmounts[Field.CURRENCY_A] &&
+    withdrawCallback?.()
+      .then((tx) => {
+        tx &&
+          withdrawAmounts[Field.CURRENCY_A] &&
+          toastCallback?.({
+            title: "Liquidity Removed",
+            description: `You removed ${formatTransactionAmount(
+              currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
+            )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol} from the pool.`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Liquidity Removed",
-          description: `You removed ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
-          )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol} from the pool.`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   const handleMaxWithdraw = () => {
@@ -205,31 +239,47 @@ const DammTabContent = () => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.().then((tx) => {
-      tx &&
+    mintCallbackA?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Minted",
+            description: `Minted ${formatTransactionAmount(
+              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
+            )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Minted",
-          description: `Minted ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
-          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   const handleMintB = () => {
-    mintCallbackB?.().then((tx) => {
-      tx &&
+    mintCallbackB?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Minted",
+            description: `Minted ${formatTransactionAmount(
+              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
+            )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Minted",
-          description: `Minted ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
-          )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   // temporarily use currencies from provide (dependent on pool in future?)
@@ -245,27 +295,44 @@ const DammTabContent = () => {
   const { callback: polygonCallback } = useSyncL2(ChainId.POLYGON_MUMBAI);
 
   const handleArbiSync = () => {
-    arbiCallback?.().then((tx) => {
-      tx &&
+    arbiCallback?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Arbitrum Sync",
+            description: `Synced Arbitrum with Ethereum`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        console.log("");
         toastCallback?.({
-          title: "Arbitrum Sync",
-          description: `Synced Arbitrum with Ethereum`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   const handlePolygonSync = () => {
-    polygonCallback?.().then((tx) => {
-      tx &&
+    polygonCallback?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Polygon Sync",
+            description: `Synced Polygon with Ethereum`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
         toastCallback?.({
-          title: "Polygon Sync",
-          description: `Synced Polygon with Ethereum`,
-          txid: tx.hash,
-          type: "success",
+          title: "Error",
+          description: "",
+          type: "error",
         });
-    });
+      });
   };
 
   return (
@@ -430,7 +497,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_A]}
           onUserInput={handleTypeMintA}
           showMaxButton={false}
-          value={fields[Field.CURRENCY_A]}
+          value={mintFields[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <div className="relative mb-4">
@@ -445,7 +512,7 @@ const DammTabContent = () => {
           balance={mintBalance[Field.CURRENCY_B]}
           onUserInput={handleTypeMintB}
           showMaxButton={false}
-          value={fields[Field.CURRENCY_B]}
+          value={mintFields[Field.CURRENCY_B]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <InteractButton

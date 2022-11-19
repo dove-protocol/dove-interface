@@ -20,10 +20,6 @@ export default function useTokenApproval(
 } {
   const { chain } = useNetwork();
 
-  const amountToApprove =
-    currencyAmount &&
-    CurrencyAmount.fromRawAmount(currencyAmount?.currency, MaxUint256);
-
   const spender = useMemo(() => {
     if (!chain) return;
     if (chain.id === ChainId.ETHEREUM_GOERLI) {
@@ -38,6 +34,6 @@ export default function useTokenApproval(
   }, [chain]);
 
   return {
-    ...useApproval(amountToApprove, spender),
+    ...useApproval(currencyAmount, spender),
   };
 }
