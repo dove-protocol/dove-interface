@@ -4,6 +4,7 @@ import { GiPeaceDove } from "react-icons/gi";
 import { useSwitchNetwork } from "wagmi";
 import { ChainId } from "../sdk";
 import { SUPPORTED_CHAIN_NAMES } from "../sdk/constants/chains";
+import TabContentContainer from "./TabContentContainer";
 
 const UnsupportedNetworkContent = () => {
   const { switchNetwork } = useSwitchNetwork();
@@ -28,35 +29,37 @@ const UnsupportedNetworkContent = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="mb-8 flex flex-col items-start justify-start">
-        <GiPeaceDove className="mb-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
-        <div className="flex flex-col">
-          <h4 className="text-white">Dove Protocol</h4>
-          <p className=" text-xs text-white/50">
-            Please select a supported network
-          </p>
+    <TabContentContainer>
+      <div className="flex flex-col">
+        <div className="mb-4 flex flex-col items-start justify-start">
+          <GiPeaceDove className="mb-2 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+          <div className="flex flex-col">
+            <h4 className="text-white">Dove Protocol</h4>
+            <p className=" text-xs text-white/50">
+              Please select a supported network
+            </p>
+          </div>
         </div>
+        {supportedChainIds.map((chainId) => {
+          return (
+            <button
+              onClick={() => handleSwitchNetwork(chainId)}
+              className="relative mb-2 flex h-16 w-full items-center justify-between overflow-hidden rounded-sm border border-white/5 bg-black/10 p-4 shadow-damn transition duration-500 ease-in-out hover:shadow-none"
+            >
+              <div className="flex items-center">
+                <p className=" text-white">
+                  {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
+                </p>
+              </div>
+              <img
+                className="absolute right-0 h-24 w-24 opacity-5 grayscale"
+                src={chainImage(chainId)}
+              />
+            </button>
+          );
+        })}
       </div>
-      {supportedChainIds.map((chainId) => {
-        return (
-          <button
-            onClick={() => handleSwitchNetwork(chainId)}
-            className="relative mb-2 flex h-16 w-full items-center justify-between overflow-hidden rounded-sm border border-white/5 bg-black/10 p-4 shadow-damn transition duration-500 ease-in-out hover:shadow-none"
-          >
-            <div className="flex items-center">
-              <p className=" text-white">
-                {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
-              </p>
-            </div>
-            <img
-              className="absolute right-0 h-24 w-24 opacity-5 grayscale"
-              src={chainImage(chainId)}
-            />
-          </button>
-        );
-      })}
-    </div>
+    </TabContentContainer>
   );
 };
 
