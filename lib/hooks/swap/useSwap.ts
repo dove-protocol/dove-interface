@@ -5,14 +5,11 @@ import { useMemo, useCallback } from "react";
 import { SendTransactionResult } from "@wagmi/core";
 
 export default function useSwap(
-  amountIn: CurrencyAmount<Currency> | undefined,
-  amountOut: CurrencyAmount<Currency> | undefined
+  amountIn: CurrencyAmount<Currency> | undefined
 ): {
   callback: null | (() => Promise<SendTransactionResult>);
 } {
   const { chain } = useNetwork();
-
-  console.log(amountIn?.currency.symbol, amountOut?.currency.symbol);
 
   const ammAddress = useMemo(() => {
     if (!chain) return;
@@ -30,16 +27,21 @@ export default function useSwap(
     abi: AMMContractInterface,
   };
 
+  // temporary routing
+  const isToken0 = amountIn?.currency.symbol === "USDC" ? true : false;
+
   const { config } = usePrepareContractWrite({
     ...AMMContract,
     functionName: "swap",
-    args: [amountIn?.quotient.toString(), amountOut?.quotient.toString()],
-    enabled: !!amountIn && !!amountOut,
+    args: isToken0
+      ? [(amountIn?.numerator.toString(), 0)]
+      : [0, amountIn?.numerator.toString()],
+    enabled: !!amountIn,
   });
 
   const { writeAsync } = useContractWrite(config);
 
-  if (!writeAsync || !amountIn || !amountOut) return { callback: null };
+  if (!writeAsync || !amountIn) return { callback: null };
   return {
     callback: async () => await writeAsync(),
   };

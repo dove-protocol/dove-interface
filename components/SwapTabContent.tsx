@@ -59,10 +59,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     parsedAmounts[Field.CURRENCY_A]
   );
 
-  const { callback: swapCallback } = useSwap(
-    parsedAmounts[Field.CURRENCY_A],
-    parsedAmounts[Field.CURRENCY_B]
-  );
+  const { callback: swapCallback } = useSwap(parsedAmounts[Field.CURRENCY_A]);
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
