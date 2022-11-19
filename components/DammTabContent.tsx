@@ -31,7 +31,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
-import { BiExpandAlt, BiPlus } from "react-icons/bi";
+import { BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -414,8 +414,8 @@ const DammTabContent = () => {
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
         <p className="mb-2 text-white">You receive</p>
-        <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
             {currencies[Field.CURRENCY_A]?.symbol}
           </p>
           <p className="text-sm text-white">
@@ -438,8 +438,8 @@ const DammTabContent = () => {
               )}
           </p>
         </div>
-        <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
             {currencies[Field.CURRENCY_B]?.symbol}
           </p>
           <p className="text-sm text-white">
@@ -469,31 +469,33 @@ const DammTabContent = () => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab3">
-        <div className="flex w-full flex-col items-start">
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 1 <span className="text-white/50">(USDC)</span>
+        <div className="mb-4 flex items-center">
+          <BiStats className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
+          <h4 className="text-white">Primary Reserves</h4>
+        </div>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDC
           </p>
-          <h3 className="mb-8 text-white">
+          <p className="text-sm text-white">
             {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
-          </h3>
-        </div>
-        <div className="flex w-full flex-col items-start">
-          <div className="mb-8 h-px w-full bg-white/5" />
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Reserve 2 <span className="text-white/50">(USDT)</span>
           </p>
-          <h3 className="mb-8 text-white">
+        </div>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDT
+          </p>
+          <p className="text-sm text-white">
             {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
-          </h3>
-        </div>
-        <div className="flex w-full flex-col items-start">
-          <div className="mb-8 h-px w-full bg-white/5" />
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Total Supply <span className="text-white/50">(DAMM-LP)</span>
           </p>
-          <h3 className="mb-2 text-white">
+        </div>
+        <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            DAMM-LP
+          </p>
+          <p className="text-sm text-white">
             {data?.totalSupply && data.totalSupply.toExact()}
-          </h3>
+          </p>
         </div>
       </Tabs.Content>
       <Tabs.Content value="tab4">

@@ -1,6 +1,6 @@
 import React from "react";
 import InteractButton, { Button } from "./InteractButton";
-import { BiExpandAlt } from "react-icons/bi";
+import { BiCreditCardFront, BiExpandAlt, BiStats } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import InputWithBalance from "./InputWithBalance";
 import { ApprovalState } from "../lib/hooks/useApproval";
@@ -206,10 +206,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
 
   /////////////////////////////
 
-  // const { callback: syncCallback } = useSyncL1();
+  const { callback: syncCallback } = useSyncL1();
 
   const handleSync = () => {
-    // syncCallback?.();
+    syncCallback?.();
   };
 
   /////////////////////////////
@@ -426,15 +426,22 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <p className="mb-2 text-white ">dAMM Available Claims</p>
-        <div className="mb-1 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDC</p>
+        <div className="mb-4 flex items-center">
+          <BiCreditCardFront className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
+          <h4 className="text-white">dAMM Available Claims</h4>
+        </div>
+        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDC
+          </p>
           <p className="text-sm text-white">
             {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
           </p>
         </div>
-        <div className="mb-4 flex w-full items-start justify-between rounded-sm py-2">
-          <p className="text-sm text-white/50">USDT</p>
+        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDT
+          </p>
           <p className="text-sm text-white">
             {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
           </p>
@@ -496,22 +503,25 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
       </Tabs.Content>
 
       <Tabs.Content value="tab5">
-        <div className="flex w-full flex-col items-start">
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Virtual Reserve 1 <span className="text-white/50">(USDT)</span>
-          </p>
-          <h3 className="mb-8 text-white">
-            {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
-          </h3>
+        <div className="mb-4 flex items-center">
+          <BiStats className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
+          <h4 className="text-white">Virtual Reserves</h4>
         </div>
-        <div className="flex w-full flex-col items-start">
-          <div className="mb-8 h-px w-full bg-white/5" />
-          <p className="mb-2 font-thin tracking-widest text-white">
-            Virtual Reserve 2 <span className="text-white/50">(USDC)</span>
+        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDC
           </p>
-          <h3 className="mb-2 text-white">
+          <p className="text-sm text-white">
+            {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
+          </p>
+        </div>
+        <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            USDT
+          </p>
+          <p className="text-sm text-white">
             {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
-          </h3>
+          </p>
         </div>
       </Tabs.Content>
     </TabSlider>

@@ -34,7 +34,7 @@ export default function useSwap(
     ...AMMContract,
     functionName: "swap",
     args: isToken0
-      ? [(amountIn?.numerator.toString(), 0)]
+      ? [amountIn?.numerator.toString(), 0]
       : [0, amountIn?.numerator.toString()],
     enabled: !!amountIn,
   });
