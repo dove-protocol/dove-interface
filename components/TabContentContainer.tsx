@@ -11,9 +11,7 @@ const TabContentContainer = ({ children }: { children: React.ReactNode }) => {
         <GiPeaceDove className="text-white/10" />
         <div className="flex items-center">
           <BiCheck className="mr-2 text-sky-400" />
-          <p className="text-xs  tracking-widest text-white/50">
-            Health Factor
-          </p>
+          <p className="text-xs text-white/50">Health Factor</p>
         </div>
       </div>
     </>
