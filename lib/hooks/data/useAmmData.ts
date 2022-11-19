@@ -7,7 +7,7 @@ import { BigNumber } from "ethers";
 export default function useAmmData(
   currency1: Currency | undefined,
   currency2: Currency | undefined,
-  expectedChainId: ChainId
+  expectedChainId: ChainId | undefined
 ): {
   data: {
     reserve0: CurrencyAmount<Currency> | undefined;
@@ -27,7 +27,7 @@ export default function useAmmData(
   //   }
   // }, [chain]);
 
-  const ammAddress = AMM_ADDRESS[expectedChainId];
+  const ammAddress = expectedChainId && AMM_ADDRESS[expectedChainId];
 
   const AMMContract = {
     address: ammAddress,

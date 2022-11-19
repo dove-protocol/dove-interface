@@ -22,7 +22,7 @@ const InputWithBalance = ({
   showMaxButton: boolean;
   onMax?: () => void;
   disabled?: boolean;
-  expectedChainId: ChainId;
+  expectedChainId: ChainId | undefined;
 }) => {
   const { chain } = useNetwork();
 

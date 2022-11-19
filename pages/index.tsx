@@ -25,8 +25,6 @@ export default function Home() {
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
 
-  const { chain: currentChain } = useNetwork();
-
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
@@ -44,16 +42,6 @@ export default function Home() {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
-
-  let expectedChainId: ChainId | undefined;
-
-  if (currentChain?.id === ChainId.ETHEREUM_GOERLI) {
-    expectedChainId = ChainId.ETHEREUM_GOERLI;
-  } else if (currentChain?.id === ChainId.POLYGON_MUMBAI) {
-    expectedChainId = ChainId.POLYGON_MUMBAI;
-  } else if (currentChain?.id === ChainId.ARBITRUM_GOERLI) {
-    expectedChainId = ChainId.ARBITRUM_GOERLI;
-  }
 
   return (
     <Main>
@@ -104,9 +92,7 @@ export default function Home() {
                 </Tabs.Content>
                 <Tabs.Content value="amm">
                   <TabContainer>
-                    {expectedChainId && (
-                      <SwapTabContent expectedChainId={expectedChainId} />
-                    )}
+                    <SwapTabContent />
                   </TabContainer>
                 </Tabs.Content>
               </Tabs.Root>

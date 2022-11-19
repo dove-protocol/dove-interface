@@ -1,5 +1,6 @@
 import React from "react";
 import { useAccount, useNetwork } from "wagmi";
+import { ChainId } from "../sdk";
 import {
   CustomConnectButton,
   InteractConnectButton,
@@ -12,7 +13,7 @@ const InteractButton = ({
   children,
 }: {
   text: string;
-  expectedChainId: number;
+  expectedChainId: ChainId | undefined;
   error?: string;
   onConfirm: () => void;
   children?: React.ReactNode;
@@ -26,6 +27,9 @@ const InteractButton = ({
     <>
       {(() => {
         if (address) {
+          if (!chain) {
+            return <Button disabled text="Unsupported Network" />;
+          }
           if (chain?.id !== expectedChainId) {
             return <Button disabled text="Wrong Network" />;
           }
