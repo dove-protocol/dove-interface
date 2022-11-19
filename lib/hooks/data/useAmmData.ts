@@ -6,7 +6,8 @@ import { BigNumber } from "ethers";
 
 export default function useAmmData(
   currency1: Currency | undefined,
-  currency2: Currency | undefined
+  currency2: Currency | undefined,
+  expectedChainId: ChainId
 ): {
   data: {
     reserve0: CurrencyAmount<Currency> | undefined;
@@ -15,20 +16,23 @@ export default function useAmmData(
 } {
   const { chain } = useNetwork();
 
-  const ammAddress = useMemo(() => {
-    if (!chain) return;
+  // const ammAddress = useMemo(() => {
+  //   if (!chain) return;
 
-    if (chain.id === ChainId.ARBITRUM_GOERLI) {
-      return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
-    }
-    if (chain.id === ChainId.POLYGON_MUMBAI) {
-      return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
-    }
-  }, [chain]);
+  //   if (chain.id === ChainId.ARBITRUM_GOERLI) {
+  //     return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
+  //   }
+  //   if (chain.id === ChainId.POLYGON_MUMBAI) {
+  //     return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
+  //   }
+  // }, [chain]);
+
+  const ammAddress = AMM_ADDRESS[expectedChainId];
 
   const AMMContract = {
     address: ammAddress,
     abi: AMMContractInterface,
+    chainId: expectedChainId,
   };
 
   const { data } = useContractReads({

@@ -221,7 +221,8 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
 
   const { data: ammData } = useAmmData(
     currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B]
+    currencies[Field.CURRENCY_B],
+    expectedChainId
   );
 
   return (
