@@ -3,6 +3,7 @@ import InteractButton, { Button } from "./InteractButton";
 import {
   BiCreditCardFront,
   BiDollar,
+  BiDownArrowAlt,
   BiExpandAlt,
   BiStats,
 } from "react-icons/bi";
@@ -463,16 +464,49 @@ const SwapTabContent = () => {
       </Tabs.Content>
       <Tabs.Content value="tab3">
         <TabContentContainer>
+          <div className="mb-4 flex items-center">
+            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <div className="flex flex-col">
+              <h4 className="text-white">Sync to L1</h4>
+              <p className="text-xs text-white/50">Sync L2 balances to L1</p>
+            </div>
+          </div>
           <InteractButton
             expectedChainId={expectedChainId}
             onConfirm={handleSync}
-            text="Sync to L1"
+            text="Sync"
           />
         </TabContentContainer>
       </Tabs.Content>
 
       <Tabs.Content value="tab4">
         <TabContentContainer>
+          <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
+            Available Claims
+          </p>
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white">
+                {currencies[Field.CURRENCY_A]?.symbol}
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
+            </p>
+          </div>
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
+            <div className="flex items-center">
+              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white">
+                {currencies[Field.CURRENCY_B]?.symbol}
+              </p>
+            </div>
+            <p className="text-sm text-white">
+              {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
+            </p>
+          </div>
+          <div className="mb-2 mt-2 h-px w-full bg-white/5" />
           <InputWithBalance
             currency={burnCurrencies[Field.CURRENCY_A]}
             balance={burnBalances[Field.CURRENCY_A]}

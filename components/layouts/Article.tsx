@@ -20,7 +20,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       exit="hidden"
       className="relative w-full"
     >
-      <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center overflow-hidden">
+      <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center overflow-hidden">
         <Toast.Provider>
           <Toast.Root
             className="group relative z-[9999] flex items-center rounded-sm border border-white/5 bg-white/5 p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"

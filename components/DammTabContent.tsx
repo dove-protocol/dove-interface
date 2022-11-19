@@ -356,8 +356,8 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
+          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b] outline outline-4 outline-[#26272b]" />
             <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
           </div>
           <InputWithBalance
@@ -546,7 +546,7 @@ const DammTabContent = () => {
             value={mintFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative mb-4">
+          <div className="relative mb-2">
             <InteractButton
               onConfirm={handleMintA}
               expectedChainId={chain.goerli.id}
@@ -570,7 +570,16 @@ const DammTabContent = () => {
       </Tabs.Content>
       <Tabs.Content value="tab5">
         <TabContentContainer>
-          <div className="relative mb-4">
+          <div className="mb-4 flex items-center">
+            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <div className="flex flex-col">
+              <h4 className="text-white">Sync to L2</h4>
+              <p className="text-xs text-white/50">
+                Update Reserves with L2 AMM
+              </p>
+            </div>
+          </div>
+          <div className="relative mb-2">
             <InteractButton
               expectedChainId={chain.goerli.id}
               onConfirm={handleArbiSync}
