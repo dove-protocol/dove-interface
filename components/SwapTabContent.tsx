@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import InteractButton, { Button } from "./InteractButton";
 import { BiCreditCardFront, BiExpandAlt, BiStats } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -28,8 +28,25 @@ import {
   currencyAmountToPreciseFloat,
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
+import { useNetwork } from "wagmi";
 
-const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
+const SwapTabContent = () => {
+  const { chain } = useNetwork();
+
+  let expectedChainId = useMemo(() => {
+    if (!chain) return;
+    switch (chain.id) {
+      case ChainId.ETHEREUM_GOERLI:
+        return;
+      case ChainId.POLYGON_MUMBAI:
+        return ChainId.POLYGON_MUMBAI;
+      case ChainId.ARBITRUM_GOERLI:
+        return ChainId.ARBITRUM_GOERLI;
+      default:
+        return;
+    }
+  }, [chain]);
+
   useChainDefaults();
 
   const { callback: toastCallback } = useTriggerToast();
