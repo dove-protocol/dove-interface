@@ -34,14 +34,14 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
 
   const { callback: toastCallback } = useTriggerToast();
 
-  const [isSwapped, toggleSwap, fields, onUserInput, independentField] =
-    useSwapStore((state) => [
-      state.isSwapped,
-      state.toggleSwap,
+  const [swapCurrencies, fields, onUserInput, independentField] = useSwapStore(
+    (state) => [
+      state.swapCurrencies,
       state.fields,
       state.onUserInput,
       state.independentField,
-    ]);
+    ]
+  );
 
   const dependentField =
     independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
@@ -55,7 +55,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
     ),
   };
 
-  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+  const { callback: approveCallback, state: approveState } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );
 
@@ -80,26 +80,58 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
       );
   };
 
-  const handleApproveA = () => {
-    approveCallbackA?.();
-  };
-
-  const handleSwap = () => {
-    swapCallback?.().then((tx) => {
-      tx &&
+  const handleApprove = () => {
+    approveCallback?.()
+      .then((tx) => {
+        if (!parsedAmounts[Field.CURRENCY_A] || !tx) return;
         toastCallback?.({
-          title: "Swap",
-          description: `Swap ${formatCurrencyAmount(
+          title: "Approved",
+          description: `${formatCurrencyAmount(
             parsedAmounts[Field.CURRENCY_A],
             6
-          )} ${currencies[Field.CURRENCY_A]?.symbol} for ${formatCurrencyAmount(
-            parsedAmounts[Field.CURRENCY_B],
-            6
-          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
+          )} ${currencies[Field.CURRENCY_A]?.symbol}`,
           txid: tx.hash,
           type: "success",
         });
-    });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleSwap = () => {
+    swapCallback?.()
+      .then((tx) => {
+        tx &&
+          toastCallback?.({
+            title: "Swap",
+            description: `${formatCurrencyAmount(
+              parsedAmounts[Field.CURRENCY_A],
+              6
+            )} ${
+              currencies[Field.CURRENCY_A]?.symbol
+            } for ${formatCurrencyAmount(parsedAmounts[Field.CURRENCY_B], 6)} ${
+              currencies[Field.CURRENCY_B]?.symbol
+            }`,
+            txid: tx.hash,
+            type: "success",
+          });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
+  };
+
+  const handleSwapCurrency = () => {
+    swapCurrencies();
   };
 
   /////////////////////////////
@@ -128,43 +160,59 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.().then((tx) => {
-      if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
-        return;
-      toastCallback?.({
-        title: "Minted",
-        description: `You minted ${formatCurrencyAmount(
-          mintAmounts[Field.CURRENCY_A],
-          6
-        )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-        txid: tx.hash,
-        type: "success",
+    mintCallbackA?.()
+      .then((tx) => {
+        if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
+          return;
+        toastCallback?.({
+          title: "Minted",
+          description: `${formatCurrencyAmount(
+            mintAmounts[Field.CURRENCY_A],
+            6
+          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
       });
-    });
   };
 
   const handleMintB = () => {
-    mintCallbackB?.().then((txid) => {
-      if (!mintAmounts[Field.CURRENCY_B] || !mintCurrency[Field.CURRENCY_B])
-        return;
-      toastCallback?.({
-        title: "Minted",
-        description: `You minted ${formatCurrencyAmount(
-          mintAmounts[Field.CURRENCY_B],
-          6
-        )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
-        txid: txid.hash,
-        type: "success",
+    mintCallbackB?.()
+      .then((txid) => {
+        if (!mintAmounts[Field.CURRENCY_B] || !mintCurrency[Field.CURRENCY_B])
+          return;
+        toastCallback?.({
+          title: "Minted",
+          description: `${formatCurrencyAmount(
+            mintAmounts[Field.CURRENCY_B],
+            6
+          )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
+          txid: txid.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
       });
-    });
   };
 
   /////////////////////////////
 
-  const { callback: syncCallback } = useSyncL1();
+  // const { callback: syncCallback } = useSyncL1();
 
   const handleSync = () => {
-    syncCallback?.();
+    // syncCallback?.();
   };
 
   /////////////////////////////
@@ -200,15 +248,75 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
   };
 
   const handleApproveVoucherA = () => {
-    approveCallbackVoucherA?.();
+    approveCallbackVoucherA?.()
+      .then((tx) => {
+        if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
+          return;
+        toastCallback?.({
+          title: "Approved",
+          description: `${formatCurrencyAmount(
+            burnAmounts[Field.CURRENCY_A],
+            6
+          )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
   };
 
   const handleApproveVoucherB = () => {
-    approveCallbackVoucherB?.();
+    approveCallbackVoucherB?.()
+      .then((tx) => {
+        if (!burnAmounts[Field.CURRENCY_B] || !burnCurrencies[Field.CURRENCY_B])
+          return;
+        toastCallback?.({
+          title: "Approved",
+          description: `${formatCurrencyAmount(
+            burnAmounts[Field.CURRENCY_B],
+            6
+          )} ${burnCurrencies[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
   };
 
   const handleBurn = () => {
-    burnCallback?.();
+    burnCallback?.()
+      .then((tx) => {
+        if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
+          return;
+        toastCallback?.({
+          title: "Burned",
+          description: `${formatCurrencyAmount(
+            burnAmounts[Field.CURRENCY_A],
+            6
+          )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+      })
+      .catch((e) => {
+        toastCallback?.({
+          title: "Error",
+          description: "",
+          type: "error",
+        });
+      });
   };
 
   /////////////////////////////
@@ -237,7 +345,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           expectedChainId={expectedChainId}
         />
         <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-          <button className="group" onClick={toggleSwap}>
+          <button className="group" onClick={handleSwapCurrency}>
             <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
           </button>
         </div>
@@ -262,10 +370,10 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
               return <Button disabled text="Enter an amount" />;
             }
 
-            if (approveStateA === ApprovalState.NOT_APPROVED) {
+            if (approveState === ApprovalState.NOT_APPROVED) {
               return (
                 <Button
-                  onClick={handleApproveA}
+                  onClick={handleApprove}
                   text={`Approve ${currencies[Field.CURRENCY_A]?.symbol}`}
                 />
               );

@@ -9,12 +9,13 @@ import {
 import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
 import { utils } from "ethers";
+import { SendTransactionResult } from "@wagmi/core";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
   voucher2ToBurn: CurrencyAmount<Currency> | undefined
 ): {
-  callback: null | (() => void);
+  callback: null | (() => Promise<SendTransactionResult>);
 } {
   const { chain } = useNetwork();
 
@@ -47,10 +48,11 @@ export default function useBurn(
     },
   });
 
-  const { write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  if (!write || !voucher1ToBurn || !voucher2ToBurn) return { callback: null };
+  if (!writeAsync || !voucher1ToBurn || !voucher2ToBurn)
+    return { callback: null };
   return {
-    callback: () => write(),
+    callback: async () => await writeAsync(),
   };
 }
