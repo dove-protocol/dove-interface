@@ -2,7 +2,7 @@ import Main from "../components/layouts/Main";
 import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useEffect, useRef } from "react";
-import { chain, useSwitchNetwork } from "wagmi";
+import { chain, useNetwork, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { BiCog } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
@@ -25,6 +25,8 @@ export default function Home() {
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
 
+  const { chain: currentChain } = useNetwork();
+
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
@@ -42,6 +44,16 @@ export default function Home() {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
+
+  let expectedChainId: ChainId | undefined;
+
+  if (currentChain?.id === ChainId.ETHEREUM_GOERLI) {
+    expectedChainId = ChainId.ETHEREUM_GOERLI;
+  } else if (currentChain?.id === ChainId.POLYGON_MUMBAI) {
+    expectedChainId = ChainId.POLYGON_MUMBAI;
+  } else if (currentChain?.id === ChainId.ARBITRUM_GOERLI) {
+    expectedChainId = ChainId.ARBITRUM_GOERLI;
+  }
 
   return (
     <Main>
@@ -61,22 +73,13 @@ export default function Home() {
               >
                 <Tabs.List className="relative z-10 flex flex-row">
                   <Tabs.Trigger
-                    value="polygon"
+                    value="amm"
                     className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
-                    {activeNetworkTab === "polygon" && (
+                    {activeNetworkTab === "amm" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
                     )}
-                    <p className="font-normal">Polygon AMM</p>
-                  </Tabs.Trigger>
-                  <Tabs.Trigger
-                    value="arbi"
-                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
-                  >
-                    {activeNetworkTab === "arbi" && (
-                      <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
-                    )}
-                    <p className="font-normal">Arbitrum AMM</p>
+                    <p className="font-normal">AMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="damm"
@@ -99,19 +102,11 @@ export default function Home() {
                     <DammTabContent />
                   </TabContainer>
                 </Tabs.Content>
-                <Tabs.Content value="polygon">
+                <Tabs.Content value="amm">
                   <TabContainer>
-                    <SwapTabContent expectedChainId={ChainId.POLYGON_MUMBAI} />
-                  </TabContainer>
-                </Tabs.Content>
-                <Tabs.Content value="arbi">
-                  <TabContainer>
-                    <SwapTabContent expectedChainId={ChainId.ARBITRUM_GOERLI} />
-                  </TabContainer>
-                </Tabs.Content>
-                <Tabs.Content value="settings">
-                  <TabContainer>
-                    <SettingsTabContent />
+                    {expectedChainId && (
+                      <SwapTabContent expectedChainId={expectedChainId} />
+                    )}
                   </TabContainer>
                 </Tabs.Content>
               </Tabs.Root>
