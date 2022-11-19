@@ -86,7 +86,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
         if (!parsedAmounts[Field.CURRENCY_A] || !tx) return;
         toastCallback?.({
           title: "Approved",
-          description: `You approved ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             parsedAmounts[Field.CURRENCY_A],
             6
           )} ${currencies[Field.CURRENCY_A]?.symbol}`,
@@ -109,7 +109,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
         tx &&
           toastCallback?.({
             title: "Swap",
-            description: `Swap ${formatCurrencyAmount(
+            description: `${formatCurrencyAmount(
               parsedAmounts[Field.CURRENCY_A],
               6
             )} ${
@@ -166,7 +166,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           return;
         toastCallback?.({
           title: "Minted",
-          description: `You minted ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             mintAmounts[Field.CURRENCY_A],
             6
           )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
@@ -190,7 +190,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           return;
         toastCallback?.({
           title: "Minted",
-          description: `You minted ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             mintAmounts[Field.CURRENCY_B],
             6
           )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
@@ -254,7 +254,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           return;
         toastCallback?.({
           title: "Approved",
-          description: `You approved ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             burnAmounts[Field.CURRENCY_A],
             6
           )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
@@ -278,7 +278,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           return;
         toastCallback?.({
           title: "Approved",
-          description: `You approved ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             burnAmounts[Field.CURRENCY_B],
             6
           )} ${burnCurrencies[Field.CURRENCY_B]?.symbol}`,
@@ -302,7 +302,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
           return;
         toastCallback?.({
           title: "Burned",
-          description: `You burned ${formatCurrencyAmount(
+          description: `${formatCurrencyAmount(
             burnAmounts[Field.CURRENCY_A],
             6
           )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,

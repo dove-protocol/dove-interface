@@ -31,6 +31,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
+import { BiExpandAlt, BiPlus } from "react-icons/bi";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -87,13 +88,13 @@ const DammTabContent = () => {
           parsedAmounts[Field.CURRENCY_B];
         toastCallback?.({
           title: "Liquidity Added",
-          description: `You added ${formatTransactionAmount(
+          description: `${formatTransactionAmount(
             currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
           )} ${
             currencies[Field.CURRENCY_A]?.symbol
           } and ${formatTransactionAmount(
             currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-          )} ${currencies[Field.CURRENCY_B]?.symbol} to the pool.`,
+          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
           txid: tx.hash,
           type: "success",
         });
@@ -114,7 +115,7 @@ const DammTabContent = () => {
           parsedAmounts[Field.CURRENCY_A] &&
           toastCallback?.({
             title: "Token Approved",
-            description: `You approved ${formatTransactionAmount(
+            description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
             )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
             txid: tx.hash,
@@ -137,7 +138,7 @@ const DammTabContent = () => {
           parsedAmounts[Field.CURRENCY_B] &&
           toastCallback?.({
             title: "Token Approved",
-            description: `You approved ${formatTransactionAmount(
+            description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
             )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
             txid: tx.hash,
@@ -189,9 +190,9 @@ const DammTabContent = () => {
           withdrawAmounts[Field.CURRENCY_A] &&
           toastCallback?.({
             title: "Liquidity Removed",
-            description: `You removed ${formatTransactionAmount(
+            description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
-            )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol} from the pool.`,
+            )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol}`,
             txid: tx.hash,
             type: "success",
           });
@@ -244,7 +245,7 @@ const DammTabContent = () => {
         tx &&
           toastCallback?.({
             title: "Minted",
-            description: `Minted ${formatTransactionAmount(
+            description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
             )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
             txid: tx.hash,
@@ -266,7 +267,7 @@ const DammTabContent = () => {
         tx &&
           toastCallback?.({
             title: "Minted",
-            description: `Minted ${formatTransactionAmount(
+            description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
             )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
             txid: tx.hash,
@@ -299,7 +300,7 @@ const DammTabContent = () => {
       .then((tx) => {
         tx &&
           toastCallback?.({
-            title: "Arbitrum Sync",
+            title: "Synced",
             description: `Synced Arbitrum with Ethereum`,
             txid: tx.hash,
             type: "success",
@@ -320,7 +321,7 @@ const DammTabContent = () => {
       .then((tx) => {
         tx &&
           toastCallback?.({
-            title: "Polygon Sync",
+            title: "Synced",
             description: `Synced Polygon with Ethereum`,
             txid: tx.hash,
             type: "success",
@@ -347,6 +348,10 @@ const DammTabContent = () => {
           value={formattedAmounts[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
+        <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+          <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
+          <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
+        </div>
         <InputWithBalance
           currency={currencies[Field.CURRENCY_B]}
           balance={currencyBalances[Field.CURRENCY_B]}
