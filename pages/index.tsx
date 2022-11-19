@@ -30,12 +30,6 @@ export default function Home() {
       if (activeNetworkTab === "damm") {
         switchNetwork?.(chain.goerli.id);
       }
-      if (activeNetworkTab === "polygon") {
-        switchNetwork?.(chain.polygonMumbai.id);
-      }
-      if (activeNetworkTab === "arbi") {
-        switchNetwork?.(chain.arbitrumGoerli.id);
-      }
     }
   }, [activeNetworkTab]);
 
