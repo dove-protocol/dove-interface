@@ -1,6 +1,11 @@
 import React, { useMemo } from "react";
 import InteractButton, { Button } from "./InteractButton";
-import { BiCreditCardFront, BiExpandAlt, BiStats } from "react-icons/bi";
+import {
+  BiCreditCardFront,
+  BiDollar,
+  BiExpandAlt,
+  BiStats,
+} from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
 import InputWithBalance from "./InputWithBalance";
 import { ApprovalState } from "../lib/hooks/useApproval";
@@ -377,7 +382,7 @@ const SwapTabContent = () => {
         />
         <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
           <button className="group" onClick={handleSwapCurrency}>
-            <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272b] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
+            <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
           </button>
         </div>
         <InputWithBalance
@@ -459,26 +464,6 @@ const SwapTabContent = () => {
         />
       </Tabs.Content>
       <Tabs.Content value="tab4">
-        <div className="mb-4 flex items-center">
-          <BiCreditCardFront className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
-          <h4 className="text-white">dAMM Available Claims</h4>
-        </div>
-        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDC
-          </p>
-          <p className="text-sm text-white">
-            {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
-          </p>
-        </div>
-        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDT
-          </p>
-          <p className="text-sm text-white">
-            {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
-          </p>
-        </div>
         <InputWithBalance
           currency={burnCurrencies[Field.CURRENCY_A]}
           balance={burnBalances[Field.CURRENCY_A]}
@@ -535,25 +520,58 @@ const SwapTabContent = () => {
             }
           })()}
         </InteractButton>
+        <div className="mb-2 mt-4 h-px w-full bg-white/5" />
+        <p className="mb-2 text-white">Available claims</p>
+        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDC
+            </p>
+          </div>
+          <p className="text-sm text-white">
+            {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
+          </p>
+        </div>
+        <div className="mb-2 flex w-full items-start justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDT
+            </p>
+          </div>
+          <p className="text-sm text-white">
+            {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
+          </p>
+        </div>
       </Tabs.Content>
 
       <Tabs.Content value="tab5">
         <div className="mb-4 flex items-center">
-          <BiStats className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
-          <h4 className="text-white">Virtual Reserves</h4>
+          <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+          <div className="flex flex-col">
+            <h4 className="text-white">Virtual Reserves</h4>
+            <p className="text-xs text-white/50">Synced reserve balances</p>
+          </div>
         </div>
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDC
-          </p>
+        <div className="relative mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDC
+            </p>
+          </div>
           <p className="text-sm text-white">
             {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
           </p>
         </div>
         <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDT
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDT
+            </p>
+          </div>
           <p className="text-sm text-white">
             {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
           </p>

@@ -31,7 +31,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import useTriggerToast from "../lib/hooks/useTriggerToast";
-import { BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
+import { BiDollar, BiExpandAlt, BiPlus, BiStats } from "react-icons/bi";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -413,11 +413,22 @@ const DammTabContent = () => {
           value={withdrawFields[Field.CURRENCY_A]}
           expectedChainId={ChainId.ETHEREUM_GOERLI}
         />
+        <div className="mb-4">
+          <InteractButton
+            onConfirm={handleWithdraw}
+            expectedChainId={chain.goerli.id}
+            text="Withdraw"
+          />
+        </div>
+        <div className="mb-2 h-px w-full bg-white/5" />
         <p className="mb-2 text-white">You receive</p>
         <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            {currencies[Field.CURRENCY_A]?.symbol}
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              {currencies[Field.CURRENCY_A]?.symbol}
+            </p>
+          </div>
           <p className="text-sm text-white">
             {data?.reserve0 &&
               data?.totalSupply &&
@@ -439,9 +450,12 @@ const DammTabContent = () => {
           </p>
         </div>
         <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            {currencies[Field.CURRENCY_B]?.symbol}
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              {currencies[Field.CURRENCY_B]?.symbol}
+            </p>
+          </div>
           <p className="text-sm text-white">
             {data?.reserve1 &&
               data?.totalSupply &&
@@ -462,37 +476,42 @@ const DammTabContent = () => {
               )}
           </p>
         </div>
-        <InteractButton
-          onConfirm={handleWithdraw}
-          expectedChainId={chain.goerli.id}
-          text="Withdraw"
-        />
       </Tabs.Content>
       <Tabs.Content value="tab3">
         <div className="mb-4 flex items-center">
-          <BiStats className="mr-4 rounded-sm bg-black/20 p-2 text-4xl text-white" />
+          <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
           <h4 className="text-white">Primary Reserves</h4>
         </div>
         <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDC
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDC
+            </p>
+          </div>
           <p className="text-sm text-white">
             {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
           </p>
         </div>
+
         <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            USDT
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              USDT
+            </p>
+          </div>
           <p className="text-sm text-white">
             {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
           </p>
         </div>
         <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-          <p className="text-xs uppercase tracking-widest text-white/50">
-            DAMM-LP
-          </p>
+          <div className="flex items-center">
+            <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              DAMM-LP
+            </p>
+          </div>
           <p className="text-sm text-white">
             {data?.totalSupply && data.totalSupply.toExact()}
           </p>

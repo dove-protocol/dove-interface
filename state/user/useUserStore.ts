@@ -29,7 +29,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
   },
   setToastContent: (toastContent: ToastContent) =>
     set(() => ({ toastContent: toastContent })),
-  showAdvanced: false,
+  showAdvanced: true,
   setShowAdvanced: (showAdvanced) =>
     set(() => ({ showAdvanced: showAdvanced })),
 }));

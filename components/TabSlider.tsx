@@ -92,11 +92,11 @@ const Tab = ({
   return (
     <Tabs.Trigger
       value={id}
-      className="relative flex w-full cursor-pointer flex-row items-center justify-center rounded-sm border border-transparent px-4 py-1 transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
+      className="relative flex w-full cursor-pointer flex-row items-center justify-center rounded-sm border border-transparent px-4 py-2 transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-white/5 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
       onMouseEnter={(e) => repositionHighlight(e, id)}
     >
-      <p className="mr-2">{title}</p>
       {icon}
+      <p className="ml-2 text-xs uppercase tracking-widest">{title}</p>
     </Tabs.Trigger>
   );
 };

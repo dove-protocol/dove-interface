@@ -67,9 +67,7 @@ export const Button = ({
     >
       <p
         className={`${
-          disabled
-            ? "text-white/50 drop-shadow-none"
-            : "text-white drop-shadow-soju"
+          disabled ? "text-white/50 drop-shadow-none" : "text-white"
         }`}
       >
         {text}

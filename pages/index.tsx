@@ -12,6 +12,7 @@ import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
 import { useUserStore } from "../state/user/useUserStore";
 import { ChainId } from "../sdk";
+import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -25,6 +26,8 @@ export default function Home() {
   const { chains, error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
 
+  const { chain: currentChain } = useNetwork();
+
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
@@ -36,6 +39,11 @@ export default function Home() {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
+
+  const isSupportedNetwork = currentChain
+    ? Object.values(ChainId).includes(currentChain.id) &&
+      currentChain.id !== ChainId.ETHEREUM_GOERLI
+    : false;
 
   return (
     <Main>
@@ -86,7 +94,11 @@ export default function Home() {
                 </Tabs.Content>
                 <Tabs.Content value="amm">
                   <TabContainer>
-                    <SwapTabContent />
+                    {isSupportedNetwork ? (
+                      <SwapTabContent />
+                    ) : (
+                      <UnsupportedNetworkContent />
+                    )}
                   </TabContainer>
                 </Tabs.Content>
                 <Tabs.Content value="settings">
