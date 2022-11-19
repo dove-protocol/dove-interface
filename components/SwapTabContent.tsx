@@ -530,7 +530,7 @@ const SwapTabContent = () => {
             })()}
           </InteractButton>
         </TabContentContainer>
-        <div className="mb-2 h-px w-full bg-white/5" />
+        <div className="my-2 h-px w-full bg-white/5" />
 
         <div className=" flex w-full items-start justify-between px-4 py-1">
           <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
