@@ -261,6 +261,22 @@ const SwapTabContent = () => {
     onUserInputBurn(Field.CURRENCY_B, value);
   };
 
+  const handleMaxBurnA = () => {
+    burnBalances[Field.CURRENCY_A] &&
+      onUserInputBurn(
+        Field.CURRENCY_A,
+        burnBalances[Field.CURRENCY_A].toExact()
+      );
+  };
+
+  const handleMaxBurnB = () => {
+    burnBalances[Field.CURRENCY_B] &&
+      onUserInputBurn(
+        Field.CURRENCY_B,
+        burnBalances[Field.CURRENCY_B].toExact()
+      );
+  };
+
   const handleApproveVoucherA = () => {
     approveCallbackVoucherA?.()
       .then((tx) => {
@@ -467,7 +483,8 @@ const SwapTabContent = () => {
           currency={burnCurrencies[Field.CURRENCY_A]}
           balance={burnBalances[Field.CURRENCY_A]}
           onUserInput={handleTypeBurnA}
-          showMaxButton={false}
+          showMaxButton={true}
+          onMax={handleMaxBurnA}
           value={burnFields[Field.CURRENCY_A]}
           expectedChainId={expectedChainId}
         />
@@ -475,7 +492,8 @@ const SwapTabContent = () => {
           currency={burnCurrencies[Field.CURRENCY_B]}
           balance={burnBalances[Field.CURRENCY_B]}
           onUserInput={handleTypeBurnB}
-          showMaxButton={false}
+          showMaxButton={true}
+          onMax={handleMaxBurnB}
           value={burnFields[Field.CURRENCY_B]}
           expectedChainId={expectedChainId}
         />
