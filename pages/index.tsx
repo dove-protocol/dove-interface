@@ -89,6 +89,11 @@ export default function Home() {
                     <SwapTabContent />
                   </TabContainer>
                 </Tabs.Content>
+                <Tabs.Content value="settings">
+                  <TabContainer>
+                    <SettingsTabContent />
+                  </TabContainer>
+                </Tabs.Content>
               </Tabs.Root>
             </div>
           </div>
