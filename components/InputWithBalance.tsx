@@ -31,7 +31,7 @@ const InputWithBalance = ({
   }
 
   return (
-    <div className="relative mb-4">
+    <div className="relative mb-2">
       <input
         disabled={disabled}
         className={`flex h-24 w-full items-start justify-between rounded-sm border border-white/5 ${

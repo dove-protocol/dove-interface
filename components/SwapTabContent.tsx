@@ -382,9 +382,9 @@ const SwapTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={expectedChainId}
           />
-          <div className="relative left-1/2 z-10 -my-12 -mb-8 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
             <button className="group" onClick={handleSwapCurrency}>
-              <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-white" />
+              <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-sky-400" />
             </button>
           </div>
           <InputWithBalance
@@ -509,7 +509,7 @@ const SwapTabContent = () => {
                 burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
                 burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
               ) {
-                return <Button disabled text="Sync Before" />;
+                return <Button disabled text="Sync before" />;
               }
               if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
                 return (
@@ -530,26 +530,6 @@ const SwapTabContent = () => {
             })()}
           </InteractButton>
         </TabContentContainer>
-        <div className="mb-2 h-px w-full bg-white/5" />
-        <div className=" flex w-full items-start justify-between px-4 py-1">
-          <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
-            Available claims
-          </p>
-          <div className="flex items-center">
-            <p className="mr-4 text-xs uppercase tracking-widest text-white/50">
-              USDC
-            </p>
-            <p className="mr-8 text-xs text-white">
-              {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
-            </p>
-            <p className="mr-4 text-xs uppercase tracking-widest text-white/50">
-              USDT
-            </p>
-            <p className="text-xs text-white">
-              {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
-            </p>
-          </div>
-        </div>
       </Tabs.Content>
       <Tabs.Content value="tab5">
         <TabContentContainer>
@@ -560,10 +540,10 @@ const SwapTabContent = () => {
               <p className="text-xs text-white/50">Synced reserve balances</p>
             </div>
           </div>
-          <div className="relative mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="relative mb-2 flex w-full items-center justify-between rounded-sm  border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 USDC
               </p>
             </div>
@@ -571,10 +551,10 @@ const SwapTabContent = () => {
               {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
             </p>
           </div>
-          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 USDT
               </p>
             </div>

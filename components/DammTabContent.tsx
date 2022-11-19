@@ -371,7 +371,7 @@ const DammTabContent = () => {
           <InteractButton
             onConfirm={handleProvideLiquidity}
             expectedChainId={chain.goerli.id}
-            text="Provide Liquidity"
+            text="Add Liquidity"
           >
             {(() => {
               if (
@@ -435,10 +435,10 @@ const DammTabContent = () => {
             <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
             <BiDownArrowAlt className="relative text-2xl text-white/50 transition group-hover:text-white" />
           </div>
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_A]?.symbol}
               </p>
             </div>
@@ -462,10 +462,10 @@ const DammTabContent = () => {
                 )}
             </p>
           </div>
-          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_B]?.symbol}
               </p>
             </div>
@@ -500,10 +500,10 @@ const DammTabContent = () => {
               <p className="text-xs text-white/50">Main reserve balances</p>
             </div>
           </div>
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex w-full items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 USDC
               </p>
             </div>
@@ -512,10 +512,10 @@ const DammTabContent = () => {
             </p>
           </div>
 
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 USDT
               </p>
             </div>
@@ -523,10 +523,10 @@ const DammTabContent = () => {
               {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
             </p>
           </div>
-          <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
-              <p className="text-xs uppercase tracking-widest text-white/50">
+              <p className="text-xs uppercase tracking-widest text-white">
                 DAMM-LP
               </p>
             </div>
