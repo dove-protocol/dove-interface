@@ -42,7 +42,7 @@ export const ammTabsData = [
 export const dammTabsData = [
   {
     id: "tab1",
-    title: "Provide",
+    title: "Deposit",
     icon: <BiPlus className=" rounded-sm p-px" />,
   },
   {

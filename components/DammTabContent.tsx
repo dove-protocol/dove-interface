@@ -371,7 +371,7 @@ const DammTabContent = () => {
           <InteractButton
             onConfirm={handleProvideLiquidity}
             expectedChainId={chain.goerli.id}
-            text="Add Liquidity"
+            text="Provide Liquidity"
           >
             {(() => {
               if (
@@ -427,7 +427,7 @@ const DammTabContent = () => {
             <InteractButton
               onConfirm={handleWithdraw}
               expectedChainId={chain.goerli.id}
-              text="Withdraw"
+              text="Remove Liquidity"
             />
           </div>
           <div className="mb-4 h-px w-full bg-white/5" />
