@@ -29,8 +29,8 @@ const UnsupportedNetworkContent = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex items-center">
-        <GiPeaceDove className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+      <div className="mb-8 flex flex-col items-start justify-start">
+        <GiPeaceDove className="mb-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
         <div className="flex flex-col">
           <h4 className="text-white">Dove Protocol</h4>
           <p className=" text-xs text-white/50">
