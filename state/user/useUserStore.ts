@@ -11,6 +11,8 @@ interface UserStoreState {
   setOpen: (isOpen: boolean) => void;
   toastContent: ToastContent;
   setToastContent: (toastContent: ToastContent) => void;
+  showAdvanced: boolean;
+  setShowAdvanced: (showAdvanced: boolean) => void;
 }
 
 export const useUserStore = create<UserStoreState>((set, get) => ({
@@ -27,4 +29,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
   },
   setToastContent: (toastContent: ToastContent) =>
     set(() => ({ toastContent: toastContent })),
+  showAdvanced: false,
+  setShowAdvanced: (showAdvanced) =>
+    set(() => ({ showAdvanced: showAdvanced })),
 }));

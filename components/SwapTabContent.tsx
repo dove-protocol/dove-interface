@@ -480,7 +480,7 @@ const SwapTabContent = ({ expectedChainId }: { expectedChainId: ChainId }) => {
               burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
               burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
             ) {
-              return <Button disabled text="Sync before" />;
+              return <Button disabled text="Sync Before" />;
             }
             if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
               return (

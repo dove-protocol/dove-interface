@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
+import { useUserStore } from "../state/user/useUserStore";
 
 const TabSlider = ({
   children,
@@ -21,6 +22,7 @@ const TabSlider = ({
   );
   const [highlightedTab, setHighlightedTab] = useState<string | null>(null);
   const [isHoveredFromNull, setIsHoveredFromNull] = useState(true);
+  const showAdvanced = useUserStore((state) => state.showAdvanced);
 
   const repositionHighlight = (e: any, id: string) => {
     if (wrapperRef.current) {
@@ -59,7 +61,7 @@ const TabSlider = ({
           ref={highlightRef}
           style={highlightStyles}
         />
-        {tabsData.map((tab) => (
+        {(showAdvanced ? tabsData : tabsData.slice(0, 3)).map((tab) => (
           <Tab
             key={tab.id}
             id={tab.id}

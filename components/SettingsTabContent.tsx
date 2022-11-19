@@ -6,10 +6,21 @@ import { useUserStore } from "../state/user/useUserStore";
 const SettingsTabContent = () => {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
   const setAutoSwitch = useUserStore((state) => state.setAutoSwitch);
+  const showAdvanced = useUserStore((state) => state.showAdvanced);
+  const setShowAdvanced = useUserStore((state) => state.setShowAdvanced);
 
   return (
     <>
       <p className="mb-4 font-normal text-white">Settings</p>
+
+      <p className="mb-2 text-white/50">Show Advanced</p>
+      <Switch.Root
+        className="relative mb-2 h-8 w-16 rounded-sm border border-white/5 bg-black/10"
+        checked={showAdvanced}
+        onCheckedChange={(v) => setShowAdvanced(v)}
+      >
+        <Switch.Thumb className="block h-6 w-6 translate-x-[34px] rounded-sm border border-white/5 transition ease-in-out rdx-state-checked:translate-x-1 rdx-state-checked:bg-white rdx-state-unchecked:bg-white/10" />
+      </Switch.Root>
 
       <p className="mb-2 text-white/50">Automatically Switch Networks</p>
       <Switch.Root
