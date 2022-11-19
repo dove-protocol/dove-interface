@@ -501,7 +501,7 @@ const DammTabContent = () => {
             </div>
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
-            <div className="flex items-center">
+            <div className="flex w-full items-center">
               <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white/50">
                 USDC
