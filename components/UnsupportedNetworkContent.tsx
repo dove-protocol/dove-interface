@@ -34,7 +34,7 @@ const UnsupportedNetworkContent = () => {
     <TabContentContainer>
       <div className="flex flex-col">
         <div className="mb-4 flex flex-col items-start justify-start">
-          <GiPeaceDove className="mb-2 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
+          <GiPeaceDove className="mb-2 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
           <div className="flex flex-col">
             <h4 className="text-white">Dove Protocol</h4>
             <p className=" text-xs text-white/50">

@@ -63,13 +63,13 @@ export const Button = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className="group flex h-16 w-full items-center justify-center rounded-sm border-y border-sky-400/50 bg-sky-400/5 transition duration-500 ease-in-out hover:shadow-none disabled:border-none disabled:bg-white/5 disabled:shadow-none"
+      className="group flex h-16 w-full items-center justify-center rounded-sm border border-sky-400/50 bg-sky-400/5 transition duration-500 ease-in-out hover:shadow-none disabled:border-none disabled:bg-white/5 disabled:shadow-none"
     >
       <p
         className={`transition duration-500 ease-in-out ${
           disabled
             ? "text-white/50 drop-shadow-none"
-            : "text-white group-hover:drop-shadow-soju"
+            : "text-sky-400 group-hover:drop-shadow-soju"
         }`}
       >
         {text}
