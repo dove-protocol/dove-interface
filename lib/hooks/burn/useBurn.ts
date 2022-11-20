@@ -6,11 +6,11 @@ import {
   CurrencyAmount,
   LZ_CHAIN,
 } from "../../../sdk";
-import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { SendTransactionResult } from "@wagmi/core";
 import { ApprovalState } from "../useApproval";
+import { AMM as AMMContractInterface } from "../../../abis/AMM";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
@@ -43,8 +43,8 @@ export default function useBurn(
     functionName: "burnVouchers",
     args: [
       LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
-      voucher1ToBurn?.quotient.toString(),
-      voucher2ToBurn?.quotient.toString(),
+      BigNumber.from(voucher1ToBurn?.quotient.toString()),
+      BigNumber.from(voucher2ToBurn?.quotient.toString()),
     ],
     overrides: {
       value: utils.parseEther("0.1"),

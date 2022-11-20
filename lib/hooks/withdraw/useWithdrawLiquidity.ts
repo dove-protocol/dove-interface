@@ -1,8 +1,9 @@
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
-import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useCallback } from "react";
 import { SendTransactionResult } from "@wagmi/core";
+import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
+import { BigNumber } from "ethers";
 
 export default function useWithdrawLiquidity(
   amount: CurrencyAmount<Currency> | undefined
@@ -13,7 +14,7 @@ export default function useWithdrawLiquidity(
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
     functionName: "withdraw",
-    args: [amount?.numerator.toString()],
+    args: [BigNumber.from(amount?.numerator.toString())],
     enabled: !!amount,
   });
 

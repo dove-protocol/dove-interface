@@ -1,9 +1,10 @@
 import { AMM_ADDRESS, ChainId, DAMM_ADDRESS, LZ_CHAIN } from "../../../sdk";
 import { useMemo, useCallback } from "react";
-import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
 import { SendTransactionResult } from "@wagmi/core";
+import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
+import { wrapAddress } from "../../utils/wrapAddress";
 
 export default function useSyncL2(chainToSync: ChainId): {
   callback: null | (() => Promise<SendTransactionResult>);
@@ -22,11 +23,11 @@ export default function useSyncL2(chainToSync: ChainId): {
   const { config } = usePrepareContractWrite({
     ...dAMMContract,
     functionName: "syncL2",
-    args: [lzChainId, AMM_ADDRESS[chainToSync]],
+    args: [lzChainId!, wrapAddress(AMM_ADDRESS[chainToSync])],
     overrides: {
       value: ethers.utils.parseEther("0.2"),
     },
-    enabled: !!chainToSync,
+    enabled: !!lzChainId,
   });
 
   const { writeAsync } = useContractWrite(config);

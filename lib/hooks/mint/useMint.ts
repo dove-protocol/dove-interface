@@ -1,8 +1,10 @@
 import { Currency, CurrencyAmount } from "../../../sdk";
 import { useCallback } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import MintableERC20 from "../../../abis/ERC20.json";
 import { SendTransactionResult } from "@wagmi/core";
+import { ERC20 as ERC20Interface } from "../../../abis/ERC20";
+import { wrapAddress } from "../../utils/wrapAddress";
+import { BigNumber } from "ethers";
 
 export default function useMint(
   amountToMint: CurrencyAmount<Currency> | undefined,
@@ -16,10 +18,13 @@ export default function useMint(
     address: amountToMint?.currency.isToken
       ? amountToMint.currency.address
       : undefined,
-    abi: MintableERC20,
+    abi: ERC20Interface,
     functionName: "mint",
-    args: [account ?? address, amountToMint?.numerator.toString()],
-    enabled: !!amountToMint,
+    args: [
+      wrapAddress(account ?? address),
+      BigNumber.from(amountToMint?.numerator.toString()),
+    ],
+    enabled: !!amountToMint && (!!address || !!account),
   });
 
   const { writeAsync } = useContractWrite(config);

@@ -1,8 +1,8 @@
 import { useContractReads, useNetwork } from "wagmi";
 import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
-import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo } from "react";
 import { BigNumber } from "ethers";
+import { AMM as AMMContractInterface } from "../../../abis/AMM";
 
 export default function useAmmData(
   currency1: Currency | undefined,
