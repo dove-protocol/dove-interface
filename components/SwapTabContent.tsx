@@ -383,10 +383,10 @@ const SwapTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={expectedChainId}
           />
-          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <button className="group" onClick={handleSwapCurrency}>
-              <BiExpandAlt className="-rotate-45 border border-white/10 bg-[#26272] text-2xl text-white/50 transition ease-in-out group-hover:scale-110 group-hover:text-sky-400" />
-            </button>
+          <div className="relative  left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
+              <BiExpandAlt className="relative text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
+            </div>
           </div>
           <InputWithBalance
             currency={currencies[Field.CURRENCY_B]}
@@ -465,7 +465,7 @@ const SwapTabContent = () => {
       <Tabs.Content value="tab3">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <BiStats className="mr-4 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
             <div className="flex flex-col">
               <h4 className="text-white">Sync to L1</h4>
               <p className="text-xs text-white/50">Sync L2 balances to L1</p>
@@ -568,7 +568,7 @@ const SwapTabContent = () => {
       <Tabs.Content value="tab5">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <BiStats className="mr-4 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
             <div className="flex flex-col">
               <h4 className="text-white">Virtual Reserves</h4>
               <p className="text-xs text-white/50">Synced reserve balances</p>

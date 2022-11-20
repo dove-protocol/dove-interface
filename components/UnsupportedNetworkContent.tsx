@@ -34,7 +34,7 @@ const UnsupportedNetworkContent = () => {
     <TabContentContainer>
       <div className="flex flex-col">
         <div className="mb-4 flex flex-col items-start justify-start">
-          <GiPeaceDove className="mb-2 rounded-sm bg-sky-400 p-2 text-4xl text-black" />
+          <GiPeaceDove className="mb-2 rounded-sm bg-white p-2 text-4xl text-black" />
           <div className="flex flex-col">
             <h4 className="text-white">Dove Protocol</h4>
             <p className=" text-xs text-white/50">
@@ -55,7 +55,7 @@ const UnsupportedNetworkContent = () => {
                   </p>
                 </div>
                 <img
-                  className="absolute right-0 h-24 w-24 opacity-5 grayscale"
+                  className="absolute right-0 h-24 w-24 opacity-20 grayscale"
                   src={chainImage(chainId)}
                 />
               </button>

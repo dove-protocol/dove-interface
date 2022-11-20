@@ -356,9 +356,10 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b] outline outline-4 outline-[#26272b]" />
-            <BiPlus className="relative text-2xl text-white/50 transition group-hover:text-white" />
+          <div className="relative  left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+            <div className="group absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita">
+              <BiPlus className="relative -rotate-45 text-2xl text-white/50" />
+            </div>
           </div>
           <InputWithBalance
             currency={currencies[Field.CURRENCY_B]}
@@ -432,8 +433,9 @@ const DammTabContent = () => {
           </div>
           <div className="mb-4 h-px w-full bg-white/5" />
           <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-[#26272b]" />
-            <BiDownArrowAlt className="relative text-2xl text-white/50 transition group-hover:text-white" />
+            <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
+              <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
+            </div>
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
             <div className="flex items-center">
@@ -494,7 +496,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab3">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
             <div className="flex flex-col">
               <h4 className="text-white">Primary Reserves</h4>
               <p className="text-xs text-white/50">Main reserve balances</p>

@@ -35,7 +35,7 @@ const InputWithBalance = ({
       <input
         disabled={disabled}
         className={`flex h-24 w-full items-start justify-between rounded-sm border border-white/5 ${
-          disabled ? "bg-transparent" : "bg-black/10"
+          disabled ? "bg-transparent" : "bg-white/5"
         } p-4 pb-12 pt-4 font-wagmi text-xl text-white  placeholder:text-white/50 focus:outline-none`}
         placeholder="0.00"
         value={value}
