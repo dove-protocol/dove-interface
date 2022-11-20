@@ -42,7 +42,7 @@ export const avalancheChain: Chain = {
 const { chains, provider } = configureChains(
   [chain.goerli, chain.arbitrumGoerli, chain.polygonMumbai],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? "" }),
+    alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" }),
     jsonRpcProvider({
       rpc: (chain) => {
         if (chain.id !== avalancheChain.id) return null;
