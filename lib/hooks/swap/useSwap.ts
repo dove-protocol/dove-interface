@@ -37,8 +37,11 @@ export default function useSwap(
     ...AMMContract,
     functionName: "swap",
     args: isToken0
-      ? [BigNumber.from(amountIn?.numerator.toString()), BigNumber.from(0)]
-      : [BigNumber.from(0), BigNumber.from(amountIn?.numerator.toString())],
+      ? [BigNumber.from(amountIn?.numerator.toString() || 0), BigNumber.from(0)]
+      : [
+          BigNumber.from(0),
+          BigNumber.from(amountIn?.numerator.toString() || 0),
+        ],
     enabled: !!amountIn && approvalState === ApprovalState.APPROVED,
   });
 

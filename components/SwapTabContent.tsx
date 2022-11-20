@@ -18,14 +18,9 @@ import { Field, useSwapStore } from "../state/swap/useSwapStore";
 import { useDerivedSwapInfo } from "../state/swap/useDerivedSwapInfo";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { useMintStore } from "../state/mint/useMintStore";
-import useMint from "../lib/hooks/mint/useMint";
 import useSyncL1 from "../lib/hooks/sync/useSyncL1";
-import useSwap from "../lib/hooks/swap/useSwap";
 import { useBurnStore } from "../state/burn/useBurnStore";
-import useBurn from "../lib/hooks/burn/useBurn";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
-import useDammData from "../lib/hooks/data/useDammData";
-import useAmmData from "../lib/hooks/data/useAmmData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
@@ -36,6 +31,11 @@ import {
 } from "../lib/utils/formatNumbers";
 import { useNetwork } from "wagmi";
 import TabContentContainer from "./TabContentContainer";
+import useSwap from "../lib/hooks/swap/useSwap";
+import useMint from "../lib/hooks/mint/useMint";
+import useBurn from "../lib/hooks/burn/useBurn";
+import useDammData from "../lib/hooks/data/useDammData";
+import useAmmData from "../lib/hooks/data/useAmmData";
 
 const SwapTabContent = () => {
   const { chain } = useNetwork();

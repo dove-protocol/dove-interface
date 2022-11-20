@@ -14,7 +14,7 @@ export default function useWithdrawLiquidity(
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
     functionName: "withdraw",
-    args: [BigNumber.from(amount?.numerator.toString())],
+    args: [BigNumber.from(amount?.numerator.toString() || 0)],
     enabled: !!amount,
   });
 

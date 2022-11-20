@@ -43,8 +43,8 @@ export default function useBurn(
     functionName: "burnVouchers",
     args: [
       LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
-      BigNumber.from(voucher1ToBurn?.quotient.toString()),
-      BigNumber.from(voucher2ToBurn?.quotient.toString()),
+      BigNumber.from(voucher1ToBurn?.quotient.toString() || 0),
+      BigNumber.from(voucher2ToBurn?.quotient.toString() || 0),
     ],
     overrides: {
       value: utils.parseEther("0.1"),

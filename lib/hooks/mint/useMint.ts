@@ -22,7 +22,7 @@ export default function useMint(
     functionName: "mint",
     args: [
       wrapAddress(account ?? address),
-      BigNumber.from(amountToMint?.numerator.toString()),
+      BigNumber.from(amountToMint?.numerator.toString() || "0"),
     ],
     enabled: !!amountToMint && (!!address || !!account),
   });

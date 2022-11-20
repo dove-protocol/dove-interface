@@ -3,7 +3,7 @@ import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
 import { useMemo } from "react";
 import { SendTransactionResult } from "@wagmi/core";
 import { ApprovalState } from "../useApproval";
-import { dAMM  as dAMMContractInterface} from "../../../abis/dAMM";
+import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
 import { BigNumber } from "ethers";
 
 export default function useProvideLiquidity(
@@ -16,7 +16,10 @@ export default function useProvideLiquidity(
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,
     functionName: "provide",
-    args: [BigNumber.from(amount1?.numerator.toString()), BigNumber.from(amount2?.numerator.toString())],
+    args: [
+      BigNumber.from(amount1?.numerator.toString() || "0"),
+      BigNumber.from(amount2?.numerator.toString() || "0"),
+    ],
     enabled:
       !!amount1 &&
       !!amount2 &&
