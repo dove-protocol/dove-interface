@@ -510,7 +510,7 @@ const DammTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {data?.reserve0 && formatCurrencyAmount(data.reserve0, 6)}
+              {data?.reserve0 && formatCurrencyAmount(data.reserve0, 12)}
             </p>
           </div>
 
@@ -522,7 +522,7 @@ const DammTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {data?.reserve1 && formatCurrencyAmount(data.reserve1, 6)}
+              {data?.reserve1 && formatCurrencyAmount(data.reserve1, 12)}
             </p>
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
