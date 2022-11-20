@@ -11,9 +11,9 @@ import {
   DAMM_ADDRESS,
   LZ_CHAIN,
 } from "../../../sdk";
-import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useMemo } from "react";
 import { BigNumber } from "ethers";
+import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
 
 export default function useDammData(
   currency1: Currency | undefined,
@@ -66,15 +66,16 @@ export default function useDammData(
       {
         ...dAMMContract,
         functionName: "marked0",
-        args: [lzChainId],
+        args: [lzChainId!],
       },
       {
         ...dAMMContract,
         functionName: "marked1",
-        args: [lzChainId],
+        args: [lzChainId!],
       },
     ],
     watch: true,
+    enabled: !!lzChainId,
   });
 
   if (

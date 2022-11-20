@@ -6,14 +6,17 @@ import {
   CurrencyAmount,
   LZ_CHAIN,
 } from "../../../sdk";
-import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { SendTransactionResult } from "@wagmi/core";
+import { ApprovalState } from "../useApproval";
+import { AMM as AMMContractInterface } from "../../../abis/AMM";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
-  voucher2ToBurn: CurrencyAmount<Currency> | undefined
+  voucher2ToBurn: CurrencyAmount<Currency> | undefined,
+  approvalState1: ApprovalState | undefined,
+  approvalState2: ApprovalState | undefined
 ): {
   callback: null | (() => Promise<SendTransactionResult>);
 } {
@@ -40,12 +43,17 @@ export default function useBurn(
     functionName: "burnVouchers",
     args: [
       LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
-      voucher1ToBurn?.quotient.toString(),
-      voucher2ToBurn?.quotient.toString(),
+      BigNumber.from(voucher1ToBurn?.quotient.toString() || 0),
+      BigNumber.from(voucher2ToBurn?.quotient.toString() || 0),
     ],
     overrides: {
       value: utils.parseEther("0.1"),
     },
+    enabled:
+      !!voucher1ToBurn &&
+      !!voucher2ToBurn &&
+      approvalState1 === ApprovalState.APPROVED &&
+      approvalState2 === ApprovalState.APPROVED,
   });
 
   const { writeAsync } = useContractWrite(config);

@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, useMemo } from "react";
 import { chain } from "wagmi";
 import InteractButton, { Button } from "./InteractButton";
 import InputWithBalance from "./InputWithBalance";
-import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
 import { ChainId, Currency, CurrencyAmount, DAMM_LP, MaxUint256 } from "../sdk";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
@@ -18,8 +17,6 @@ import { useDerivedWithdrawInfo } from "../state/withdraw/useDerivedWithdrawInfo
 import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
-import useMint from "../lib/hooks/mint/useMint";
-import useDammData from "../lib/hooks/data/useDammData";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
@@ -39,6 +36,9 @@ import {
   BiStats,
 } from "react-icons/bi";
 import TabContentContainer from "./TabContentContainer";
+import useMint from "../lib/hooks/mint/useMint";
+import useDammData from "../lib/hooks/data/useDammData";
+import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -76,7 +76,9 @@ const DammTabContent = () => {
   // load up liquidity callback
   const { callback } = useProvideLiquidity(
     parsedAmounts[Field.CURRENCY_A],
-    parsedAmounts[Field.CURRENCY_B]
+    parsedAmounts[Field.CURRENCY_B],
+    approveStateA,
+    approveStateB
   );
 
   const handleTypeA = (value: string) => {
@@ -124,7 +126,7 @@ const DammTabContent = () => {
             title: "Token Approved",
             description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-            )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
+            )} ${currencies[Field.CURRENCY_A]?.symbol}`,
             txid: tx.hash,
             type: "success",
           });
@@ -147,7 +149,7 @@ const DammTabContent = () => {
             title: "Token Approved",
             description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-            )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
+            )} ${currencies[Field.CURRENCY_B]?.symbol}`,
             txid: tx.hash,
             type: "success",
           });

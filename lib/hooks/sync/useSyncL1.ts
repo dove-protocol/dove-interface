@@ -1,10 +1,9 @@
 import { AMM_ADDRESS, ChainId, DAMM_ADDRESS, LZ_CHAIN } from "../../../sdk";
 import { useMemo, useCallback } from "react";
-import dAMMContractInterface from "../../../abis/dAMM.json";
 import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
-import AMMContractInterface from "../../../abis/AMM.json";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { SendTransactionResult } from "@wagmi/core";
+import { AMM as AMMContractInterface } from "../../../abis/AMM";
 
 export default function useSyncL1(): {
   callback: null | (() => Promise<SendTransactionResult>);
@@ -30,7 +29,13 @@ export default function useSyncL1(): {
   const { config } = usePrepareContractWrite({
     ...AMMContract,
     functionName: "syncToL1",
-    args: [LZ_CHAIN[ChainId.ETHEREUM_GOERLI], 1, 1, 2, 2],
+    args: [
+      LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
+      BigNumber.from(1),
+      BigNumber.from(1),
+      BigNumber.from(2),
+      BigNumber.from(2),
+    ],
     overrides: {
       value: ethers.utils.parseEther("0.2"),
     },

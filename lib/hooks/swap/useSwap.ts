@@ -1,11 +1,14 @@
 import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
-import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
 import { SendTransactionResult } from "@wagmi/core";
+import { ApprovalState } from "../useApproval";
+import { AMM as AMMContractInterface } from "../../../abis/AMM";
+import { BigNumber } from "ethers";
 
 export default function useSwap(
-  amountIn: CurrencyAmount<Currency> | undefined
+  amountIn: CurrencyAmount<Currency> | undefined,
+  approvalState: ApprovalState | undefined
 ): {
   callback: null | (() => Promise<SendTransactionResult>);
 } {
@@ -34,9 +37,12 @@ export default function useSwap(
     ...AMMContract,
     functionName: "swap",
     args: isToken0
-      ? [amountIn?.numerator.toString(), 0]
-      : [0, amountIn?.numerator.toString()],
-    enabled: !!amountIn,
+      ? [BigNumber.from(amountIn?.numerator.toString() || 0), BigNumber.from(0)]
+      : [
+          BigNumber.from(0),
+          BigNumber.from(amountIn?.numerator.toString() || 0),
+        ],
+    enabled: !!amountIn && approvalState === ApprovalState.APPROVED,
   });
 
   const { writeAsync } = useContractWrite(config);
