@@ -590,7 +590,7 @@ const SwapTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 6)}
+              {ammData?.reserve0 && formatCurrencyAmount(ammData.reserve0, 12)}
             </p>
           </div>
           <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
@@ -601,7 +601,7 @@ const SwapTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 6)}
+              {ammData?.reserve1 && formatCurrencyAmount(ammData.reserve1, 12)}
             </p>
           </div>
         </TabContentContainer>
