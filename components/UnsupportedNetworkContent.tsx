@@ -34,7 +34,7 @@ const UnsupportedNetworkContent = () => {
     <TabContentContainer>
       <div className="flex flex-col">
         <div className="mb-4 flex flex-col items-start justify-start">
-          <GiPeaceDove className="mb-2 rounded-sm bg-white p-2 text-4xl text-black" />
+          <GiPeaceDove className="mb-2 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
           <div className="flex flex-col">
             <h4 className="text-white">Dove Protocol</h4>
             <p className=" text-xs text-white/50">
@@ -47,7 +47,7 @@ const UnsupportedNetworkContent = () => {
             return (
               <button
                 onClick={() => handleSwitchNetwork(chainId)}
-                className="group relative mb-2 flex h-16 w-full items-center justify-between overflow-hidden rounded-sm border border-white/5 bg-black/10 p-4 shadow-damn transition duration-500 ease-in-out hover:shadow-none"
+                className="group relative mb-2 flex h-16 w-full items-center justify-between overflow-hidden rounded-sm border-y border-sky-400 bg-sky-400/5 p-4 shadow-damn transition duration-500 ease-in-out hover:shadow-none"
               >
                 <div className="flex items-center">
                   <p className="text-white transition duration-500 ease-in-out group-hover:drop-shadow-soju">
@@ -55,7 +55,7 @@ const UnsupportedNetworkContent = () => {
                   </p>
                 </div>
                 <img
-                  className="absolute right-0 h-24 w-24 opacity-20 grayscale"
+                  className="absolute right-0 h-24 w-24 opacity-5"
                   src={chainImage(chainId)}
                 />
               </button>

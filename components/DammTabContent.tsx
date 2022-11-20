@@ -573,7 +573,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab5">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
             <div className="flex flex-col">
               <h4 className="text-white">Sync to L2</h4>
               <p className="text-xs text-white/50">

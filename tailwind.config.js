@@ -17,7 +17,7 @@ module.exports = {
         damn: "0 2px 2px rgba(4,4,7,.45),0 8px 24px rgba(4,4,7,.6)",
       },
       dropShadow: {
-        soju: "0 0 5px #1da7eb",
+        soju: "0 0 5px #fff",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--gradient-color-stops))",

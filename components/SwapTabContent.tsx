@@ -465,7 +465,7 @@ const SwapTabContent = () => {
       <Tabs.Content value="tab3">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
+            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
             <div className="flex flex-col">
               <h4 className="text-white">Sync to L1</h4>
               <p className="text-xs text-white/50">Sync L2 balances to L1</p>
@@ -568,7 +568,7 @@ const SwapTabContent = () => {
       <Tabs.Content value="tab5">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-tan/10 p-2 text-4xl text-tan" />
+            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
             <div className="flex flex-col">
               <h4 className="text-white">Virtual Reserves</h4>
               <p className="text-xs text-white/50">Synced reserve balances</p>
