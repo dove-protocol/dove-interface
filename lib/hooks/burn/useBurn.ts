@@ -10,10 +10,13 @@ import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
 import { utils } from "ethers";
 import { SendTransactionResult } from "@wagmi/core";
+import { ApprovalState } from "../useApproval";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
-  voucher2ToBurn: CurrencyAmount<Currency> | undefined
+  voucher2ToBurn: CurrencyAmount<Currency> | undefined,
+  approvalState1: ApprovalState | undefined,
+  approvalState2: ApprovalState | undefined
 ): {
   callback: null | (() => Promise<SendTransactionResult>);
 } {
@@ -46,6 +49,11 @@ export default function useBurn(
     overrides: {
       value: utils.parseEther("0.1"),
     },
+    enabled:
+      !!voucher1ToBurn &&
+      !!voucher2ToBurn &&
+      approvalState1 === ApprovalState.APPROVED &&
+      approvalState2 === ApprovalState.APPROVED,
   });
 
   const { writeAsync } = useContractWrite(config);

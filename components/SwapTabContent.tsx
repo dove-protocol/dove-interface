@@ -83,7 +83,10 @@ const SwapTabContent = () => {
     parsedAmounts[Field.CURRENCY_A]
   );
 
-  const { callback: swapCallback } = useSwap(parsedAmounts[Field.CURRENCY_A]);
+  const { callback: swapCallback } = useSwap(
+    parsedAmounts[Field.CURRENCY_A],
+    approveState
+  );
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
@@ -257,7 +260,9 @@ const SwapTabContent = () => {
 
   const { callback: burnCallback } = useBurn(
     burnAmounts[Field.CURRENCY_A],
-    burnAmounts[Field.CURRENCY_B]
+    burnAmounts[Field.CURRENCY_B],
+    approveVoucherStateA,
+    approveVoucherStateB
   );
 
   const handleTypeBurnA = (value: string) => {

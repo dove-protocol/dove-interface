@@ -17,6 +17,7 @@ import {
   getDefaultWallets,
   darkTheme,
   RainbowKitProvider,
+  midnightTheme,
 } from "@rainbow-me/rainbowkit";
 import { AppProps } from "next/app";
 
@@ -73,8 +74,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider
           chains={chains}
           modalSize="compact"
-          theme={darkTheme({
-            accentColor: "#131319",
+          theme={midnightTheme({
+            accentColor: "#1da7eb",
             accentColorForeground: "white",
             borderRadius: "small",
           })}

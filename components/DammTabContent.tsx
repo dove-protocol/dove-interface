@@ -76,7 +76,9 @@ const DammTabContent = () => {
   // load up liquidity callback
   const { callback } = useProvideLiquidity(
     parsedAmounts[Field.CURRENCY_A],
-    parsedAmounts[Field.CURRENCY_B]
+    parsedAmounts[Field.CURRENCY_B],
+    approveStateA,
+    approveStateB
   );
 
   const handleTypeA = (value: string) => {
@@ -124,7 +126,7 @@ const DammTabContent = () => {
             title: "Token Approved",
             description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-            )} ${currencies[Field.CURRENCY_A]?.symbol}.`,
+            )} ${currencies[Field.CURRENCY_A]?.symbol}`,
             txid: tx.hash,
             type: "success",
           });
@@ -147,7 +149,7 @@ const DammTabContent = () => {
             title: "Token Approved",
             description: `${formatTransactionAmount(
               currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-            )} ${currencies[Field.CURRENCY_B]?.symbol}.`,
+            )} ${currencies[Field.CURRENCY_B]?.symbol}`,
             txid: tx.hash,
             type: "success",
           });

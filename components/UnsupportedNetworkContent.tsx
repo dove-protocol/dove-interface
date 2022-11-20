@@ -50,7 +50,7 @@ const UnsupportedNetworkContent = () => {
                 className="group relative mb-2 flex h-16 w-full items-center justify-between overflow-hidden rounded-sm border-y border-sky-400 bg-sky-400/5 p-4 shadow-damn transition duration-500 ease-in-out hover:shadow-none"
               >
                 <div className="flex items-center">
-                  <p className="text-white transition duration-500 ease-in-out group-hover:drop-shadow-soju">
+                  <p className="text-white transition duration-500 ease-in-out group-hover:drop-shadow-tabler">
                     {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
                   </p>
                 </div>

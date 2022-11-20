@@ -3,9 +3,11 @@ import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
 import AMMContractInterface from "../../../abis/AMM.json";
 import { useMemo, useCallback } from "react";
 import { SendTransactionResult } from "@wagmi/core";
+import { ApprovalState } from "../useApproval";
 
 export default function useSwap(
-  amountIn: CurrencyAmount<Currency> | undefined
+  amountIn: CurrencyAmount<Currency> | undefined,
+  approvalState: ApprovalState | undefined
 ): {
   callback: null | (() => Promise<SendTransactionResult>);
 } {
@@ -36,7 +38,7 @@ export default function useSwap(
     args: isToken0
       ? [amountIn?.numerator.toString(), 0]
       : [0, amountIn?.numerator.toString()],
-    enabled: !!amountIn,
+    enabled: !!amountIn && approvalState === ApprovalState.APPROVED,
   });
 
   const { writeAsync } = useContractWrite(config);
