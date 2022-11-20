@@ -384,9 +384,12 @@ const SwapTabContent = () => {
             expectedChainId={expectedChainId}
           />
           <div className="relative  left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
+            <button
+              onClick={handleSwapCurrency}
+              className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110"
+            >
               <BiExpandAlt className="relative text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
-            </div>
+            </button>
           </div>
           <InputWithBalance
             currency={currencies[Field.CURRENCY_B]}
