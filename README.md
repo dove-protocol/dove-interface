@@ -1,27 +1,10 @@
-# NextJs Web3 Starter
+# Dove Protocol Interface
 
-Slightly Opinionated Next.js Web3 Boilerplate.
+An interface for Dove.
+Dove is a protocol that allows you to provide liquidity on L2s without having to bridge any token.
+Minimized risk, maximum fees.
 
-## Deployment
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FzkSoju%2Fwagmi-starter)
-
-1. Click use this template or deploy with Vercel above.
-2. Install dependencies.
-
-```
-cd wagmi-start
-npm i
-```
-
-3. Change `.env.example` to `.env` file and fill in the required fields. Refer to https://chainlist.org/ for the appropriate chain ID that matches the network contract is deployed at.
-
-```
-INFURA_ID=<PROJECT_ID>
-ALCHEMY_ID=<PROJECT_ID>
-CHAIN_ID=<CHAIN_ID>
-CONTRACT_ADDRESS=<DEPLOYED_CONTRACT ADDRESS>
-```
+Find it [here](https://dove.whitenoise.rs).
 
 # Built on
 
