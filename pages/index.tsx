@@ -52,8 +52,8 @@ export default function Home() {
         <div className="background-gradient absolute h-full w-[100vw] opacity-20">
           <div className="background-gradient-pattern" />
         </div>
-        <div className="relative flex min-h-screen w-full items-start justify-center pb-36 pt-36">
-          <div className="relative flex w-full flex-col items-start">
+        <div className="relative flex min-h-screen w-full flex-col items-start justify-start pb-36 pt-36">
+          <div className="relative mb-4 flex w-full flex-col items-start">
             <div className="flex w-full flex-row space-x-4">
               <Tabs.Root
                 value={activeNetworkTab}
@@ -109,6 +109,9 @@ export default function Home() {
               </Tabs.Root>
             </div>
           </div>
+          {/* <div className="flex w-full flex-col justify-end rounded-sm bg-black/10 px-4 py-1 outline outline-1 outline-offset-4 outline-sky-400">
+            <p className="text-white">Need help?</p>
+          </div> */}
         </div>
       </Article>
     </Main>
