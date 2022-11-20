@@ -14,13 +14,13 @@ const SettingsTabContent = () => {
   return (
     <TabContentContainer>
       <div className="mb-4 flex items-center">
-        <BiCog className="mr-4 rounded-sm bg-black/50 p-2 text-4xl text-white" />
+        <BiCog className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
         <div className="flex flex-col">
           <h4 className="text-white">Settings</h4>
           <p className="text-xs text-white/50">Adjust advanced settings</p>
         </div>
       </div>
-      <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+      <div className="mb-2 flex w-full items-center justify-between rounded-sm border border-white/5 bg-white/5 p-4">
         <p className="text-xs uppercase tracking-widest text-white/50">
           Show Advanced
         </p>
@@ -32,7 +32,7 @@ const SettingsTabContent = () => {
           <Switch.Thumb className="block h-6 w-6 translate-x-[34px] rounded-sm border border-white/5 transition ease-in-out rdx-state-checked:translate-x-1 rdx-state-checked:bg-white rdx-state-unchecked:bg-white/10" />
         </Switch.Root>
       </div>
-      <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-black/10 p-4">
+      <div className="flex w-full items-center justify-between rounded-sm border border-white/5 bg-white/5 p-4">
         <p className="text-xs uppercase tracking-widest text-white/50">
           Automatically Switch Networks
         </p>

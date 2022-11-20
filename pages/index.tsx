@@ -64,16 +64,16 @@ export default function Home() {
                 <Tabs.List className="relative z-10 flex flex-row">
                   <Tabs.Trigger
                     value="amm"
-                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
+                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-pita/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-pita rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
                     {activeNetworkTab === "amm" && (
-                      <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />
+                      <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/10" />
                     )}
                     <p className="font-normal">AMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="damm"
-                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-[#313135] rdx-state-active:text-white rdx-state-inactive:text-white/50"
+                    className="relative w-full cursor-pointer overflow-hidden rounded-sm rounded-b-none border border-b-0 border-white/5 bg-pita/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-pita rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
                     {activeNetworkTab === "damm" && (
                       <GiPeaceDove className="absolute right-0 -rotate-45 text-6xl text-white/5" />

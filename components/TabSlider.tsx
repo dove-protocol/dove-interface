@@ -54,7 +54,7 @@ const TabSlider = ({
       <Tabs.List
         ref={wrapperRef}
         onMouseLeave={() => setHighlightedTab(null)}
-        className="relative flex w-full flex-row rounded-sm bg-black/10 p-1"
+        className="relative flex w-full flex-row rounded-sm border-y border-white/5"
       >
         <div
           className="absolute -left-px h-[34px] translate-y-[4px] rounded-sm bg-white/5 transition"
@@ -92,7 +92,7 @@ const Tab = ({
   return (
     <Tabs.Trigger
       value={id}
-      className="relative flex w-full cursor-pointer flex-row items-center justify-center rounded-sm border-b-2 border-transparent px-4 py-2 transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-sky-400 rdx-state-active:bg-black/10 rdx-state-active:text-white rdx-state-inactive:text-white/50"
+      className="group relative flex w-full cursor-pointer flex-row items-center justify-center rounded-sm border-b border-transparent px-4 py-2 transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:border-tan rdx-state-active:bg-tan/10 rdx-state-active:text-tan rdx-state-inactive:text-white/50"
       onMouseEnter={(e) => repositionHighlight(e, id)}
     >
       {icon}
