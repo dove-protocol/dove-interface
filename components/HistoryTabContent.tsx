@@ -7,7 +7,7 @@ import { BiCog, BiHistory, BiLinkExternal, BiShuffle } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 
 const HistoryTabContent = () => {
-  const toastContent = useUserStore((state) => state.toastContent);
+  const allToastContents = useUserStore((state) => state.allToastContents);
   const { chain } = useNetwork();
 
   return (
@@ -19,27 +19,29 @@ const HistoryTabContent = () => {
           <p className="text-xs text-white/50">Review previous transactions</p>
         </div>
       </div>
-      {toastContent.title !== "" ? (
-        <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
-          <div className="flex items-center">
-            <BiShuffle className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
-            <p className="text-xs uppercase tracking-widest text-white">
-              {toastContent.title}
-            </p>
+      {allToastContents.length > 0 ? (
+        allToastContents.map((toastContent) => (
+          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
+            <div className="flex items-center">
+              <BiShuffle className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
+              <p className="text-xs uppercase tracking-widest text-white">
+                {toastContent.title}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <p className="text-sm text-white">{toastContent.description}</p>\
+              {toastContent.txid && (
+                <a
+                  className="mr-2"
+                  target="_blank"
+                  href={`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`}
+                >
+                  <BiLinkExternal className="text-white/50 hover:text-white" />
+                </a>
+              )}
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <p className="text-sm text-white">{toastContent.description}</p>\
-            {toastContent.txid && (
-              <a
-                className="mr-2"
-                target="_blank"
-                href={`${chain?.blockExplorers?.default.url}/tx/${toastContent.txid}`}
-              >
-                <BiLinkExternal className="text-white/50 hover:text-white" />
-              </a>
-            )}
-          </div>
-        </div>
+        ))
       ) : (
         <div className="flex h-40 w-full items-center justify-center">
           <p className="text-white">No previous transactions</p>
