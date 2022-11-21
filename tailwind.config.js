@@ -51,5 +51,6 @@ module.exports = {
     require("tailwindcss-radix")({
       variantPrefix: "rdx",
     }),
+    require("tailwind-gradient-mask-image"),
   ],
 };

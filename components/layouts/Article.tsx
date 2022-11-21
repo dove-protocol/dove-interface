@@ -74,9 +74,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
         </Toast.Provider>
         <Navbar />
         {children}
-        <div className="absolute bottom-0 flex w-full items-center justify-center p-8">
-          <GiPeaceDove className="text-3xl text-white/10" />
-        </div>
+        <div className="absolute bottom-0 flex w-full items-center justify-center p-8"></div>
         {/* <div className="absolute bottom-0 flex w-full items-center justify-end space-x-2 p-8">
           <div className="h-2 w-2 rounded-full bg-green-400">
             <div className="h-2 w-2 animate-ping rounded-full bg-green-400"></div>

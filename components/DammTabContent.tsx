@@ -441,7 +441,7 @@ const DammTabContent = () => {
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_A]?.symbol}
               </p>
@@ -468,7 +468,7 @@ const DammTabContent = () => {
           </div>
           <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_B]?.symbol}
               </p>
@@ -498,7 +498,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab3">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
+            <BiStats className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
               <h4 className="text-white">Primary Reserves</h4>
               <p className="text-xs text-white/50">Main reserve balances</p>
@@ -506,7 +506,7 @@ const DammTabContent = () => {
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex w-full items-center">
-              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white">
                 USDC
               </p>
@@ -518,7 +518,7 @@ const DammTabContent = () => {
 
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white">
                 USDT
               </p>
@@ -529,7 +529,7 @@ const DammTabContent = () => {
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm bg-black/20 p-1 text-2xl text-white" />
+              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
               <p className="text-xs uppercase tracking-widest text-white">
                 DAMM-LP
               </p>
@@ -575,7 +575,7 @@ const DammTabContent = () => {
       <Tabs.Content value="tab5">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm bg-sky-400/10 p-2 text-4xl text-sky-400" />
+            <BiStats className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
               <h4 className="text-white">Sync to L2</h4>
               <p className="text-xs text-white/50">

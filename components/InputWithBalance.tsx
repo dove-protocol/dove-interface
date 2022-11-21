@@ -48,11 +48,11 @@ const InputWithBalance = ({
       <div className="absolute top-4 right-4 flex flex-col items-end">
         {currency && (
           <h4
-            className={`mb-2 flex h-fit items-center  rounded-sm border border-white/5 px-2 py-0.5 ${
+            className={`mb-2 flex h-fit items-center  rounded-sm border border-white/10 px-2 py-0.5 ${
               disabled ? "text-white/50" : "bg-black/10 text-white"
             }`}
           >
-            <BiDollar className="mr-2 rounded-sm bg-white/5 p-px" />
+            <BiDollar className="mr-2 rounded-sm bg-white/10 p-px" />
             {currency?.symbol}
           </h4>
         )}

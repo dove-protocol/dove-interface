@@ -63,13 +63,16 @@ export const Button = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className="group flex h-16 w-full items-center justify-center rounded-sm border border-sky-400/50 bg-sky-400/5 transition duration-500 ease-in-out hover:shadow-none disabled:border-none disabled:bg-white/5 disabled:shadow-none"
+      className="group relative flex h-16 w-full items-center justify-center rounded-sm border-y border-sky-400 bg-gradient-to-t from-sky-400/5 to-transparent transition duration-500 ease-in-out hover:shadow-none disabled:border-none disabled:bg-white/5 disabled:from-transparent disabled:shadow-none"
     >
+      {!disabled && (
+        <div className="background-gradient-pattern absolute top-0 h-16 w-full opacity-50 gradient-mask-t-0" />
+      )}
       <p
         className={`transition duration-500 ease-in-out ${
           disabled
             ? "text-white/50 drop-shadow-none"
-            : "text-sky-400 group-hover:drop-shadow-soju"
+            : "font-normal text-white group-hover:drop-shadow-tabler"
         }`}
       >
         {text}
