@@ -36,6 +36,7 @@ import useMint from "../lib/hooks/mint/useMint";
 import useBurn from "../lib/hooks/burn/useBurn";
 import useDammData from "../lib/hooks/data/useDammData";
 import useAmmData from "../lib/hooks/data/useAmmData";
+import shallow from "zustand/shallow";
 
 const SwapTabContent = () => {
   const { chain } = useNetwork();
@@ -64,7 +65,8 @@ const SwapTabContent = () => {
       state.fields,
       state.onUserInput,
       state.independentField,
-    ]
+    ],
+    shallow
   );
 
   const dependentField =
@@ -160,10 +162,10 @@ const SwapTabContent = () => {
 
   /////////////////////////////
 
-  const [mintFields, onUserInputMint] = useMintStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
+  const [mintFields, onUserInputMint] = useMintStore(
+    (state) => [state.fields, state.onUserInput],
+    shallow
+  );
 
   const {
     parsedAmounts: mintAmounts,
@@ -241,10 +243,10 @@ const SwapTabContent = () => {
 
   /////////////////////////////
 
-  const [burnFields, onUserInputBurn] = useBurnStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
+  const [burnFields, onUserInputBurn] = useBurnStore(
+    (state) => [state.fields, state.onUserInput],
+    shallow
+  );
 
   const {
     parsedAmounts: burnAmounts,

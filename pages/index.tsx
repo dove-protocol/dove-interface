@@ -4,7 +4,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useState, useEffect, useRef } from "react";
 import { chain, useNetwork, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../lib/hooks/useIsMounted";
-import { BiCog } from "react-icons/bi";
+import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
 import SwapTabContent from "../components/SwapTabContent";
 import DammTabContent from "../components/DammTabContent";
@@ -13,9 +13,11 @@ import { GiPeaceDove } from "react-icons/gi";
 import { useUserStore } from "../state/user/useUserStore";
 import { ChainId } from "../sdk";
 import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
+import HistoryTabContent from "../components/HistoryTabContent";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
+  const toastContent = useUserStore((state) => state.toastContent);
   const [activeNetworkTab, setActiveNetworkTab] = useState("damm");
   const timerRef = useRef(0);
 
@@ -81,6 +83,15 @@ export default function Home() {
                     <p className="font-normal">dAMM</p>
                   </Tabs.Trigger>
                   <Tabs.Trigger
+                    value="history"
+                    className="relative w-12 cursor-pointer rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-pita rdx-state-active:text-white rdx-state-inactive:text-white/50"
+                  >
+                    {toastContent.title !== "" && (
+                      <div className="absolute top-0 right-0 h-1 w-1 bg-sky-400 drop-shadow-soju" />
+                    )}
+                    <BiHistory className="" />
+                  </Tabs.Trigger>
+                  <Tabs.Trigger
                     value="settings"
                     className="w-12 cursor-pointer rounded-sm rounded-b-none border border-b-0 border-white/5 bg-black/10 px-4 py-2 text-left transition duration-300 ease-linear hover:text-white focus:outline-none rdx-state-active:bg-pita rdx-state-active:text-white rdx-state-inactive:text-white/50"
                   >
@@ -101,6 +112,11 @@ export default function Home() {
                     )}
                   </TabContainer>
                 </Tabs.Content>
+                <Tabs.Content value="history">
+                  <TabContainer>
+                    <HistoryTabContent />
+                  </TabContainer>
+                </Tabs.Content>
                 <Tabs.Content value="settings">
                   <TabContainer>
                     <SettingsTabContent />
@@ -109,9 +125,14 @@ export default function Home() {
               </Tabs.Root>
             </div>
           </div>
-          {/* <div className="flex w-full flex-col justify-end rounded-sm bg-black/10 px-4 py-1 outline outline-1 outline-offset-4 outline-sky-400">
-            <p className="text-white">Need help?</p>
-          </div> */}
+          <div className="flex w-full flex-row justify-between px-4 pt-1">
+            <div className="flex flex-row items-center space-x-1">
+              <p className="text-sm text-white/50">
+                Need help? <span className="text-white">Read the guide</span>
+              </p>
+              <BiArrowToRight className="text-white" />
+            </div>
+          </div>
         </div>
       </Article>
     </Main>

@@ -39,6 +39,7 @@ import TabContentContainer from "./TabContentContainer";
 import useMint from "../lib/hooks/mint/useMint";
 import useDammData from "../lib/hooks/data/useDammData";
 import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
+import shallow from "zustand/shallow";
 
 const DammTabContent = () => {
   // load up default tokens for chain
@@ -47,11 +48,10 @@ const DammTabContent = () => {
   const { callback: toastCallback } = useTriggerToast();
 
   // load up state
-  const [fields, onUserInput, independentField] = useProvideStore((state) => [
-    state.fields,
-    state.onUserInput,
-    state.independentField,
-  ]);
+  const [fields, onUserInput, independentField] = useProvideStore(
+    (state) => [state.fields, state.onUserInput, state.independentField],
+    shallow
+  );
 
   // load up token info
   const { parsedAmounts, currencies, currencyBalances } =
@@ -173,10 +173,10 @@ const DammTabContent = () => {
 
   //////////////////////////////////////////////////////////
 
-  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
+  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore(
+    (state) => [state.fields, state.onUserInput],
+    shallow
+  );
 
   const {
     parsedAmounts: withdrawAmounts,
@@ -231,10 +231,10 @@ const DammTabContent = () => {
     currencyBalances: mintBalance,
   } = useDerivedMintInfo();
 
-  const [mintFields, onUserInputMint] = useMintStore((state) => [
-    state.fields,
-    state.onUserInput,
-  ]);
+  const [mintFields, onUserInputMint] = useMintStore(
+    (state) => [state.fields, state.onUserInput],
+    shallow
+  );
 
   const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
 
