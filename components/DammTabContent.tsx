@@ -426,14 +426,12 @@ const DammTabContent = () => {
             value={withdrawFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative z-10 mb-4">
-            <InteractButton
-              onConfirm={handleWithdraw}
-              expectedChainId={chain.goerli.id}
-              text="Remove Liquidity"
-            />
-          </div>
-          <div className="mb-4 h-px w-full bg-white/5" />
+          <InteractButton
+            onConfirm={handleWithdraw}
+            expectedChainId={chain.goerli.id}
+            text="Remove Liquidity"
+          />
+          <div className="mb-4 mt-8 h-px w-full bg-white/5" />
           <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
             <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
               <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
