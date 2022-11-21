@@ -16,10 +16,10 @@ const HistoryTabContent = () => {
         <BiHistory className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
         <div className="flex flex-col">
           <h4 className="text-white">History</h4>
-          <p className="text-xs text-white/50">Review previous swaps</p>
+          <p className="text-xs text-white/50">Review previous transactions</p>
         </div>
       </div>
-      {toastContent.title !== "" && (
+      {toastContent.title !== "" ? (
         <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
           <div className="flex items-center">
             <BiShuffle className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
@@ -39,6 +39,10 @@ const HistoryTabContent = () => {
               </a>
             )}
           </div>
+        </div>
+      ) : (
+        <div className="flex h-40 w-full items-center justify-center">
+          <p className="text-white">No previous transactions</p>
         </div>
       )}
 
