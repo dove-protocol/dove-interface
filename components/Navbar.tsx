@@ -11,8 +11,12 @@ const Navbar = () => {
         <GiPeaceDove className="text-3xl text-white" />
         <div className="flex items-center space-x-4">
           <CustomConnectButton />
-          <FaGithub className="text-white/50" />
-          <FaTwitter className="text-white/50" />
+          <a href="https://github.com/whitenois3" target="_blank">
+            <FaGithub className="text-white/50" />
+          </a>
+          <a href="https://twitter.com/exp_table" target="_blank">
+            <FaTwitter className="text-white/50" />
+          </a>
         </div>
       </div>
     </div>

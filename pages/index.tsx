@@ -128,7 +128,14 @@ export default function Home() {
           <div className="flex w-full flex-row justify-between px-4 pt-1">
             <div className="flex flex-row items-center space-x-1">
               <p className="text-sm text-white/50">
-                Need help? <span className="text-white">Read the guide</span>
+                Need help?{" "}
+                <a
+                  href="https://0xst.notion.site/Dove-Protocol-5a174626e63f4c26a30e753fc7460714"
+                  target="_blank"
+                  className="text-white"
+                >
+                  Read the guide
+                </a>
               </p>
               <BiArrowToRight className="text-white" />
             </div>
