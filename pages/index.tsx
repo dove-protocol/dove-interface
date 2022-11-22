@@ -6,7 +6,7 @@ import { chain, useNetwork, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
-import SwapTabContent from "../components/SwapTabContent";
+import AmmTabContent from "../components/AmmTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
@@ -106,7 +106,7 @@ export default function Home() {
                 <Tabs.Content value="amm">
                   <TabContainer>
                     {isSupportedNetwork ? (
-                      <SwapTabContent />
+                      <AmmTabContent />
                     ) : (
                       <UnsupportedNetworkContent />
                     )}

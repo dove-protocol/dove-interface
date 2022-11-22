@@ -6,7 +6,7 @@ import { chain, useSwitchNetwork } from "wagmi";
 import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { BiCog } from "react-icons/bi";
 import TabContainer from "../components/TabContainer";
-import SwapTabContent from "../components/SwapTabContent";
+import SwapTabContent from "./AmmTabContent";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
