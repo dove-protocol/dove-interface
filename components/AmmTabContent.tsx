@@ -5,6 +5,7 @@ import {
   BiDollar,
   BiDownArrowAlt,
   BiExpandAlt,
+  BiRefresh,
   BiStats,
 } from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -479,7 +480,7 @@ const SwapTabContent = () => {
       <Tabs.Content value="tab3">
         <TabContentContainer>
           <div className="mb-4 flex items-center">
-            <BiStats className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
+            <BiRefresh className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
               <h4 className="text-white">Sync to L1</h4>
               <p className="text-xs text-white/50">Sync L2 balances to L1</p>
