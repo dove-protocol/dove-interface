@@ -20,6 +20,7 @@ interface BurnStoreState {
   fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
+  clearFields: () => void;
 }
 
 export const useBurnStore = create<BurnStoreState>((set, get) => ({
@@ -41,4 +42,12 @@ export const useBurnStore = create<BurnStoreState>((set, get) => ({
     );
   },
   onSwitchTokens: () => {},
+  clearFields: () => {
+    set(
+      produce((draft) => {
+        draft.fields[Field.CURRENCY_A] = "";
+        draft.fields[Field.CURRENCY_B] = "";
+      })
+    );
+  },
 }));

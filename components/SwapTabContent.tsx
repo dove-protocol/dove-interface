@@ -59,15 +59,17 @@ const SwapTabContent = () => {
 
   const { callback: toastCallback } = useTriggerToast();
 
-  const [swapCurrencies, fields, onUserInput, independentField] = useSwapStore(
-    (state) => [
-      state.swapCurrencies,
-      state.fields,
-      state.onUserInput,
-      state.independentField,
-    ],
-    shallow
-  );
+  const [swapCurrencies, fields, onUserInput, independentField, clearFields] =
+    useSwapStore(
+      (state) => [
+        state.swapCurrencies,
+        state.fields,
+        state.onUserInput,
+        state.independentField,
+        state.clearFields,
+      ],
+      shallow
+    );
 
   const dependentField =
     independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
@@ -109,7 +111,7 @@ const SwapTabContent = () => {
   const handleApprove = () => {
     approveCallback?.()
       .then((tx) => {
-        if (!parsedAmounts[Field.CURRENCY_A] || !tx) return;
+        if (!parsedAmounts[Field.CURRENCY_A]) return;
         toastCallback?.({
           title: "Approved",
           description: `${formatCurrencyAmount(
@@ -132,20 +134,19 @@ const SwapTabContent = () => {
   const handleSwap = () => {
     swapCallback?.()
       .then((tx) => {
-        tx &&
-          toastCallback?.({
-            title: "Swap",
-            description: `${formatCurrencyAmount(
-              parsedAmounts[Field.CURRENCY_A],
-              6
-            )} ${
-              currencies[Field.CURRENCY_A]?.symbol
-            } for ${formatCurrencyAmount(parsedAmounts[Field.CURRENCY_B], 6)} ${
-              currencies[Field.CURRENCY_B]?.symbol
-            }`,
-            txid: tx.hash,
-            type: "success",
-          });
+        toastCallback?.({
+          title: "Swap",
+          description: `${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_A],
+            6
+          )} ${currencies[Field.CURRENCY_A]?.symbol} for ${formatCurrencyAmount(
+            parsedAmounts[Field.CURRENCY_B],
+            6
+          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+        clearFields();
       })
       .catch((e) => {
         toastCallback?.({
@@ -162,8 +163,8 @@ const SwapTabContent = () => {
 
   /////////////////////////////
 
-  const [mintFields, onUserInputMint] = useMintStore(
-    (state) => [state.fields, state.onUserInput],
+  const [mintFields, onUserInputMint, clearMintField] = useMintStore(
+    (state) => [state.fields, state.onUserInput, state.clearField],
     shallow
   );
 
@@ -199,6 +200,7 @@ const SwapTabContent = () => {
           txid: tx.hash,
           type: "success",
         });
+        clearMintField(Field.CURRENCY_A);
       })
       .catch((e) => {
         toastCallback?.({
@@ -223,6 +225,7 @@ const SwapTabContent = () => {
           txid: txid.hash,
           type: "success",
         });
+        clearMintField(Field.CURRENCY_B);
       })
       .catch((e) => {
         toastCallback?.({
@@ -243,8 +246,8 @@ const SwapTabContent = () => {
 
   /////////////////////////////
 
-  const [burnFields, onUserInputBurn] = useBurnStore(
-    (state) => [state.fields, state.onUserInput],
+  const [burnFields, onUserInputBurn, clearBurnFields] = useBurnStore(
+    (state) => [state.fields, state.onUserInput, state.clearFields],
     shallow
   );
 
@@ -353,6 +356,7 @@ const SwapTabContent = () => {
           txid: tx.hash,
           type: "success",
         });
+        clearBurnFields();
       })
       .catch((e) => {
         toastCallback?.({

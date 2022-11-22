@@ -20,6 +20,7 @@ interface MintStoreState {
   fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
+  clearField: (field: Field) => void;
 }
 
 export const useMintStore = create<MintStoreState>((set, get) => ({
@@ -41,4 +42,11 @@ export const useMintStore = create<MintStoreState>((set, get) => ({
     );
   },
   onSwitchTokens: () => {},
+  clearField: (field) => {
+    set(
+      produce((draft) => {
+        draft.fields[field] = "";
+      })
+    );
+  },
 }));

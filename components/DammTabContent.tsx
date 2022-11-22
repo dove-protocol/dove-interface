@@ -48,8 +48,13 @@ const DammTabContent = () => {
   const { callback: toastCallback } = useTriggerToast();
 
   // load up state
-  const [fields, onUserInput, independentField] = useProvideStore(
-    (state) => [state.fields, state.onUserInput, state.independentField],
+  const [fields, onUserInput, independentField, clearFields] = useProvideStore(
+    (state) => [
+      state.fields,
+      state.onUserInput,
+      state.independentField,
+      state.clearFields,
+    ],
     shallow
   );
 
@@ -92,9 +97,7 @@ const DammTabContent = () => {
   const handleProvideLiquidity = () => {
     callback?.()
       .then((tx) => {
-        tx &&
-          parsedAmounts[Field.CURRENCY_A] &&
-          parsedAmounts[Field.CURRENCY_B];
+        parsedAmounts[Field.CURRENCY_A] && parsedAmounts[Field.CURRENCY_B];
         toastCallback?.({
           title: "Liquidity Added",
           description: `${formatTransactionAmount(
@@ -107,6 +110,7 @@ const DammTabContent = () => {
           txid: tx.hash,
           type: "success",
         });
+        clearFields();
       })
       .catch((e) => {
         toastCallback?.({
@@ -120,8 +124,7 @@ const DammTabContent = () => {
   const handleApproveA = () => {
     approveCallbackA?.()
       .then((tx) => {
-        tx &&
-          parsedAmounts[Field.CURRENCY_A] &&
+        parsedAmounts[Field.CURRENCY_A] &&
           toastCallback?.({
             title: "Token Approved",
             description: `${formatTransactionAmount(
@@ -143,8 +146,7 @@ const DammTabContent = () => {
   const handleApproveB = () => {
     approveCallbackB?.()
       .then((tx) => {
-        tx &&
-          parsedAmounts[Field.CURRENCY_B] &&
+        parsedAmounts[Field.CURRENCY_B] &&
           toastCallback?.({
             title: "Token Approved",
             description: `${formatTransactionAmount(
@@ -173,10 +175,11 @@ const DammTabContent = () => {
 
   //////////////////////////////////////////////////////////
 
-  const [withdrawFields, onUserInputWithdraw] = useWithdrawStore(
-    (state) => [state.fields, state.onUserInput],
-    shallow
-  );
+  const [withdrawFields, onUserInputWithdraw, clearWithdrawFields] =
+    useWithdrawStore(
+      (state) => [state.fields, state.onUserInput, state.clearFields],
+      shallow
+    );
 
   const {
     parsedAmounts: withdrawAmounts,
@@ -195,8 +198,7 @@ const DammTabContent = () => {
   const handleWithdraw = () => {
     withdrawCallback?.()
       .then((tx) => {
-        tx &&
-          withdrawAmounts[Field.CURRENCY_A] &&
+        withdrawAmounts[Field.CURRENCY_A] &&
           toastCallback?.({
             title: "Liquidity Removed",
             description: `${formatTransactionAmount(
@@ -205,6 +207,7 @@ const DammTabContent = () => {
             txid: tx.hash,
             type: "success",
           });
+        clearWithdrawFields();
       })
       .catch((e) => {
         toastCallback?.({
@@ -231,8 +234,8 @@ const DammTabContent = () => {
     currencyBalances: mintBalance,
   } = useDerivedMintInfo();
 
-  const [mintFields, onUserInputMint] = useMintStore(
-    (state) => [state.fields, state.onUserInput],
+  const [mintFields, onUserInputMint, clearMintField] = useMintStore(
+    (state) => [state.fields, state.onUserInput, state.clearField],
     shallow
   );
 
@@ -251,15 +254,15 @@ const DammTabContent = () => {
   const handleMintA = () => {
     mintCallbackA?.()
       .then((tx) => {
-        tx &&
-          toastCallback?.({
-            title: "Minted",
-            description: `${formatTransactionAmount(
-              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
-            )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-            txid: tx.hash,
-            type: "success",
-          });
+        toastCallback?.({
+          title: "Minted",
+          description: `${formatTransactionAmount(
+            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
+          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
+          txid: tx.hash,
+          type: "success",
+        });
+        clearMintField(Field.CURRENCY_A);
       })
       .catch((e) => {
         toastCallback?.({
@@ -282,6 +285,7 @@ const DammTabContent = () => {
             txid: tx.hash,
             type: "success",
           });
+        clearMintField(Field.CURRENCY_B);
       })
       .catch((e) => {
         toastCallback?.({

@@ -19,6 +19,7 @@ interface WithdrawStoreState {
   fields: { [field in Field]: string };
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
+  clearFields: () => void;
 }
 
 export const useWithdrawStore = create<WithdrawStoreState>((set, get) => ({
@@ -39,4 +40,11 @@ export const useWithdrawStore = create<WithdrawStoreState>((set, get) => ({
     );
   },
   onSwitchTokens: () => {},
+  clearFields: () => {
+    set(
+      produce((draft) => {
+        draft.fields[Field.CURRENCY_A] = "";
+      })
+    );
+  },
 }));

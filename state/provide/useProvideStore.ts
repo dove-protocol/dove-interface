@@ -22,6 +22,7 @@ interface ProvideStoreState {
   onUserInput: (field: Field, value: string) => void;
   onSwitchTokens: () => void;
   independentField: Field;
+  clearFields: () => void;
 }
 
 export const useProvideStore = create<ProvideStoreState>(
@@ -47,6 +48,14 @@ export const useProvideStore = create<ProvideStoreState>(
       },
       onSwitchTokens: () => {},
       independentField: Field.CURRENCY_A,
+      clearFields: () => {
+        set(
+          produce((draft) => {
+            draft.fields[Field.CURRENCY_A] = "";
+            draft.fields[Field.CURRENCY_B] = "";
+          })
+        );
+      },
     }),
     {
       name: "ProvideStore",
