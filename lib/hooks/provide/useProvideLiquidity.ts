@@ -12,6 +12,8 @@ export default function useProvideLiquidity(
   approvalState1: ApprovalState | undefined,
   approvalState2: ApprovalState | undefined
 ): { callback: null | (() => Promise<SendTransactionResult>) } {
+  console.log(amount1?.numerator.toString(), amount2?.numerator.toString());
+
   const { config } = usePrepareContractWrite({
     address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
     abi: dAMMContractInterface,

@@ -39,9 +39,14 @@ export default function useDammData(
   const lzChainId = useMemo(() => {
     if (!chain) return;
 
+    if (chain.id === ChainId.ETHEREUM_GOERLI) {
+      return ChainId.ETHEREUM_GOERLI;
+    }
+
     if (chain.id === ChainId.ARBITRUM_GOERLI) {
       return LZ_CHAIN[ChainId.ARBITRUM_GOERLI];
     }
+
     if (chain.id === ChainId.POLYGON_MUMBAI) {
       return LZ_CHAIN[ChainId.POLYGON_MUMBAI];
     } else {
@@ -77,6 +82,8 @@ export default function useDammData(
     watch: true,
     enabled: !!lzChainId,
   });
+
+  console.log(data?.[0].toString(), data?.[1].toString());
 
   if (
     !data?.[0] ||
