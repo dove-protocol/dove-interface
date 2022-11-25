@@ -38,6 +38,7 @@ import useBurn from "../lib/hooks/burn/useBurn";
 import useDammData from "../lib/hooks/data/useDammData";
 import useAmmData from "../lib/hooks/data/useAmmData";
 import shallow from "zustand/shallow";
+import Image from "next/image";
 
 const SwapTabContent = () => {
   const { chain } = useNetwork();
@@ -501,7 +502,9 @@ const SwapTabContent = () => {
           </p>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
+              <div className="relative mr-4 h-4 w-4">
+                <Image src="/usdc.png" alt="" fill className="object-contain" />
+              </div>
               <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_A]?.symbol}
               </p>
@@ -512,7 +515,9 @@ const SwapTabContent = () => {
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm border border-white/10 p-1 text-2xl text-white" />
+              <div className="relative mr-4 h-4 w-4">
+                <Image src="/usdt.png" alt="" fill className="object-contain" />
+              </div>
               <p className="text-xs uppercase tracking-widest text-white">
                 {currencies[Field.CURRENCY_B]?.symbol}
               </p>
@@ -591,7 +596,9 @@ const SwapTabContent = () => {
           </div>
           <div className="relative mb-2 flex w-full items-center justify-between rounded-sm  border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm border border-white/5 p-1 text-2xl text-white" />
+              <div className="relative mr-4 h-4 w-4">
+                <Image src="/usdc.png" alt="" fill className="object-contain" />
+              </div>
               <p className="text-xs uppercase tracking-widest text-white">
                 USDC
               </p>
@@ -602,7 +609,9 @@ const SwapTabContent = () => {
           </div>
           <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
             <div className="flex items-center">
-              <BiDollar className="mr-4 rounded-sm border border-white/5 p-1 text-2xl text-white" />
+              <div className="relative mr-4 h-4 w-4">
+                <Image src="/usdt.png" alt="" fill className="object-contain" />
+              </div>
               <p className="text-xs uppercase tracking-widest text-white">
                 USDT
               </p>

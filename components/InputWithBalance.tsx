@@ -1,7 +1,10 @@
 import { BigNumber } from "ethers";
+import Image from "next/image";
 import React, { useMemo } from "react";
 import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
+import useCurrencyIcon from "../lib/hooks/useTokenIcon";
+import useTokenIcon from "../lib/hooks/useTokenIcon";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import { ChainId, Currency, CurrencyAmount } from "../sdk";
 
@@ -25,6 +28,7 @@ const InputWithBalance = ({
   expectedChainId: ChainId | undefined;
 }) => {
   const { chain } = useNetwork();
+  const icon = useCurrencyIcon(currency);
 
   if (!chain || chain.id !== expectedChainId) {
     disabled = true;
@@ -50,7 +54,11 @@ const InputWithBalance = ({
               disabled ? "text-white/50" : "bg-black/10 text-white"
             }`}
           >
-            <BiDollar className="mr-2 rounded-sm bg-white/10 p-px" />
+            <div className="relative mr-2 h-4 w-4 rounded-full">
+              {icon && (
+                <Image src={icon} alt="" fill className="object-contain" />
+              )}
+            </div>
             {currency?.symbol}
           </h4>
         )}
