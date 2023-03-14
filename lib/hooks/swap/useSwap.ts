@@ -1,54 +1,98 @@
-import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
-import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
-import { useMemo, useCallback } from "react";
-import { SendTransactionResult } from "@wagmi/core";
+import { BigNumber, ethers } from "ethers";
+import { useMemo } from "react";
+import { useAccount, useNetwork } from "wagmi";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  L2_ROUTER_ADDRESS,
+  PAIR_ADDRESS,
+} from "../../../sdk";
+import {
+  useL2RouterGetAmountOut,
+  useL2RouterSwapExactTokensForTokensSimple,
+  usePairToken0,
+  usePairToken1,
+  usePrepareL2RouterSwapExactTokensForTokensSimple,
+} from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
-import { AMM as AMMContractInterface } from "../../../abis/AMM";
-import { BigNumber } from "ethers";
 
 export default function useSwap(
   amountIn: CurrencyAmount<Currency> | undefined,
   approvalState: ApprovalState | undefined
 ): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  swap: () => void;
 } {
   const { chain } = useNetwork();
+  const { address } = useAccount();
 
-  const ammAddress = useMemo(() => {
+  const routerAddress = useMemo(() => {
     if (!chain) return;
 
     if (chain.id === ChainId.ARBITRUM_GOERLI) {
-      return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
+      return L2_ROUTER_ADDRESS[ChainId.ARBITRUM_GOERLI];
     }
     if (chain.id === ChainId.POLYGON_MUMBAI) {
-      return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
+      return L2_ROUTER_ADDRESS[ChainId.POLYGON_MUMBAI];
     }
   }, [chain]);
 
-  const AMMContract = {
-    address: ammAddress,
-    abi: AMMContractInterface,
-  };
-
   // temporary routing
-  const isToken0 = amountIn?.currency.symbol === "USDC" ? true : false;
+  const pairAddress = useMemo(() => {
+    if (!chain) return;
 
-  const { config } = usePrepareContractWrite({
-    ...AMMContract,
-    functionName: "swap",
-    args: isToken0
-      ? [BigNumber.from(amountIn?.numerator.toString() || 0), BigNumber.from(0)]
-      : [
-          BigNumber.from(0),
-          BigNumber.from(amountIn?.numerator.toString() || 0),
-        ],
+    if (chain.id === ChainId.ARBITRUM_GOERLI) {
+      return PAIR_ADDRESS[ChainId.ARBITRUM_GOERLI];
+    }
+
+    if (chain.id === ChainId.POLYGON_MUMBAI) {
+      return PAIR_ADDRESS[ChainId.POLYGON_MUMBAI];
+    }
+  }, [chain]);
+
+  const { data: token0Data } = usePairToken0({
+    address: pairAddress as `0x${string}`,
+    enabled: !!pairAddress,
+  });
+
+  const { data: token1Data } = usePairToken1({
+    address: pairAddress as `0x${string}`,
+    enabled: !!pairAddress,
+  });
+
+  const isToken0 =
+    amountIn?.currency.isToken &&
+    token0Data?.toLowerCase() === amountIn?.currency.address;
+
+  const { data: amountOutData } = useL2RouterGetAmountOut({
+    address: routerAddress as `0x${string}`,
+    args: [
+      BigNumber.from(amountIn?.numerator.toString() ?? 0),
+      amountIn?.currency.isToken
+        ? (amountIn?.currency.address as `0x${string}`)
+        : "0x",
+      isToken0 ? token1Data ?? "0x" : token0Data ?? "0x",
+    ],
+  });
+
+  const { config } = usePrepareL2RouterSwapExactTokensForTokensSimple({
+    address: routerAddress as `0x${string}`,
+    args: [
+      BigNumber.from(amountIn?.numerator.toString() ?? 0),
+      BigNumber.from(amountOutData?.toString() ?? 0),
+      amountIn?.currency.isToken
+        ? (amountIn?.currency.address as `0x${string}`)
+        : "0x",
+      isToken0 ? token1Data ?? "0x" : token0Data ?? "0x",
+      address ?? "0x",
+      ethers.constants.MaxUint256, // TODO: use deadline
+    ],
     enabled: !!amountIn && approvalState === ApprovalState.APPROVED,
   });
 
-  const { writeAsync } = useContractWrite(config);
+  const { write } = useL2RouterSwapExactTokensForTokensSimple(config);
 
-  if (!writeAsync || !amountIn) return { callback: null };
   return {
-    callback: async () => await writeAsync(),
+    swap: () => write?.(),
   };
 }

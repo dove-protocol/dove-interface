@@ -1,10 +1,6 @@
-import { BigNumber } from "ethers";
 import Image from "next/image";
-import React, { useMemo } from "react";
-import { BiDollar } from "react-icons/bi";
 import { useNetwork } from "wagmi";
 import useCurrencyIcon from "../lib/hooks/useTokenIcon";
-import useTokenIcon from "../lib/hooks/useTokenIcon";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import { ChainId, Currency, CurrencyAmount } from "../sdk";
 

@@ -1,13 +1,13 @@
 import {
-  DAMM_ADDRESS,
+  DOVE_ADDRESS,
   USDC_ADDRESS,
   USDT_ADDRESS,
   vUSDC_ADDRESS,
   vUSDT_ADDRESS,
 } from "./addresses";
 
-import { ChainId } from "../enums";
 import { Token } from "../entities/token";
+import { ChainId } from "../enums";
 import { TokenMap } from "../types/tokenMap";
 
 export const USDC: TokenMap = {
@@ -61,7 +61,7 @@ export const USDT: TokenMap = {
 export const DAMM_LP: TokenMap = {
   [ChainId.ETHEREUM_GOERLI]: new Token(
     ChainId.ETHEREUM_GOERLI,
-    DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
+    DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI],
     18,
     "DAMM-LP",
     "DAMM LP"

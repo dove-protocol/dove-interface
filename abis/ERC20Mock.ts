@@ -1,4 +1,25 @@
-export const ERC20 = [
+export const erc20MockAbi = [
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "name_",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "symbol_",
+        type: "string",
+      },
+      {
+        internalType: "uint8",
+        name: "decimals_",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   {
     anonymous: false,
     inputs: [
@@ -151,7 +172,7 @@ export const ERC20 = [
       },
       {
         internalType: "uint256",
-        name: "quantity",
+        name: "amount",
         type: "uint256",
       },
     ],

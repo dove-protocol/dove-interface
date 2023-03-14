@@ -1,5 +1,3 @@
-import React from "react";
-import { BiError } from "react-icons/bi";
 import { GiPeaceDove } from "react-icons/gi";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { ChainId } from "../sdk";

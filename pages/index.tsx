@@ -1,19 +1,17 @@
-import Main from "../components/layouts/Main";
-import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useEffect, useRef } from "react";
-import { chain, useNetwork, useSwitchNetwork } from "wagmi";
-import { useIsMounted } from "../lib/hooks/useIsMounted";
+import { useEffect, useRef, useState } from "react";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
-import TabContainer from "../components/TabContainer";
-import AmmTabContent from "../components/AmmTabContent";
-import DammTabContent from "../components/DammTabContent";
-import SettingsTabContent from "../components/SettingsTabContent";
 import { GiPeaceDove } from "react-icons/gi";
-import { useUserStore } from "../state/user/useUserStore";
+import { chain, useNetwork, useSwitchNetwork } from "wagmi";
+import DammTabContent from "../components/DammTabContent";
+import TabContainer from "../components/TabContainer";
+import Article from "../components/layouts/Article";
+import Main from "../components/layouts/Main";
+import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { ChainId } from "../sdk";
+import { useUserStore } from "../state/user/useUserStore";
+import AmmTabContent from "../components/AmmTabContent";
 import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
-import HistoryTabContent from "../components/HistoryTabContent";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -112,7 +110,7 @@ export default function Home() {
                     )}
                   </TabContainer>
                 </Tabs.Content>
-                <Tabs.Content value="history">
+                {/* <Tabs.Content value="history">
                   <TabContainer>
                     <HistoryTabContent />
                   </TabContainer>
@@ -121,7 +119,7 @@ export default function Home() {
                   <TabContainer>
                     <SettingsTabContent />
                   </TabContainer>
-                </Tabs.Content>
+                </Tabs.Content> */}
               </Tabs.Root>
             </div>
           </div>

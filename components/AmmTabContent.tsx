@@ -1,44 +1,36 @@
-import React, { useMemo } from "react";
-import InteractButton, { Button } from "./InteractButton";
-import {
-  BiCreditCardFront,
-  BiDollar,
-  BiDownArrowAlt,
-  BiExpandAlt,
-  BiRefresh,
-  BiStats,
-} from "react-icons/bi";
 import * as Tabs from "@radix-ui/react-tabs";
-import InputWithBalance from "./InputWithBalance";
-import { ApprovalState } from "../lib/hooks/useApproval";
-import useTriggerToast from "../lib/hooks/useTriggerToast";
-import { ChainId } from "../sdk";
-import { DAMM_LP } from "../sdk/constants";
-import TabSlider from "./TabSlider";
-import { Field, useSwapStore } from "../state/swap/useSwapStore";
-import { useDerivedSwapInfo } from "../state/swap/useDerivedSwapInfo";
-import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
-import { useMintStore } from "../state/mint/useMintStore";
-import useSyncL1 from "../lib/hooks/sync/useSyncL1";
-import { useBurnStore } from "../state/burn/useBurnStore";
-import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
-import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
-import useTokenApproval from "../lib/hooks/useTokenApproval";
-import { useChainDefaults } from "../lib/hooks/useDefaults";
+import Image from "next/image";
+import { useMemo } from "react";
+import { BiExpandAlt, BiRefresh, BiStats } from "react-icons/bi";
+import { useNetwork } from "wagmi";
+import shallow from "zustand/shallow";
 import { ammTabsData } from "../constants/tabs";
+import useBurn from "../lib/hooks/burn/useBurn";
+import useAmmData from "../lib/hooks/data/useAmmData";
+import useDammData from "../lib/hooks/data/useDammData";
+import useMint from "../lib/hooks/mint/useMint";
+import useSwap from "../lib/hooks/swap/useSwap";
+import useSyncL1 from "../lib/hooks/sync/useSyncL1";
+import { ApprovalState } from "../lib/hooks/useApproval";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import {
   currencyAmountToPreciseFloat,
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
-import { useNetwork } from "wagmi";
+import { ChainId } from "../sdk";
+import { DAMM_LP } from "../sdk/constants";
+import { useBurnStore } from "../state/burn/useBurnStore";
+import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
+import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
+import { useMintStore } from "../state/mint/useMintStore";
+import { useDerivedSwapInfo } from "../state/swap/useDerivedSwapInfo";
+import { Field, useSwapStore } from "../state/swap/useSwapStore";
+import InputWithBalance from "./InputWithBalance";
+import InteractButton, { Button } from "./InteractButton";
 import TabContentContainer from "./TabContentContainer";
-import useSwap from "../lib/hooks/swap/useSwap";
-import useMint from "../lib/hooks/mint/useMint";
-import useBurn from "../lib/hooks/burn/useBurn";
-import useDammData from "../lib/hooks/data/useDammData";
-import useAmmData from "../lib/hooks/data/useAmmData";
-import shallow from "zustand/shallow";
-import Image from "next/image";
+import TabSlider from "./TabSlider";
 
 const SwapTabContent = () => {
   const { chain } = useNetwork();
@@ -58,8 +50,6 @@ const SwapTabContent = () => {
   }, [chain]);
 
   useChainDefaults();
-
-  const { callback: toastCallback } = useTriggerToast();
 
   const [swapCurrencies, fields, onUserInput, independentField, clearFields] =
     useSwapStore(
@@ -85,14 +75,11 @@ const SwapTabContent = () => {
     ),
   };
 
-  const { callback: approveCallback, state: approveState } = useTokenApproval(
+  const { approve, state: approveState } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );
 
-  const { callback: swapCallback } = useSwap(
-    parsedAmounts[Field.CURRENCY_A],
-    approveState
-  );
+  const { swap } = useSwap(parsedAmounts[Field.CURRENCY_A], approveState);
 
   const handleTypeInput = (value: string) => {
     onUserInput(Field.CURRENCY_A, value);
@@ -111,52 +98,11 @@ const SwapTabContent = () => {
   };
 
   const handleApprove = () => {
-    approveCallback?.()
-      .then((tx) => {
-        if (!parsedAmounts[Field.CURRENCY_A]) return;
-        toastCallback?.({
-          title: "Approved",
-          description: `${formatCurrencyAmount(
-            parsedAmounts[Field.CURRENCY_A],
-            6
-          )} ${currencies[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    approve?.();
   };
 
   const handleSwap = () => {
-    swapCallback?.()
-      .then((tx) => {
-        toastCallback?.({
-          title: "Swap",
-          description: `${formatCurrencyAmount(
-            parsedAmounts[Field.CURRENCY_A],
-            6
-          )} ${currencies[Field.CURRENCY_A]?.symbol} for ${formatCurrencyAmount(
-            parsedAmounts[Field.CURRENCY_B],
-            6
-          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-        clearFields();
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    swap?.();
   };
 
   const handleSwapCurrency = () => {
@@ -176,9 +122,9 @@ const SwapTabContent = () => {
     currencyBalances: mintBalance,
   } = useDerivedMintInfo();
 
-  const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
+  const { mint: mintA } = useMint(mintAmounts[Field.CURRENCY_A]);
 
-  const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
+  const { mint: mintB } = useMint(mintAmounts[Field.CURRENCY_B]);
 
   const handleTypeMintA = (value: string) => {
     onUserInputMint(Field.CURRENCY_A, value);
@@ -189,61 +135,19 @@ const SwapTabContent = () => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.()
-      .then((tx) => {
-        if (!mintAmounts[Field.CURRENCY_A] || !mintCurrency[Field.CURRENCY_A])
-          return;
-        toastCallback?.({
-          title: "Minted",
-          description: `${formatCurrencyAmount(
-            mintAmounts[Field.CURRENCY_A],
-            6
-          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-        clearMintField(Field.CURRENCY_A);
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    mintA?.();
   };
 
   const handleMintB = () => {
-    mintCallbackB?.()
-      .then((txid) => {
-        if (!mintAmounts[Field.CURRENCY_B] || !mintCurrency[Field.CURRENCY_B])
-          return;
-        toastCallback?.({
-          title: "Minted",
-          description: `${formatCurrencyAmount(
-            mintAmounts[Field.CURRENCY_B],
-            6
-          )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
-          txid: txid.hash,
-          type: "success",
-        });
-        clearMintField(Field.CURRENCY_B);
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    mintB?.();
   };
 
   /////////////////////////////
 
-  const { callback: syncCallback } = useSyncL1();
+  const { sync } = useSyncL1();
 
   const handleSync = () => {
-    syncCallback?.();
+    sync?.();
   };
 
   /////////////////////////////
@@ -259,13 +163,13 @@ const SwapTabContent = () => {
     currencyBalances: burnBalances,
   } = useDerivedBurnInfo();
 
-  const { callback: approveCallbackVoucherA, state: approveVoucherStateA } =
+  const { approve: approveVoucherA, state: approveVoucherStateA } =
     useTokenApproval(burnAmounts[Field.CURRENCY_A]);
 
-  const { callback: approveCallbackVoucherB, state: approveVoucherStateB } =
+  const { approve: approveVoucherB, state: approveVoucherStateB } =
     useTokenApproval(burnAmounts[Field.CURRENCY_B]);
 
-  const { callback: burnCallback } = useBurn(
+  const { burn } = useBurn(
     burnAmounts[Field.CURRENCY_A],
     burnAmounts[Field.CURRENCY_B],
     approveVoucherStateA,
@@ -297,76 +201,15 @@ const SwapTabContent = () => {
   };
 
   const handleApproveVoucherA = () => {
-    approveCallbackVoucherA?.()
-      .then((tx) => {
-        if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
-          return;
-        toastCallback?.({
-          title: "Approved",
-          description: `${formatCurrencyAmount(
-            burnAmounts[Field.CURRENCY_A],
-            6
-          )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    approveVoucherA?.();
   };
 
   const handleApproveVoucherB = () => {
-    approveCallbackVoucherB?.()
-      .then((tx) => {
-        if (!burnAmounts[Field.CURRENCY_B] || !burnCurrencies[Field.CURRENCY_B])
-          return;
-        toastCallback?.({
-          title: "Approved",
-          description: `${formatCurrencyAmount(
-            burnAmounts[Field.CURRENCY_B],
-            6
-          )} ${burnCurrencies[Field.CURRENCY_B]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    approveVoucherB?.();
   };
 
   const handleBurn = () => {
-    burnCallback?.()
-      .then((tx) => {
-        if (!burnAmounts[Field.CURRENCY_A] || !burnCurrencies[Field.CURRENCY_A])
-          return;
-        toastCallback?.({
-          title: "Burned",
-          description: `${formatCurrencyAmount(
-            burnAmounts[Field.CURRENCY_A],
-            6
-          )} ${burnCurrencies[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-        clearBurnFields();
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    burn?.();
   };
 
   /////////////////////////////

@@ -1,55 +1,21 @@
-import "../styles/globals.css";
-import "../styles/tailwind.css";
-import "@rainbow-me/rainbowkit/styles.css";
-import {
-  Chain,
-  chain,
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from "wagmi";
-import { providers } from "ethers";
-import { AnimatePresence } from "framer-motion";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import {
   getDefaultWallets,
-  darkTheme,
-  RainbowKitProvider,
   midnightTheme,
+  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { AnimatePresence } from "framer-motion";
 import { AppProps } from "next/app";
-
-export const avalancheChain: Chain = {
-  id: 43113,
-  name: "Avalanche",
-  network: "avalanche",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
-  rpcUrls: {
-    default: "https://api.avax-test.network/ext/bc/C/rpc",
-  },
-  blockExplorers: {
-    default: { name: "SnowTrace", url: "https:/testnet.snowtrace.io" },
-  },
-  testnet: true,
-};
+import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
+import { arbitrumGoerli, polygonMumbai } from "wagmi/chains";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import "../styles/globals.css";
+import "../styles/tailwind.css";
 
 const { chains, provider } = configureChains(
-  [chain.goerli, chain.arbitrumGoerli, chain.polygonMumbai],
-  [
-    alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" }),
-    jsonRpcProvider({
-      rpc: (chain) => {
-        if (chain.id !== avalancheChain.id) return null;
-        return { http: chain.rpcUrls.default };
-      },
-    }),
-  ]
+  [goerli, arbitrumGoerli, polygonMumbai],
+  [alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" })]
 );
 
 const { connectors } = getDefaultWallets({

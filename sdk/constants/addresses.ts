@@ -1,12 +1,24 @@
 import { ChainId } from "../enums/chainId";
 
-export const DAMM_ADDRESS: { [chainId in ChainId]: string } = {
+export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "0x18e02D08CCEb8509730949954e904534768f1536",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.ARBITRUM_GOERLI]: "",
 };
 
-export const AMM_ADDRESS: { [chainId in ChainId]: string } = {
+export const L2_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.ETHEREUM_GOERLI]: "0x18e02D08CCEb8509730949954e904534768f1536",
+  [ChainId.POLYGON_MUMBAI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "",
+};
+
+export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.ETHEREUM_GOERLI]: "0x18e02D08CCEb8509730949954e904534768f1536",
+  [ChainId.POLYGON_MUMBAI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "",
+};
+
+export const PAIR_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
   [ChainId.POLYGON_MUMBAI]: "0xC51eFC8C3E3b8708c6f496FDa57ac33931CDB0c8",
   [ChainId.ARBITRUM_GOERLI]: "0xE7b3CcEb43b247664784836572af31dac522E148",

@@ -1,12 +1,14 @@
-import { AMM_ADDRESS, ChainId, DAMM_ADDRESS, LZ_CHAIN } from "../../../sdk";
-import { useMemo, useCallback } from "react";
-import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
-import { BigNumber, ethers } from "ethers";
-import { SendTransactionResult } from "@wagmi/core";
-import { AMM as AMMContractInterface } from "../../../abis/AMM";
+import { ethers } from "ethers";
+import { useMemo } from "react";
+import { useNetwork } from "wagmi";
+import { ChainId, PAIR_ADDRESS } from "../../../sdk";
+import {
+  usePairSyncToL1,
+  usePreparePairSyncToL1,
+} from "../../../src/generated";
 
 export default function useSyncL1(): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  sync: () => void;
 } {
   const { chain } = useNetwork();
 
@@ -14,38 +16,25 @@ export default function useSyncL1(): {
     if (!chain) return;
 
     if (chain.id === ChainId.ARBITRUM_GOERLI) {
-      return AMM_ADDRESS[ChainId.ARBITRUM_GOERLI];
+      return PAIR_ADDRESS[ChainId.ARBITRUM_GOERLI];
     }
     if (chain.id === ChainId.POLYGON_MUMBAI) {
-      return AMM_ADDRESS[ChainId.POLYGON_MUMBAI];
+      return PAIR_ADDRESS[ChainId.POLYGON_MUMBAI];
     }
   }, [chain]);
 
-  const AMMContract = {
-    address: ammAddress,
-    abi: AMMContractInterface,
-  };
-
-  const { config } = usePrepareContractWrite({
-    ...AMMContract,
-    functionName: "syncToL1",
-    args: [
-      LZ_CHAIN[ChainId.ETHEREUM_GOERLI],
-      BigNumber.from(1),
-      BigNumber.from(1),
-      BigNumber.from(2),
-      BigNumber.from(2),
-    ],
+  const { config } = usePreparePairSyncToL1({
+    address: ammAddress as `0x${string}`,
+    args: [ethers.utils.parseEther("0.1"), ethers.utils.parseEther("0.1")],
     overrides: {
       value: ethers.utils.parseEther("0.2"),
     },
     enabled: !!chain,
   });
 
-  const { writeAsync } = useContractWrite(config);
+  const { write } = usePairSyncToL1(config);
 
-  if (!writeAsync) return { callback: null };
   return {
-    callback: async () => await writeAsync(),
+    sync: () => write?.(),
   };
 }
