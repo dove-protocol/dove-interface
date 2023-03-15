@@ -1,13 +1,13 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import {
+  RainbowKitProvider,
   getDefaultWallets,
   midnightTheme,
-  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { AnimatePresence } from "framer-motion";
 import { AppProps } from "next/app";
-import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
+import { WagmiConfig, configureChains, createClient, goerli } from "wagmi";
 import { arbitrumGoerli, polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import "../styles/globals.css";
@@ -15,11 +15,11 @@ import "../styles/tailwind.css";
 
 const { chains, provider } = configureChains(
   [goerli, arbitrumGoerli, polygonMumbai],
-  [alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" })]
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API ?? "" })]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "Dove Protocol",
   chains,
 });
 
@@ -28,6 +28,7 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
+
 const apolloClient = new ApolloClient({
   uri: process.env.GRAPHQL_URI,
   cache: new InMemoryCache(),

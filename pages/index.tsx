@@ -2,16 +2,16 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useEffect, useRef, useState } from "react";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
 import { GiPeaceDove } from "react-icons/gi";
-import { chain, useNetwork, useSwitchNetwork } from "wagmi";
+import { goerli, useNetwork, useSwitchNetwork } from "wagmi";
+import AmmTabContent from "../components/AmmTabContent";
 import DammTabContent from "../components/DammTabContent";
 import TabContainer from "../components/TabContainer";
+import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
 import Article from "../components/layouts/Article";
 import Main from "../components/layouts/Main";
 import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { ChainId } from "../sdk";
 import { useUserStore } from "../state/user/useUserStore";
-import AmmTabContent from "../components/AmmTabContent";
-import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -31,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
-        switchNetwork?.(chain.goerli.id);
+        switchNetwork?.(goerli.id);
       }
     }
   }, [activeNetworkTab]);
