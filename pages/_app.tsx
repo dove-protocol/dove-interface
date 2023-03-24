@@ -8,14 +8,26 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { AnimatePresence } from "framer-motion";
 import { AppProps } from "next/app";
 import { WagmiConfig, configureChains, createClient, goerli } from "wagmi";
-import { arbitrumGoerli, polygonMumbai } from "wagmi/chains";
+import { arbitrumGoerli, avalancheFuji, polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { ChainId } from "../sdk";
 import "../styles/globals.css";
 import "../styles/tailwind.css";
 
 const { chains, provider } = configureChains(
-  [goerli, arbitrumGoerli, polygonMumbai],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API ?? "" })]
+  [goerli, arbitrumGoerli, polygonMumbai, avalancheFuji],
+  [
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? "" }),
+    jsonRpcProvider({
+      rpc: (chain) => {
+        if (chain.id !== ChainId.AVALANCHE_FUJI) return null;
+        return {
+          http: `https://api.avax-test.network/ext/bc/C/rpc`,
+        };
+      },
+    }),
+  ]
 );
 
 const { connectors } = getDefaultWallets({
