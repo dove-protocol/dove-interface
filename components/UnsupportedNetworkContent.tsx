@@ -23,6 +23,8 @@ const UnsupportedNetworkContent = () => {
         return "/polygon.png";
       case ChainId.ARBITRUM_GOERLI:
         return "/arbitrum.png";
+      case ChainId.AVALANCHE_FUJI:
+        return "/avalanche.png";
       default:
         return "";
     }

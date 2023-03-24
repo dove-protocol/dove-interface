@@ -5,6 +5,8 @@ import { GiPeaceDove } from "react-icons/gi";
 import { goerli, useNetwork, useSwitchNetwork } from "wagmi";
 import AmmTabContent from "../components/AmmTabContent";
 import DammTabContent from "../components/DammTabContent";
+import HistoryTabContent from "../components/HistoryTabContent";
+import SettingsTabContent from "../components/SettingsTabContent";
 import TabContainer from "../components/TabContainer";
 import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
 import Article from "../components/layouts/Article";
@@ -110,7 +112,7 @@ export default function Home() {
                     )}
                   </TabContainer>
                 </Tabs.Content>
-                {/* <Tabs.Content value="history">
+                <Tabs.Content value="history">
                   <TabContainer>
                     <HistoryTabContent />
                   </TabContainer>
@@ -119,7 +121,7 @@ export default function Home() {
                   <TabContainer>
                     <SettingsTabContent />
                   </TabContainer>
-                </Tabs.Content> */}
+                </Tabs.Content>
               </Tabs.Root>
             </div>
           </div>
