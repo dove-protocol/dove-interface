@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNetwork } from "wagmi";
-import { DAMM_LP, USDC, USDT, vUSDC, vUSDT } from "../../sdk";
+import { DVE_LP, USDC, USDT, vUSDC, vUSDT } from "../../sdk";
 import { useBurnStore } from "../../state/burn/useBurnStore";
 import { useMintStore } from "../../state/mint/useMintStore";
 import { Field, useProvideStore } from "../../state/provide/useProvideStore";
@@ -29,7 +29,7 @@ export function useChainDefaults() {
       [Field.CURRENCY_B]: USDT[chain.id],
     });
     setWithdrawCurrencies({
-      [Field.CURRENCY_A]: DAMM_LP[chain.id],
+      [Field.CURRENCY_A]: DVE_LP[chain.id],
     });
     setMintCurrencies({
       [Field.CURRENCY_A]: USDC[chain.id],

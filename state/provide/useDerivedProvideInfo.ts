@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 import useDammData from "../../lib/hooks/data/useDammData";
 import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
 import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
-import { ChainId, Currency, CurrencyAmount, DAMM_LP, Token } from "../../sdk";
+import { ChainId, Currency, CurrencyAmount, DVE_LP, Token } from "../../sdk";
 import { Field, useProvideStore } from "./useProvideStore";
 
 export function useDerivedProvideInfo(): {
@@ -22,7 +22,7 @@ export function useDerivedProvideInfo(): {
   const { data } = useDammData(
     currencies.CURRENCY_A,
     currencies.CURRENCY_B,
-    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+    DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   const dependentField =

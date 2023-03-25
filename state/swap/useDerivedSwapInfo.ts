@@ -1,9 +1,9 @@
-import { ChainId, Currency, CurrencyAmount, DAMM_LP, Token } from "../../sdk";
-import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
-import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
 import { useAccount } from "wagmi";
-import { Field, useSwapStore } from "./useSwapStore";
 import useDammData from "../../lib/hooks/data/useDammData";
+import { useTokenBalances } from "../../lib/hooks/useTokenBalance";
+import tryParseCurrencyAmount from "../../lib/utils/tryParseCurrencyAmount";
+import { ChainId, Currency, CurrencyAmount, DVE_LP, Token } from "../../sdk";
+import { Field, useSwapStore } from "./useSwapStore";
 
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | undefined };
@@ -22,7 +22,7 @@ export function useDerivedSwapInfo(): {
   const { data } = useDammData(
     currencies.CURRENCY_A,
     currencies.CURRENCY_B,
-    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+    DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   const dependentField =

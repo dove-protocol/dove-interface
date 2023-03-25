@@ -58,13 +58,13 @@ export const USDT: TokenMap = {
   ),
 };
 
-export const DAMM_LP: TokenMap = {
+export const DVE_LP: TokenMap = {
   [ChainId.ETHEREUM_GOERLI]: new Token(
     ChainId.ETHEREUM_GOERLI,
     DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI],
     18,
-    "DAMM-LP",
-    "DAMM LP"
+    "DVE-LP",
+    "DOVE LP"
   ),
 };
 

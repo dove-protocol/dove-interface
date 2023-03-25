@@ -22,7 +22,7 @@ import useLiquidityLocked from "../lib/hooks/useLiquidityLocked";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
-import { ChainId, CurrencyAmount, DAMM_LP } from "../sdk";
+import { ChainId, CurrencyAmount, DVE_LP } from "../sdk";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
@@ -177,7 +177,7 @@ const DammTabContent = () => {
   const { data } = useDammData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
-    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+    DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   //////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ const DammTabContent = () => {
                 <Image src="/dove.png" alt="" fill className="object-contain" />
               </div>
               <p className="text-xs uppercase tracking-widest text-white">
-                DAMM-LP
+                DVE-LP
               </p>
             </div>
             <p className="text-sm text-white">

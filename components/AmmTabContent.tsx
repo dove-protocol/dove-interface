@@ -20,7 +20,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import { ChainId } from "../sdk";
-import { DAMM_LP } from "../sdk/constants";
+import { DVE_LP } from "../sdk/constants";
 import { useBurnStore } from "../state/burn/useBurnStore";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
@@ -217,7 +217,7 @@ const SwapTabContent = () => {
   const { data } = useDammData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
-    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+    DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   const { data: ammData } = useAmmData(
