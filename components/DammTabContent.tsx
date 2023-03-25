@@ -184,6 +184,7 @@ const DammTabContent = () => {
 
   const { sync: syncArbi } = useSyncL2(ChainId.ARBITRUM_GOERLI);
   const { sync: syncPoly } = useSyncL2(ChainId.POLYGON_MUMBAI);
+  const { sync: syncAvax } = useSyncL2(ChainId.AVALANCHE_FUJI);
 
   const handleArbiSync = () => {
     syncArbi?.();
@@ -191,6 +192,10 @@ const DammTabContent = () => {
 
   const handlePolygonSync = () => {
     syncPoly?.();
+  };
+
+  const handleAvalancheSync = () => {
+    syncAvax?.();
   };
 
   const { isLocked } = useLiquidityLocked();
@@ -221,19 +226,19 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_B]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="mb-2 flex h-12 w-full items-center justify-center rounded-sm bg-sky-400/5 px-4">
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-sky-400/5 px-4">
             {isLocked ? (
               <>
                 <BiLock className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
-                  Liquidity locked for the next 24 hours
+                  You must wait 24 hours before removing liquidity
                 </div>
               </>
             ) : (
               <>
                 <BiLockOpen className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
-                  Liquidity unlocked
+                  You can remove liquidity at any time
                 </div>
               </>
             )}
@@ -301,14 +306,14 @@ const DammTabContent = () => {
               <>
                 <BiLock className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
-                  Liquidity locked for the next 24 hours
+                  You can only remove liquidity after 24 hours
                 </div>
               </>
             ) : (
               <>
                 <BiLockOpen className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
-                  Liquidity unlocked
+                  You can remove liquidity at any time
                 </div>
               </>
             )}
@@ -522,11 +527,18 @@ const DammTabContent = () => {
               text="Sync to Arbitrum AMM"
             />
           </div>
-          <div className="relative">
+          <div className="relative mb-2">
             <InteractButton
               expectedChainId={goerli.id}
               onConfirm={handlePolygonSync}
               text="Sync to Polygon AMM"
+            />
+          </div>
+          <div className="relative">
+            <InteractButton
+              expectedChainId={goerli.id}
+              onConfirm={handleAvalancheSync}
+              text="Sync to Avalanche AMM"
             />
           </div>
         </TabContentContainer>
