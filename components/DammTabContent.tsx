@@ -1,7 +1,14 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import JSBI from "jsbi";
 import Image from "next/image";
-import { BiDownArrowAlt, BiPlus, BiRefresh, BiStats } from "react-icons/bi";
+import {
+  BiDownArrowAlt,
+  BiLock,
+  BiLockOpen,
+  BiPlus,
+  BiRefresh,
+  BiStats,
+} from "react-icons/bi";
 import { goerli } from "wagmi";
 import shallow from "zustand/shallow";
 import { dammTabsData } from "../constants/tabs";
@@ -11,6 +18,7 @@ import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
 import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
+import useLiquidityLocked from "../lib/hooks/useLiquidityLocked";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
@@ -185,6 +193,8 @@ const DammTabContent = () => {
     syncPoly?.();
   };
 
+  const { isLocked } = useLiquidityLocked();
+
   return (
     <TabSlider tabsData={dammTabsData}>
       <Tabs.Content value="tab1">
@@ -198,7 +208,7 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative  left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
             <div className="group absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita">
               <BiPlus className="relative -rotate-45 text-2xl text-white/50" />
             </div>
@@ -211,12 +221,32 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_B]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
+          <div className="mb-2 flex h-12 w-full items-center justify-center rounded-sm bg-sky-400/5 px-4">
+            {isLocked ? (
+              <>
+                <BiLock className="text-sky-400" />
+                <div className="ml-2 text-sm text-white">
+                  Liquidity locked for the next 24 hours
+                </div>
+              </>
+            ) : (
+              <>
+                <BiLockOpen className="text-sky-400" />
+                <div className="ml-2 text-sm text-white">
+                  Liquidity unlocked
+                </div>
+              </>
+            )}
+          </div>
           <InteractButton
             onConfirm={handleProvideLiquidity}
             expectedChainId={goerli.id}
             text="Add Liquidity"
           >
             {(() => {
+              if (isLocked) {
+                return <Button disabled text="Liquidity locked" />;
+              }
               if (
                 !parsedAmounts[Field.CURRENCY_A] ||
                 !parsedAmounts[Field.CURRENCY_B]
@@ -266,75 +296,129 @@ const DammTabContent = () => {
             value={withdrawFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-sky-400/5 px-4">
+            {isLocked ? (
+              <>
+                <BiLock className="text-sky-400" />
+                <div className="ml-2 text-sm text-white">
+                  Liquidity locked for the next 24 hours
+                </div>
+              </>
+            ) : (
+              <>
+                <BiLockOpen className="text-sky-400" />
+                <div className="ml-2 text-sm text-white">
+                  Liquidity unlocked
+                </div>
+              </>
+            )}
+          </div>
           <InteractButton
             onConfirm={handleWithdraw}
             expectedChainId={goerli.id}
             text="Remove Liquidity"
-          />
-          <div className="mb-4 mt-8 h-px w-full bg-white/5" />
-          <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
-              <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
-            </div>
-          </div>
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
-            <div className="flex items-center">
-              <div className="relative mr-4 h-4 w-4">
-                <Image src="/usdc.png" alt="" fill className="object-contain" />
+          >
+            {(() => {
+              if (isLocked) {
+                return <Button disabled text="Liquidity locked" />;
+              }
+              if (!withdrawAmounts[Field.CURRENCY_A]) {
+                return <Button disabled text="Enter an amount" />;
+              }
+              if (
+                withdrawBalance[Field.CURRENCY_A] &&
+                withdrawAmounts[Field.CURRENCY_A].greaterThan(
+                  withdrawBalance[Field.CURRENCY_A]
+                )
+              ) {
+                return <Button disabled text="Insufficient balance" />;
+              }
+            })()}
+          </InteractButton>
+          {!isLocked && (
+            <>
+              <div className="mb-4 mt-8 h-px w-full bg-white/5" />
+              <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+                <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
+                  <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
+                </div>
               </div>
-              <p className="text-xs uppercase tracking-widest text-white">
-                {currencies[Field.CURRENCY_A]?.symbol}
-              </p>
-            </div>
-            <p className="text-sm text-white">
-              {data?.reserve0 &&
-                data?.totalSupply &&
-                currencies[Field.CURRENCY_A] &&
-                withdrawAmounts[Field.CURRENCY_A] &&
-                formatCurrencyAmount(
-                  CurrencyAmount.fromRawAmount(
-                    currencies[Field.CURRENCY_A],
-                    JSBI.divide(
-                      JSBI.multiply(
-                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                        data.reserve0.numerator
+              <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
+                <div className="flex items-center">
+                  <div className="relative mr-4 h-4 w-4">
+                    <Image
+                      src="/usdc.png"
+                      alt=""
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <p className="text-xs uppercase tracking-widest text-white">
+                    {currencies[Field.CURRENCY_A]?.symbol}
+                  </p>
+                </div>
+                <p className="text-sm text-white">
+                  {data?.reserve0 &&
+                    data?.totalSupply &&
+                    currencies[Field.CURRENCY_A] &&
+                    withdrawAmounts[Field.CURRENCY_A] &&
+                    formatCurrencyAmount(
+                      CurrencyAmount.fromRawAmount(
+                        currencies[Field.CURRENCY_A],
+                        data?.reserve0.equalTo("0") ||
+                          data?.totalSupply.equalTo("0")
+                          ? JSBI.BigInt(0)
+                          : JSBI.divide(
+                              JSBI.multiply(
+                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                                data.reserve0.numerator
+                              ),
+                              data?.totalSupply.numerator
+                            )
                       ),
-                      data?.totalSupply.numerator
-                    )
-                  ),
-                  6
-                )}
-            </p>
-          </div>
-          <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
-            <div className="flex items-center">
-              <div className="relative mr-4 h-4 w-4">
-                <Image src="/usdt.png" alt="" fill className="object-contain" />
+                      6
+                    )}
+                </p>
               </div>
-              <p className="text-xs uppercase tracking-widest text-white">
-                {currencies[Field.CURRENCY_B]?.symbol}
-              </p>
-            </div>
-            <p className="text-sm text-white">
-              {data?.reserve1 &&
-                data?.totalSupply &&
-                currencies[Field.CURRENCY_B] &&
-                withdrawAmounts[Field.CURRENCY_A] &&
-                formatCurrencyAmount(
-                  CurrencyAmount.fromRawAmount(
-                    currencies[Field.CURRENCY_B],
-                    JSBI.divide(
-                      JSBI.multiply(
-                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                        data.reserve1.numerator
+              <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
+                <div className="flex items-center">
+                  <div className="relative mr-4 h-4 w-4">
+                    <Image
+                      src="/usdt.png"
+                      alt=""
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <p className="text-xs uppercase tracking-widest text-white">
+                    {currencies[Field.CURRENCY_B]?.symbol}
+                  </p>
+                </div>
+                <p className="text-sm text-white">
+                  {data?.reserve1 &&
+                    data?.totalSupply &&
+                    currencies[Field.CURRENCY_B] &&
+                    withdrawAmounts[Field.CURRENCY_A] &&
+                    formatCurrencyAmount(
+                      CurrencyAmount.fromRawAmount(
+                        currencies[Field.CURRENCY_B],
+                        data?.reserve1.equalTo("0") ||
+                          data?.totalSupply.equalTo("0")
+                          ? JSBI.BigInt(0)
+                          : JSBI.divide(
+                              JSBI.multiply(
+                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                                data.reserve1.numerator
+                              ),
+                              data?.totalSupply.numerator
+                            )
                       ),
-                      data?.totalSupply.numerator
-                    )
-                  ),
-                  6
-                )}
-            </p>
-          </div>
+                      6
+                    )}
+                </p>
+              </div>
+            </>
+          )}
         </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab3">

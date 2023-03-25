@@ -1,4 +1,5 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
 import { GiPeaceDove } from "react-icons/gi";
@@ -51,8 +52,9 @@ export default function Home() {
     <Main>
       <Article>
         <div className="radial absolute h-screen w-full"></div>
-        <div className="background-gradient absolute h-full w-[100vw] opacity-20">
-          <div className="background-gradient-pattern" />
+        <div className="absolute h-full w-[100vw] opacity-20">
+          {/* <div className="background-gradient-pattern" /> */}
+          <Image src="/DoveArt.png" fill alt="" className="object-cover" />
         </div>
         <div className="relative flex min-h-screen w-full flex-col items-start justify-start pb-36 pt-48">
           <div className="relative mb-4 flex w-full flex-col items-start">
