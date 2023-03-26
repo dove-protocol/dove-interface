@@ -2,9 +2,9 @@ import * as Tabs from "@radix-ui/react-tabs";
 import JSBI from "jsbi";
 import Image from "next/image";
 import {
+  BiCheckCircle,
   BiDownArrowAlt,
   BiLock,
-  BiLockOpen,
   BiPlus,
   BiRefresh,
   BiStats,
@@ -236,7 +236,7 @@ const DammTabContent = () => {
               </>
             ) : (
               <>
-                <BiLockOpen className="text-sky-400" />
+                <BiCheckCircle className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
                   You can remove liquidity at any time
                 </div>
@@ -311,7 +311,7 @@ const DammTabContent = () => {
               </>
             ) : (
               <>
-                <BiLockOpen className="text-sky-400" />
+                <BiCheckCircle className="text-sky-400" />
                 <div className="ml-2 text-sm text-white">
                   You can remove liquidity at any time
                 </div>

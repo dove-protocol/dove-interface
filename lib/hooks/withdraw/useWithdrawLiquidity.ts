@@ -33,13 +33,21 @@ export default function useWithdrawLiquidity(
   });
 
   const { data: quotedData } = useL1RouterQuoteRemoveLiquidity({
-    address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+    address: L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
     args: [
       token0Data ?? "0x",
       token1Data ?? "0x",
       BigNumber.from(amount?.numerator.toString() ?? "0"),
     ],
+    enabled: !!token0Data && !!token1Data && !!amount,
   });
+
+  console.log(
+    token0Data,
+    token1Data,
+    amount?.numerator.toString(),
+    quotedData?.amountA
+  );
 
   const { config } = usePrepareL1RouterRemoveLiquidity({
     address: L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
@@ -52,7 +60,7 @@ export default function useWithdrawLiquidity(
       address ?? "0x",
       ethers.constants.MaxUint256, // TODO: use deadline
     ],
-    enabled: !!amount,
+    enabled: !!amount && !!quotedData?.amountA && !!quotedData?.amountB,
   });
 
   const { write } = useL1RouterRemoveLiquidity(config);
