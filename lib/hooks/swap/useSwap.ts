@@ -61,8 +61,7 @@ export default function useSwap(
   });
 
   const isToken0 =
-    amountIn?.currency.isToken &&
-    token0Data?.toLowerCase() === amountIn?.currency.address;
+    amountIn?.currency.isToken && token0Data === amountIn?.currency.address;
 
   const { data: amountOutData } = useL2RouterGetAmountOut({
     address: routerAddress as `0x${string}`,
@@ -87,7 +86,8 @@ export default function useSwap(
       address ?? "0x",
       ethers.constants.MaxUint256, // TODO: use deadline
     ],
-    enabled: !!amountIn && approvalState === ApprovalState.APPROVED,
+    enabled:
+      !!amountIn && !!amountOutData && approvalState === ApprovalState.APPROVED,
   });
 
   const { write } = useL2RouterSwapExactTokensForTokensSimple(config);

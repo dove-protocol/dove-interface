@@ -23,7 +23,6 @@ export default function useSyncL2(chainToSync: ChainId): {
     enabled: !!domainId,
   });
 
-  console.log(domainId, PAIR_ADDRESS[chainToSync]);
 
   const { write } = useDoveSyncL2(config);
 
