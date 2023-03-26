@@ -5,7 +5,7 @@ import {
   Currency,
   CurrencyAmount,
   L1_ROUTER_ADDRESS,
-  PAIR_ADDRESS,
+  L2_ROUTER_ADDRESS,
 } from "../../sdk";
 import useApproval, { ApprovalState } from "./useApproval";
 
@@ -24,10 +24,10 @@ export default function useTokenApproval(
       return L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI];
     }
     if (chain.id === ChainId.POLYGON_MUMBAI) {
-      return PAIR_ADDRESS[ChainId.POLYGON_MUMBAI];
+      return L2_ROUTER_ADDRESS[ChainId.POLYGON_MUMBAI];
     }
     if (chain.id === ChainId.ARBITRUM_GOERLI) {
-      return PAIR_ADDRESS[ChainId.ARBITRUM_GOERLI];
+      return L2_ROUTER_ADDRESS[ChainId.ARBITRUM_GOERLI];
     }
   }, [chain]);
 
