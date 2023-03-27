@@ -1,7 +1,7 @@
 import { ChainId } from "../enums/chainId";
 
 export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0x399CD1eB15a570BCd63d68FE6E073cB81730d9E4",
+  [ChainId.ETHEREUM_GOERLI]: "0x5Aebb6E8f23782Af574232D5E0eA95Ec1EEa3587",
   [ChainId.ARBITRUM_GOERLI]: "",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.AVALANCHE_FUJI]: "",
@@ -9,13 +9,13 @@ export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const L2_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0x88BDec3893364f43194eAbe01312cd3d49AC0d2B",
-  [ChainId.POLYGON_MUMBAI]: "0x1aC3E28E97864296fE8b0fEA9cBCf77604bf0c4E",
-  [ChainId.AVALANCHE_FUJI]: "0x4CCB891607C911Fd65e56D03bd850F9bB71e043C",
+  [ChainId.ARBITRUM_GOERLI]: "0x0eCd916D0DD87433bf2772D8d6363c7A770a5Ab5",
+  [ChainId.POLYGON_MUMBAI]: "0xa9582De37b16C0d28E89c2F02a66692642F3B487",
+  [ChainId.AVALANCHE_FUJI]: "0x0656AB5c74a804076ce027ae5BB3eF91dc45f665",
 };
 
 export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0x13b156E036f6D91482b7136302A2D1fF0c5FDcF8",
+  [ChainId.ETHEREUM_GOERLI]: "0x4cEe61a7641390b71225cD64FB6cE7CA30E7e151",
   [ChainId.ARBITRUM_GOERLI]: "",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.AVALANCHE_FUJI]: "",
@@ -23,9 +23,9 @@ export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const PAIR_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0x78818F4784B9A1f272F4dcDE1ED09fF182bAF407",
-  [ChainId.POLYGON_MUMBAI]: "0x1aC3E28E97864296fE8b0fEA9cBCf77604bf0c4E",
-  [ChainId.AVALANCHE_FUJI]: "0x51fb7aDdE04fB8d45BF02B254C6DfbFA3aFaE916",
+  [ChainId.ARBITRUM_GOERLI]: "0xD348BcCdbB17d7ff2A3D48952aa4f2886F151256",
+  [ChainId.POLYGON_MUMBAI]: "0xDA3fEC084E9958268F650dA21817860ba2D2988d",
+  [ChainId.AVALANCHE_FUJI]: "0x3c30d2c818ad1fe7B44595A3CF264A97dcE566cE",
 };
 
 export const USDC_ADDRESS: { [chainId in ChainId]: string } = {
@@ -44,14 +44,14 @@ export const USDT_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const vUSDC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "",
-  [ChainId.POLYGON_MUMBAI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "0x1d509f787616d2c4289bf5be0ce6bf72065e4898",
+  [ChainId.POLYGON_MUMBAI]: "0x3c204088c5524e409dbb1e07850e67b30a648e1f",
   [ChainId.AVALANCHE_FUJI]: "",
 };
 
 export const vUSDT_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "",
-  [ChainId.POLYGON_MUMBAI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "0x564929554fad6c1773d71e3f15c3b7bcc9adf9b7",
+  [ChainId.POLYGON_MUMBAI]: "0xef3c0664db587b3adfde428012a589e6ffb1a6d0",
   [ChainId.AVALANCHE_FUJI]: "",
 };

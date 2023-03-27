@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   BiCheckCircle,
   BiDownArrowAlt,
+  BiLoader,
   BiLock,
   BiPlus,
   BiRefresh,
@@ -15,6 +16,7 @@ import { dammTabsData } from "../constants/tabs";
 import useDammData from "../lib/hooks/data/useDammData";
 import useMint from "../lib/hooks/mint/useMint";
 import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
+import useFinalizeSyncL1 from "../lib/hooks/sync/useFinalizeSyncL1";
 import useSyncL2 from "../lib/hooks/sync/useSyncL2";
 import { ApprovalState } from "../lib/hooks/useApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
@@ -23,6 +25,10 @@ import useTokenApproval from "../lib/hooks/useTokenApproval";
 import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
 import { ChainId, CurrencyAmount, DVE_LP } from "../sdk";
+import {
+  SUPPORTED_CHAIN_IMAGES,
+  SUPPORTED_CHAIN_NAMES,
+} from "../sdk/constants/chains";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
 import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
 import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
@@ -185,20 +191,41 @@ const DammTabContent = () => {
   const { sync: syncArbi } = useSyncL2(ChainId.ARBITRUM_GOERLI);
   const { sync: syncPoly } = useSyncL2(ChainId.POLYGON_MUMBAI);
   const { sync: syncAvax } = useSyncL2(ChainId.AVALANCHE_FUJI);
+  const { finalizeSync: finalizeSyncArbi } = useFinalizeSyncL1(
+    ChainId.ARBITRUM_GOERLI
+  );
+  const { finalizeSync: finalizeSyncPoly } = useFinalizeSyncL1(
+    ChainId.POLYGON_MUMBAI
+  );
+  const { finalizeSync: finalizeSyncAvax } = useFinalizeSyncL1(
+    ChainId.AVALANCHE_FUJI
+  );
 
-  const handleArbiSync = () => {
-    syncArbi?.();
+  const handleSync = (chainId: ChainId) => {
+    if (chainId === ChainId.ARBITRUM_GOERLI) {
+      syncArbi?.();
+    } else if (chainId === ChainId.POLYGON_MUMBAI) {
+      syncPoly?.();
+    } else if (chainId === ChainId.AVALANCHE_FUJI) {
+      syncAvax?.();
+    }
   };
 
-  const handlePolygonSync = () => {
-    syncPoly?.();
-  };
-
-  const handleAvalancheSync = () => {
-    syncAvax?.();
+  const handleFinalizeIncomingSync = (chainId: ChainId) => {
+    if (chainId === ChainId.ARBITRUM_GOERLI) {
+      finalizeSyncArbi?.();
+    } else if (chainId === ChainId.POLYGON_MUMBAI) {
+      finalizeSyncPoly?.();
+    } else if (chainId === ChainId.AVALANCHE_FUJI) {
+      finalizeSyncAvax?.();
+    }
   };
 
   const { isLocked } = useLiquidityLocked();
+
+  const supportedChainIds = Object.values(ChainId)
+    .filter((x) => typeof x === "number")
+    .filter((values) => values !== ChainId.ETHEREUM_GOERLI) as number[];
 
   return (
     <TabSlider tabsData={dammTabsData}>
@@ -226,17 +253,17 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_B]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-sky-400/5 px-4">
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-yellow-400/5 px-4">
             {isLocked ? (
               <>
-                <BiLock className="text-sky-400" />
+                <BiLock className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
                   You must wait 24 hours before removing liquidity
                 </div>
               </>
             ) : (
               <>
-                <BiCheckCircle className="text-sky-400" />
+                <BiCheckCircle className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
                   You can remove liquidity at any time
                 </div>
@@ -301,17 +328,17 @@ const DammTabContent = () => {
             value={withdrawFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-sky-400/5 px-4">
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-yellow-400/5 px-4">
             {isLocked ? (
               <>
-                <BiLock className="text-sky-400" />
+                <BiLock className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
                   You can only remove liquidity after 24 hours
                 </div>
               </>
             ) : (
               <>
-                <BiCheckCircle className="text-sky-400" />
+                <BiCheckCircle className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
                   You can remove liquidity at any time
                 </div>
@@ -520,27 +547,44 @@ const DammTabContent = () => {
               </p>
             </div>
           </div>
-          <div className="relative mb-2">
-            <InteractButton
-              expectedChainId={goerli.id}
-              onConfirm={handleArbiSync}
-              text="Sync to Arbitrum AMM"
-            />
-          </div>
-          <div className="relative mb-2">
-            <InteractButton
-              expectedChainId={goerli.id}
-              onConfirm={handlePolygonSync}
-              text="Sync to Polygon AMM"
-            />
-          </div>
-          <div className="relative">
-            <InteractButton
-              expectedChainId={goerli.id}
-              onConfirm={handleAvalancheSync}
-              text="Sync to Avalanche AMM"
-            />
-          </div>
+          {supportedChainIds.map((chainId) => (
+            <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
+              <div className="flex w-full items-center">
+                <div className="relative mr-4 h-4 w-4">
+                  <Image
+                    src={SUPPORTED_CHAIN_IMAGES[chainId as ChainId]}
+                    alt=""
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex">
+                  <div className="flex flex-col">
+                    <p className="mb-2 text-white">
+                      {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
+                    </p>
+
+                    <p className="flex w-24 items-center justify-center rounded-sm bg-yellow-400/5 py-1 text-xs uppercase tracking-widest text-yellow-400">
+                      <BiLoader className="mr-2" />
+                      Pending
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button onClick={() => handleFinalizeIncomingSync(chainId)}>
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-2 text-xs uppercase tracking-widest text-white">
+                    Finalize Sync
+                  </p>
+                </button>
+                <button onClick={() => handleSync(chainId)}>
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-sky-400 py-2 text-xs uppercase tracking-widest text-white">
+                    Sync To L2
+                  </p>
+                </button>
+              </div>
+            </div>
+          ))}
         </TabContentContainer>
       </Tabs.Content>
     </TabSlider>
