@@ -1,53 +1,51 @@
-import React from "react";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useRef, useCallback, useMemo } from "react";
-import { chain } from "wagmi";
-import InteractButton, { Button } from "./InteractButton";
-import InputWithBalance from "./InputWithBalance";
-import { ChainId, Currency, CurrencyAmount, DAMM_LP, MaxUint256 } from "../sdk";
-import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
-import { useChainDefaults } from "../lib/hooks/useDefaults";
-import { Field, useProvideStore } from "../state/provide/useProvideStore";
-import TabSlider from "./TabSlider";
-import {
-  Field as WithdrawField,
-  useWithdrawStore,
-} from "../state/withdraw/useWithdrawStore";
-import { useDerivedWithdrawInfo } from "../state/withdraw/useDerivedWithdrawInfo";
-import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
-import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
-import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
-import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
-import useSyncL2 from "../lib/hooks/sync/useSyncL2";
-import useTokenApproval from "../lib/hooks/useTokenApproval";
-import { ApprovalState } from "../lib/hooks/useApproval";
 import JSBI from "jsbi";
-import { ammTabsData, dammTabsData } from "../constants/tabs";
+import Image from "next/image";
 import {
-  currencyAmountToPreciseFloat,
-  formatTransactionAmount,
-} from "../lib/utils/formatNumbers";
-import useTriggerToast from "../lib/hooks/useTriggerToast";
-import {
-  BiDollar,
+  BiCheckCircle,
   BiDownArrowAlt,
-  BiExpandAlt,
+  BiLoader,
+  BiLock,
   BiPlus,
   BiRefresh,
   BiStats,
 } from "react-icons/bi";
-import TabContentContainer from "./TabContentContainer";
-import useMint from "../lib/hooks/mint/useMint";
-import useDammData from "../lib/hooks/data/useDammData";
-import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
+import { goerli } from "wagmi";
 import shallow from "zustand/shallow";
-import Image from "next/image";
+import { dammTabsData } from "../constants/tabs";
+import useDammData from "../lib/hooks/data/useDammData";
+import useMint from "../lib/hooks/mint/useMint";
+import useProvideLiquidity from "../lib/hooks/provide/useProvideLiquidity";
+import useFinalizeSyncL1 from "../lib/hooks/sync/useFinalizeSyncL1";
+import useSyncL2 from "../lib/hooks/sync/useSyncL2";
+import { ApprovalState } from "../lib/hooks/useApproval";
+import { useChainDefaults } from "../lib/hooks/useDefaults";
+import useLiquidityLocked from "../lib/hooks/useLiquidityLocked";
+import useTokenApproval from "../lib/hooks/useTokenApproval";
+import useWithdrawLiquidity from "../lib/hooks/withdraw/useWithdrawLiquidity";
+import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
+import { ChainId, CurrencyAmount, DVE_LP } from "../sdk";
+import {
+  SUPPORTED_CHAIN_IMAGES,
+  SUPPORTED_CHAIN_NAMES,
+} from "../sdk/constants/chains";
+import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
+import { Field as MintField, useMintStore } from "../state/mint/useMintStore";
+import { useDerivedProvideInfo } from "../state/provide/useDerivedProvideInfo";
+import { Field, useProvideStore } from "../state/provide/useProvideStore";
+import { useDerivedWithdrawInfo } from "../state/withdraw/useDerivedWithdrawInfo";
+import {
+  Field as WithdrawField,
+  useWithdrawStore,
+} from "../state/withdraw/useWithdrawStore";
+import InputWithBalance from "./InputWithBalance";
+import InteractButton, { Button } from "./InteractButton";
+import TabContentContainer from "./TabContentContainer";
+import TabSlider from "./TabSlider";
 
 const DammTabContent = () => {
   // load up default tokens for chain
   useChainDefaults();
-
-  const { callback: toastCallback } = useTriggerToast();
 
   // load up state
   const [fields, onUserInput, independentField, clearFields] = useProvideStore(
@@ -72,16 +70,16 @@ const DammTabContent = () => {
     [dependentField]: parsedAmounts[dependentField]?.toExact() ?? "",
   };
 
-  const { callback: approveCallbackA, state: approveStateA } = useTokenApproval(
+  const { approve: approveA, state: approveStateA } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );
 
-  const { callback: approveCallbackB, state: approveStateB } = useTokenApproval(
+  const { approve: approveB, state: approveStateB } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_B]
   );
 
   // load up liquidity callback
-  const { callback } = useProvideLiquidity(
+  const { provide } = useProvideLiquidity(
     parsedAmounts[Field.CURRENCY_A],
     parsedAmounts[Field.CURRENCY_B],
     approveStateA,
@@ -97,74 +95,15 @@ const DammTabContent = () => {
   };
 
   const handleProvideLiquidity = () => {
-    callback?.()
-      .then((tx) => {
-        parsedAmounts[Field.CURRENCY_A] && parsedAmounts[Field.CURRENCY_B];
-        toastCallback?.({
-          title: "Liquidity Added",
-          description: `${formatTransactionAmount(
-            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-          )} ${
-            currencies[Field.CURRENCY_A]?.symbol
-          } and ${formatTransactionAmount(
-            currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-          )} ${currencies[Field.CURRENCY_B]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-        clearFields();
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    provide?.();
   };
 
   const handleApproveA = () => {
-    approveCallbackA?.()
-      .then((tx) => {
-        parsedAmounts[Field.CURRENCY_A] &&
-          toastCallback?.({
-            title: "Token Approved",
-            description: `${formatTransactionAmount(
-              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_A])
-            )} ${currencies[Field.CURRENCY_A]?.symbol}`,
-            txid: tx.hash,
-            type: "success",
-          });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    approveA?.();
   };
 
   const handleApproveB = () => {
-    approveCallbackB?.()
-      .then((tx) => {
-        parsedAmounts[Field.CURRENCY_B] &&
-          toastCallback?.({
-            title: "Token Approved",
-            description: `${formatTransactionAmount(
-              currencyAmountToPreciseFloat(parsedAmounts[Field.CURRENCY_B])
-            )} ${currencies[Field.CURRENCY_B]?.symbol}`,
-            txid: tx.hash,
-            type: "success",
-          });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    approveB?.();
   };
 
   const handleMax = () => {
@@ -189,35 +128,14 @@ const DammTabContent = () => {
     currencyBalances: withdrawBalance,
   } = useDerivedWithdrawInfo();
 
-  const { callback: withdrawCallback } = useWithdrawLiquidity(
-    withdrawAmounts[Field.CURRENCY_A]
-  );
+  const { withdraw } = useWithdrawLiquidity(withdrawAmounts[Field.CURRENCY_A]);
 
   const handleTypeWithdraw = (value: string) => {
     onUserInputWithdraw(WithdrawField.CURRENCY_A, value);
   };
 
   const handleWithdraw = () => {
-    withdrawCallback?.()
-      .then((tx) => {
-        withdrawAmounts[Field.CURRENCY_A] &&
-          toastCallback?.({
-            title: "Liquidity Removed",
-            description: `${formatTransactionAmount(
-              currencyAmountToPreciseFloat(withdrawAmounts[Field.CURRENCY_A])
-            )} ${withdrawCurrency[Field.CURRENCY_A]?.symbol}`,
-            txid: tx.hash,
-            type: "success",
-          });
-        clearWithdrawFields();
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    withdraw?.();
   };
 
   const handleMaxWithdraw = () => {
@@ -241,9 +159,9 @@ const DammTabContent = () => {
     shallow
   );
 
-  const { callback: mintCallbackA } = useMint(mintAmounts[Field.CURRENCY_A]);
+  const { mint: mintA } = useMint(mintAmounts[Field.CURRENCY_A]);
 
-  const { callback: mintCallbackB } = useMint(mintAmounts[Field.CURRENCY_B]);
+  const { mint: mintB } = useMint(mintAmounts[Field.CURRENCY_B]);
 
   const handleTypeMintA = (value: string) => {
     onUserInputMint(MintField.CURRENCY_A, value);
@@ -254,102 +172,60 @@ const DammTabContent = () => {
   };
 
   const handleMintA = () => {
-    mintCallbackA?.()
-      .then((tx) => {
-        toastCallback?.({
-          title: "Minted",
-          description: `${formatTransactionAmount(
-            currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_A])
-          )} ${mintCurrency[Field.CURRENCY_A]?.symbol}`,
-          txid: tx.hash,
-          type: "success",
-        });
-        clearMintField(Field.CURRENCY_A);
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    mintA?.();
   };
 
   const handleMintB = () => {
-    mintCallbackB?.()
-      .then((tx) => {
-        tx &&
-          toastCallback?.({
-            title: "Minted",
-            description: `${formatTransactionAmount(
-              currencyAmountToPreciseFloat(mintAmounts[Field.CURRENCY_B])
-            )} ${mintCurrency[Field.CURRENCY_B]?.symbol}`,
-            txid: tx.hash,
-            type: "success",
-          });
-        clearMintField(Field.CURRENCY_B);
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+    mintB?.();
   };
 
   // temporarily use currencies from provide (dependent on pool in future?)
   const { data } = useDammData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
-    DAMM_LP[ChainId.ETHEREUM_GOERLI]
+    DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
   //////////////////////////////////////////////////////////
 
-  const { callback: arbiCallback } = useSyncL2(ChainId.ARBITRUM_GOERLI);
-  const { callback: polygonCallback } = useSyncL2(ChainId.POLYGON_MUMBAI);
+  const { sync: syncArbi } = useSyncL2(ChainId.ARBITRUM_GOERLI);
+  const { sync: syncPoly } = useSyncL2(ChainId.POLYGON_MUMBAI);
+  const { sync: syncAvax } = useSyncL2(ChainId.AVALANCHE_FUJI);
+  const { finalizeSync: finalizeSyncArbi } = useFinalizeSyncL1(
+    ChainId.ARBITRUM_GOERLI
+  );
+  const { finalizeSync: finalizeSyncPoly } = useFinalizeSyncL1(
+    ChainId.POLYGON_MUMBAI
+  );
+  const { finalizeSync: finalizeSyncAvax } = useFinalizeSyncL1(
+    ChainId.AVALANCHE_FUJI
+  );
 
-  const handleArbiSync = () => {
-    arbiCallback?.()
-      .then((tx) => {
-        tx &&
-          toastCallback?.({
-            title: "Synced",
-            description: `Synced Arbitrum with Ethereum`,
-            txid: tx.hash,
-            type: "success",
-          });
-      })
-      .catch((e) => {
-        console.log("");
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+  const handleSync = (chainId: ChainId) => {
+    if (chainId === ChainId.ARBITRUM_GOERLI) {
+      syncArbi?.();
+    } else if (chainId === ChainId.POLYGON_MUMBAI) {
+      syncPoly?.();
+    } else if (chainId === ChainId.AVALANCHE_FUJI) {
+      syncAvax?.();
+    }
   };
 
-  const handlePolygonSync = () => {
-    polygonCallback?.()
-      .then((tx) => {
-        tx &&
-          toastCallback?.({
-            title: "Synced",
-            description: `Synced Polygon with Ethereum`,
-            txid: tx.hash,
-            type: "success",
-          });
-      })
-      .catch((e) => {
-        toastCallback?.({
-          title: "Error",
-          description: "",
-          type: "error",
-        });
-      });
+  const handleFinalizeIncomingSync = (chainId: ChainId) => {
+    if (chainId === ChainId.ARBITRUM_GOERLI) {
+      finalizeSyncArbi?.();
+    } else if (chainId === ChainId.POLYGON_MUMBAI) {
+      finalizeSyncPoly?.();
+    } else if (chainId === ChainId.AVALANCHE_FUJI) {
+      finalizeSyncAvax?.();
+    }
   };
+
+  const { isLocked } = useLiquidityLocked();
+
+  const supportedChainIds = Object.values(ChainId)
+    .filter((x) => typeof x === "number")
+    .filter((values) => values !== ChainId.ETHEREUM_GOERLI) as number[];
 
   return (
     <TabSlider tabsData={dammTabsData}>
@@ -364,7 +240,7 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
-          <div className="relative  left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+          <div className="relative left-1/2 z-10 -mt-[44px] -mb-[36px] flex h-20 w-fit -translate-x-1/2 items-center justify-center">
             <div className="group absolute flex h-6 w-6 -rotate-45 items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita">
               <BiPlus className="relative -rotate-45 text-2xl text-white/50" />
             </div>
@@ -377,12 +253,32 @@ const DammTabContent = () => {
             value={formattedAmounts[Field.CURRENCY_B]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-yellow-400/5 px-4">
+            {isLocked ? (
+              <>
+                <BiLock className="text-yellow-400" />
+                <div className="ml-2 text-sm text-white">
+                  You must wait 24 hours before removing liquidity
+                </div>
+              </>
+            ) : (
+              <>
+                <BiCheckCircle className="text-yellow-400" />
+                <div className="ml-2 text-sm text-white">
+                  You can remove liquidity at any time
+                </div>
+              </>
+            )}
+          </div>
           <InteractButton
             onConfirm={handleProvideLiquidity}
-            expectedChainId={chain.goerli.id}
+            expectedChainId={goerli.id}
             text="Add Liquidity"
           >
             {(() => {
+              if (isLocked) {
+                return <Button disabled text="Liquidity locked" />;
+              }
               if (
                 !parsedAmounts[Field.CURRENCY_A] ||
                 !parsedAmounts[Field.CURRENCY_B]
@@ -432,75 +328,129 @@ const DammTabContent = () => {
             value={withdrawFields[Field.CURRENCY_A]}
             expectedChainId={ChainId.ETHEREUM_GOERLI}
           />
+          <div className="mb-2 flex h-12 w-full items-center justify-start rounded-sm bg-yellow-400/5 px-4">
+            {isLocked ? (
+              <>
+                <BiLock className="text-yellow-400" />
+                <div className="ml-2 text-sm text-white">
+                  You can only remove liquidity after 24 hours
+                </div>
+              </>
+            ) : (
+              <>
+                <BiCheckCircle className="text-yellow-400" />
+                <div className="ml-2 text-sm text-white">
+                  You can remove liquidity at any time
+                </div>
+              </>
+            )}
+          </div>
           <InteractButton
             onConfirm={handleWithdraw}
-            expectedChainId={chain.goerli.id}
+            expectedChainId={goerli.id}
             text="Remove Liquidity"
-          />
-          <div className="mb-4 mt-8 h-px w-full bg-white/5" />
-          <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
-            <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
-              <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
-            </div>
-          </div>
-          <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
-            <div className="flex items-center">
-              <div className="relative mr-4 h-4 w-4">
-                <Image src="/usdc.png" alt="" fill className="object-contain" />
+          >
+            {(() => {
+              if (isLocked) {
+                return <Button disabled text="Liquidity locked" />;
+              }
+              if (!withdrawAmounts[Field.CURRENCY_A]) {
+                return <Button disabled text="Enter an amount" />;
+              }
+              if (
+                withdrawBalance[Field.CURRENCY_A] &&
+                withdrawAmounts[Field.CURRENCY_A].greaterThan(
+                  withdrawBalance[Field.CURRENCY_A]
+                )
+              ) {
+                return <Button disabled text="Insufficient balance" />;
+              }
+            })()}
+          </InteractButton>
+          {!isLocked && (
+            <>
+              <div className="mb-4 mt-8 h-px w-full bg-white/5" />
+              <div className="relative left-1/2 -my-14 -mb-6 flex h-20 w-fit -translate-x-1/2 items-center justify-center">
+                <div className="group absolute flex h-6 w-6 -rotate-45 cursor-pointer items-center justify-center border border-white/10 bg-pita outline outline-4 outline-pita transition duration-500 ease-in-out hover:scale-110">
+                  <BiDownArrowAlt className="relative rotate-45 text-2xl text-white/50 transition duration-500 ease-in-out group-hover:text-sky-400" />
+                </div>
               </div>
-              <p className="text-xs uppercase tracking-widest text-white">
-                {currencies[Field.CURRENCY_A]?.symbol}
-              </p>
-            </div>
-            <p className="text-sm text-white">
-              {data?.reserve0 &&
-                data?.totalSupply &&
-                currencies[Field.CURRENCY_A] &&
-                withdrawAmounts[Field.CURRENCY_A] &&
-                formatCurrencyAmount(
-                  CurrencyAmount.fromRawAmount(
-                    currencies[Field.CURRENCY_A],
-                    JSBI.divide(
-                      JSBI.multiply(
-                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                        data.reserve0.numerator
+              <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
+                <div className="flex items-center">
+                  <div className="relative mr-4 h-4 w-4">
+                    <Image
+                      src="/usdc.png"
+                      alt=""
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <p className="text-xs uppercase tracking-widest text-white">
+                    {currencies[Field.CURRENCY_A]?.symbol}
+                  </p>
+                </div>
+                <p className="text-sm text-white">
+                  {data?.reserve0 &&
+                    data?.totalSupply &&
+                    currencies[Field.CURRENCY_A] &&
+                    withdrawAmounts[Field.CURRENCY_A] &&
+                    formatCurrencyAmount(
+                      CurrencyAmount.fromRawAmount(
+                        currencies[Field.CURRENCY_A],
+                        data?.reserve0.equalTo("0") ||
+                          data?.totalSupply.equalTo("0")
+                          ? JSBI.BigInt(0)
+                          : JSBI.divide(
+                              JSBI.multiply(
+                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                                data.reserve0.numerator
+                              ),
+                              data?.totalSupply.numerator
+                            )
                       ),
-                      data?.totalSupply.numerator
-                    )
-                  ),
-                  6
-                )}
-            </p>
-          </div>
-          <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
-            <div className="flex items-center">
-              <div className="relative mr-4 h-4 w-4">
-                <Image src="/usdt.png" alt="" fill className="object-contain" />
+                      6
+                    )}
+                </p>
               </div>
-              <p className="text-xs uppercase tracking-widest text-white">
-                {currencies[Field.CURRENCY_B]?.symbol}
-              </p>
-            </div>
-            <p className="text-sm text-white">
-              {data?.reserve1 &&
-                data?.totalSupply &&
-                currencies[Field.CURRENCY_B] &&
-                withdrawAmounts[Field.CURRENCY_A] &&
-                formatCurrencyAmount(
-                  CurrencyAmount.fromRawAmount(
-                    currencies[Field.CURRENCY_B],
-                    JSBI.divide(
-                      JSBI.multiply(
-                        withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                        data.reserve1.numerator
+              <div className="flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent py-2 px-4">
+                <div className="flex items-center">
+                  <div className="relative mr-4 h-4 w-4">
+                    <Image
+                      src="/usdt.png"
+                      alt=""
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <p className="text-xs uppercase tracking-widest text-white">
+                    {currencies[Field.CURRENCY_B]?.symbol}
+                  </p>
+                </div>
+                <p className="text-sm text-white">
+                  {data?.reserve1 &&
+                    data?.totalSupply &&
+                    currencies[Field.CURRENCY_B] &&
+                    withdrawAmounts[Field.CURRENCY_A] &&
+                    formatCurrencyAmount(
+                      CurrencyAmount.fromRawAmount(
+                        currencies[Field.CURRENCY_B],
+                        data?.reserve1.equalTo("0") ||
+                          data?.totalSupply.equalTo("0")
+                          ? JSBI.BigInt(0)
+                          : JSBI.divide(
+                              JSBI.multiply(
+                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
+                                data.reserve1.numerator
+                              ),
+                              data?.totalSupply.numerator
+                            )
                       ),
-                      data?.totalSupply.numerator
-                    )
-                  ),
-                  6
-                )}
-            </p>
-          </div>
+                      6
+                    )}
+                </p>
+              </div>
+            </>
+          )}
         </TabContentContainer>
       </Tabs.Content>
       <Tabs.Content value="tab3">
@@ -545,7 +495,7 @@ const DammTabContent = () => {
                 <Image src="/dove.png" alt="" fill className="object-contain" />
               </div>
               <p className="text-xs uppercase tracking-widest text-white">
-                DAMM-LP
+                DVE-LP
               </p>
             </div>
             <p className="text-sm text-white">
@@ -567,7 +517,7 @@ const DammTabContent = () => {
           <div className="relative mb-2">
             <InteractButton
               onConfirm={handleMintA}
-              expectedChainId={chain.goerli.id}
+              expectedChainId={goerli.id}
               text="Mint"
             />
           </div>
@@ -581,7 +531,7 @@ const DammTabContent = () => {
           />
           <InteractButton
             onConfirm={handleMintB}
-            expectedChainId={chain.goerli.id}
+            expectedChainId={goerli.id}
             text="Mint"
           />
         </TabContentContainer>
@@ -591,26 +541,50 @@ const DammTabContent = () => {
           <div className="mb-4 flex items-center">
             <BiRefresh className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
-              <h4 className="text-white">Sync to L2</h4>
+              <h4 className="text-white">Syncing</h4>
               <p className="text-xs text-white/50">
-                Update Reserves with L2 AMM
+                Update reserves with L2 AMM
               </p>
             </div>
           </div>
-          <div className="relative mb-2">
-            <InteractButton
-              expectedChainId={chain.goerli.id}
-              onConfirm={handleArbiSync}
-              text="Sync to Arbitrum AMM"
-            />
-          </div>
-          <div className="relative">
-            <InteractButton
-              expectedChainId={chain.goerli.id}
-              onConfirm={handlePolygonSync}
-              text="Sync to Polygon AMM"
-            />
-          </div>
+          {supportedChainIds.map((chainId) => (
+            <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400  bg-gradient-to-r from-sky-400/5 to-transparent p-4">
+              <div className="flex w-full items-center">
+                <div className="relative mr-4 h-4 w-4">
+                  <Image
+                    src={SUPPORTED_CHAIN_IMAGES[chainId as ChainId]}
+                    alt=""
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex">
+                  <div className="flex flex-col">
+                    <p className="mb-2 text-white">
+                      {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
+                    </p>
+
+                    <p className="flex w-24 items-center justify-center rounded-sm bg-yellow-400/5 py-1 text-xs uppercase tracking-widest text-yellow-400">
+                      <BiLoader className="mr-2" />
+                      Pending
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button onClick={() => handleFinalizeIncomingSync(chainId)}>
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-3 text-xs uppercase tracking-widest text-sky-400">
+                    Finalize Sync
+                  </p>
+                </button>
+                <button onClick={() => handleSync(chainId)}>
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-sky-400 bg-sky-400/5 py-3 text-xs uppercase tracking-widest text-white">
+                    Sync To L2
+                  </p>
+                </button>
+              </div>
+            </div>
+          ))}
         </TabContentContainer>
       </Tabs.Content>
     </TabSlider>

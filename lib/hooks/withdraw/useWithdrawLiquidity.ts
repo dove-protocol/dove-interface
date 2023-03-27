@@ -1,28 +1,71 @@
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { ChainId, Currency, CurrencyAmount, DAMM_ADDRESS } from "../../../sdk";
-import { useCallback } from "react";
-import { SendTransactionResult } from "@wagmi/core";
-import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import { useAccount } from "wagmi";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  DOVE_ADDRESS,
+  L1_ROUTER_ADDRESS,
+} from "../../../sdk";
+import {
+  useDoveToken0,
+  useDoveToken1,
+  useL1RouterQuoteRemoveLiquidity,
+  useL1RouterRemoveLiquidity,
+  usePrepareL1RouterRemoveLiquidity,
+} from "../../../src/generated";
+import useBlockTimestamp from "../useBlockTimestamp";
 
 export default function useWithdrawLiquidity(
   amount: CurrencyAmount<Currency> | undefined
 ): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  withdraw: () => void;
 } {
-  const { config } = usePrepareContractWrite({
-    address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
-    abi: dAMMContractInterface,
-    functionName: "withdraw",
-    args: [BigNumber.from(amount?.numerator.toString() || 0)],
-    enabled: !!amount,
+  const blockTimestamp = useBlockTimestamp();
+  const { address } = useAccount();
+
+  const { data: token0Data } = useDoveToken0({
+    address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
   });
 
-  const { writeAsync } = useContractWrite(config);
+  const { data: token1Data } = useDoveToken1({
+    address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+  });
 
-  if (!writeAsync || !amount) return { callback: null };
+  const { data: quotedData } = useL1RouterQuoteRemoveLiquidity({
+    address: L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+    args: [
+      token0Data ?? "0x",
+      token1Data ?? "0x",
+      BigNumber.from(amount?.numerator.toString() ?? "0"),
+    ],
+    enabled: !!token0Data && !!token1Data && !!amount,
+  });
+
+  console.log(
+    token0Data,
+    token1Data,
+    amount?.numerator.toString(),
+    quotedData?.amountA
+  );
+
+  const { config } = usePrepareL1RouterRemoveLiquidity({
+    address: L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+    args: [
+      token0Data ?? "0x",
+      token1Data ?? "0x",
+      BigNumber.from(amount?.numerator.toString() || "0"),
+      quotedData?.amountA ?? BigNumber.from("0"),
+      quotedData?.amountB ?? BigNumber.from("0"),
+      address ?? "0x",
+      ethers.constants.MaxUint256, // TODO: use deadline
+    ],
+    enabled: !!amount && !!quotedData?.amountA && !!quotedData?.amountB,
+  });
+
+  const { write } = useL1RouterRemoveLiquidity(config);
 
   return {
-    callback: async () => await writeAsync(),
+    withdraw: () => write?.(),
   };
 }

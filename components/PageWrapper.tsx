@@ -1,15 +1,15 @@
-import Main from "../components/layouts/Main";
-import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useEffect, useRef } from "react";
-import { chain, useSwitchNetwork } from "wagmi";
-import { useIsMounted } from "../lib/hooks/useIsMounted";
+import { useEffect, useRef } from "react";
 import { BiCog } from "react-icons/bi";
-import TabContainer from "../components/TabContainer";
-import SwapTabContent from "./AmmTabContent";
+import { GiPeaceDove } from "react-icons/gi";
+import { goerli, useSwitchNetwork } from "wagmi";
+import { arbitrumGoerli, polygonMumbai } from "wagmi/dist/chains";
 import DammTabContent from "../components/DammTabContent";
 import SettingsTabContent from "../components/SettingsTabContent";
-import { GiPeaceDove } from "react-icons/gi";
+import TabContainer from "../components/TabContainer";
+import Article from "../components/layouts/Article";
+import Main from "../components/layouts/Main";
+import { useIsMounted } from "../lib/hooks/useIsMounted";
 import { useUserStore } from "../state/user/useUserStore";
 
 const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
@@ -30,13 +30,13 @@ const PageWrapper = ({ children }: { children?: React.ReactNode }) => {
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeTab === "damm") {
-        switchNetwork?.(chain.goerli.id);
+        switchNetwork?.(goerli.id);
       }
       if (activeTab === "polygon") {
-        switchNetwork?.(chain.polygonMumbai.id);
+        switchNetwork?.(polygonMumbai.id);
       }
       if (activeTab === "arbi") {
-        switchNetwork?.(chain.arbitrumGoerli.id);
+        switchNetwork?.(arbitrumGoerli.id);
       }
     }
   }, [activeTab]);

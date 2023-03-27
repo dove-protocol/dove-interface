@@ -1,8 +1,5 @@
-import { BigNumber } from "ethers";
-import { useMemo } from "react";
-import { useAccount, useBalance, useNetwork } from "wagmi";
-import { ChainId, Currency, CurrencyAmount, Token } from "../../sdk";
-import { AMM_ADDRESS } from "../../sdk/constants";
+import { useBalance } from "wagmi";
+import { Currency, CurrencyAmount, Token } from "../../sdk";
 
 export function useTokenBalance(
   token: Token | undefined,

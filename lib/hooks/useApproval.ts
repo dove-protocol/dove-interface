@@ -1,19 +1,11 @@
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { useEffect, useMemo, useCallback } from "react";
-import {
-  erc20ABI,
-  useAccount,
-  useContractRead,
-  useContractReads,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from "wagmi";
+import { BigNumber } from "ethers";
+import { useAccount } from "wagmi";
 import { Currency, CurrencyAmount } from "../../sdk";
-import useTriggerToast from "./useTriggerToast";
-import { MaxUint256 } from "@ethersproject/constants";
-import { SendTransactionResult } from "@wagmi/core";
-import JSBI from "jsbi";
+import {
+  useErc20Allowance,
+  useErc20Approve,
+  usePrepareErc20Approve,
+} from "../../src/generated";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -26,21 +18,15 @@ export default function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined
 ): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  approve: () => void;
   state: ApprovalState;
 } {
-  const tokenContract = {
-    address: amountToApprove?.currency?.isToken
-      ? amountToApprove.currency.address
-      : undefined,
-    abi: erc20ABI,
-  };
-
   const approvalState = useApprovalStateForSpender(spender, amountToApprove);
 
-  const { config: approvalConfig } = usePrepareContractWrite({
-    ...tokenContract,
-    functionName: "approve",
+  const { config: approvalConfig } = usePrepareErc20Approve({
+    address: amountToApprove?.currency?.isToken
+      ? amountToApprove.currency.address as `0x${string}`
+      : undefined,
     args: [
       spender as `0x${string}`,
       BigNumber.from(amountToApprove?.numerator.toString() || "0"),
@@ -51,13 +37,10 @@ export default function useApproval(
       approvalState === ApprovalState.NOT_APPROVED,
   });
 
-  const { writeAsync } = useContractWrite(approvalConfig);
-
-  if (!writeAsync || !amountToApprove)
-    return { callback: null, state: approvalState };
+  const { write } = useErc20Approve(approvalConfig);
 
   return {
-    callback: async () => await writeAsync(),
+    approve: () => write?.(),
     state: approvalState,
   };
 }
@@ -68,18 +51,12 @@ function useApprovalStateForSpender(
 ): ApprovalState {
   const { address } = useAccount();
 
-  const tokenContract = {
+  const { data: allowance } = useErc20Allowance({
     address: amountToApprove?.currency?.isToken
-      ? amountToApprove.currency.address
+      ? (amountToApprove.currency.address as `0x${string}`)
       : undefined,
-    abi: erc20ABI,
-  };
-
-  const { data: allowance } = useContractRead({
-    ...tokenContract,
-    functionName: "allowance",
-    args: [address!, spender as `0x${string}`],
-    watch: true,
+    args: [address as `0x${string}`, spender as `0x${string}`],
+    watch: true, 
   });
 
   if (!amountToApprove) return ApprovalState.UNKNOWN;

@@ -1,25 +1,24 @@
-import { Currency, CurrencyAmount } from "../../../sdk";
-import { useCallback } from "react";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { SendTransactionResult } from "@wagmi/core";
-import { ERC20 as ERC20Interface } from "../../../abis/ERC20";
-import { wrapAddress } from "../../utils/wrapAddress";
 import { BigNumber } from "ethers";
+import { useAccount } from "wagmi";
+import { Currency, CurrencyAmount } from "../../../sdk";
+import {
+  useErc20MockMint,
+  usePrepareErc20MockMint,
+} from "../../../src/generated";
+import { wrapAddress } from "../../utils/wrapAddress";
 
 export default function useMint(
   amountToMint: CurrencyAmount<Currency> | undefined,
   account?: string
 ): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  mint: () => void;
 } {
   const { address } = useAccount();
 
-  const { config } = usePrepareContractWrite({
+  const { config } = usePrepareErc20MockMint({
     address: amountToMint?.currency.isToken
-      ? amountToMint.currency.address
+      ? amountToMint.currency.address as `0x${string}`
       : undefined,
-    abi: ERC20Interface,
-    functionName: "mint",
     args: [
       wrapAddress(account ?? address),
       BigNumber.from(amountToMint?.numerator.toString() || "0"),
@@ -27,11 +26,9 @@ export default function useMint(
     enabled: !!amountToMint && (!!address || !!account),
   });
 
-  const { writeAsync } = useContractWrite(config);
-
-  if (!writeAsync || !amountToMint) return { callback: null };
+  const { write } = useErc20MockMint(config);
 
   return {
-    callback: async () => await writeAsync(),
+    mint: () => write?.(),
   };
 }

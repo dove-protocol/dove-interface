@@ -1,8 +1,6 @@
 import { useContractReads, useNetwork } from "wagmi";
-import { AMM_ADDRESS, ChainId, Currency, CurrencyAmount } from "../../../sdk";
-import { useMemo } from "react";
-import { BigNumber } from "ethers";
-import { AMM as AMMContractInterface } from "../../../abis/AMM";
+import { pairAbi } from "../../../abis/Pair";
+import { ChainId, Currency, CurrencyAmount, PAIR_ADDRESS } from "../../../sdk";
 
 export default function useAmmData(
   currency1: Currency | undefined,
@@ -27,22 +25,22 @@ export default function useAmmData(
   //   }
   // }, [chain]);
 
-  const ammAddress = expectedChainId && AMM_ADDRESS[expectedChainId];
+  const pairAddress = expectedChainId && PAIR_ADDRESS[expectedChainId];
 
-  const AMMContract = {
-    address: ammAddress,
-    abi: AMMContractInterface,
+  const PairContract = {
+    address: pairAddress as `0x${string}`,
+    abi: pairAbi,
     chainId: expectedChainId,
   };
 
   const { data } = useContractReads({
     contracts: [
       {
-        ...AMMContract,
+        ...PairContract,
         functionName: "reserve0",
       },
       {
-        ...AMMContract,
+        ...PairContract,
         functionName: "reserve1",
       },
     ],
@@ -53,14 +51,8 @@ export default function useAmmData(
     return { data: null };
   return {
     data: {
-      reserve0: CurrencyAmount.fromRawAmount(
-        currency1,
-        (data[0] as BigNumber).toString()
-      ),
-      reserve1: CurrencyAmount.fromRawAmount(
-        currency1,
-        (data[1] as BigNumber).toString()
-      ),
+      reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].toString()),
+      reserve1: CurrencyAmount.fromRawAmount(currency1, data[1].toString()),
     },
   };
 }

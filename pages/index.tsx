@@ -1,19 +1,20 @@
-import Main from "../components/layouts/Main";
-import Article from "../components/layouts/Article";
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState, useEffect, useRef } from "react";
-import { chain, useNetwork, useSwitchNetwork } from "wagmi";
-import { useIsMounted } from "../lib/hooks/useIsMounted";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
-import TabContainer from "../components/TabContainer";
+import { GiPeaceDove } from "react-icons/gi";
+import { goerli, useNetwork, useSwitchNetwork } from "wagmi";
 import AmmTabContent from "../components/AmmTabContent";
 import DammTabContent from "../components/DammTabContent";
-import SettingsTabContent from "../components/SettingsTabContent";
-import { GiPeaceDove } from "react-icons/gi";
-import { useUserStore } from "../state/user/useUserStore";
-import { ChainId } from "../sdk";
-import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
 import HistoryTabContent from "../components/HistoryTabContent";
+import SettingsTabContent from "../components/SettingsTabContent";
+import TabContainer from "../components/TabContainer";
+import UnsupportedNetworkContent from "../components/UnsupportedNetworkContent";
+import Article from "../components/layouts/Article";
+import Main from "../components/layouts/Main";
+import { useIsMounted } from "../lib/hooks/useIsMounted";
+import { ChainId } from "../sdk";
+import { useUserStore } from "../state/user/useUserStore";
 
 export default function Home() {
   const isAutoSwitch = useUserStore((state) => state.isAutoSwitch);
@@ -33,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     if (isAutoSwitch) {
       if (activeNetworkTab === "damm") {
-        switchNetwork?.(chain.goerli.id);
+        switchNetwork?.(goerli.id);
       }
     }
   }, [activeNetworkTab]);
@@ -51,8 +52,9 @@ export default function Home() {
     <Main>
       <Article>
         <div className="radial absolute h-screen w-full"></div>
-        <div className="background-gradient absolute h-full w-[100vw] opacity-20">
-          <div className="background-gradient-pattern" />
+        <div className="absolute h-full w-[100vw] opacity-20">
+          {/* <div className="background-gradient-pattern" /> */}
+          <Image src="/DoveArt.png" fill alt="" className="object-cover" />
         </div>
         <div className="relative flex min-h-screen w-full flex-col items-start justify-start pb-36 pt-48">
           <div className="relative mb-4 flex w-full flex-col items-start">

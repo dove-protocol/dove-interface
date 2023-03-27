@@ -1,40 +1,32 @@
-import { AMM_ADDRESS, ChainId, DAMM_ADDRESS, LZ_CHAIN } from "../../../sdk";
-import { useMemo, useCallback } from "react";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
-import { SendTransactionResult } from "@wagmi/core";
-import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
+import { useMemo } from "react";
+import { ChainId, DOVE_ADDRESS, HL_DOMAIN, PAIR_ADDRESS } from "../../../sdk";
+import { useDoveSyncL2, usePrepareDoveSyncL2 } from "../../../src/generated";
 import { wrapAddress } from "../../utils/wrapAddress";
 
 export default function useSyncL2(chainToSync: ChainId): {
-  callback: null | (() => Promise<SendTransactionResult>);
+  sync: () => void;
 } {
-  const dAMMContract = {
-    address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
-    abi: dAMMContractInterface,
-  };
-
-  const lzChainId = useMemo(() => {
+  const domainId = useMemo(() => {
     if (!chainToSync) return;
 
-    return LZ_CHAIN[chainToSync];
+    return HL_DOMAIN[chainToSync];
   }, [chainToSync]);
 
-  const { config } = usePrepareContractWrite({
-    ...dAMMContract,
-    functionName: "syncL2",
-    args: [lzChainId!, wrapAddress(AMM_ADDRESS[chainToSync])],
+  const { config } = usePrepareDoveSyncL2({
+    address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+    args: [domainId ?? 0, wrapAddress(PAIR_ADDRESS[chainToSync])],
     overrides: {
-      value: ethers.utils.parseEther("0.2"),
+      // TODO: estimate gas with SDK or onchain
+      value: ethers.utils.parseEther("0.5"),
     },
-    enabled: !!lzChainId,
+    enabled: !!domainId,
   });
 
-  const { writeAsync } = useContractWrite(config);
 
-  if (!writeAsync) return { callback: null };
+  const { write } = useDoveSyncL2(config);
 
   return {
-    callback: async () => await writeAsync(),
+    sync: () => write?.(),
   };
 }

@@ -1,5 +1,3 @@
-import React from "react";
-import { BiError } from "react-icons/bi";
 import { GiPeaceDove } from "react-icons/gi";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { ChainId } from "../sdk";
@@ -25,6 +23,8 @@ const UnsupportedNetworkContent = () => {
         return "/polygon.png";
       case ChainId.ARBITRUM_GOERLI:
         return "/arbitrum.png";
+      case ChainId.AVALANCHE_FUJI:
+        return "/avalanche.png";
       default:
         return "";
     }

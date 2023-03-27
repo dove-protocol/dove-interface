@@ -1,59 +1,37 @@
-import "../styles/globals.css";
-import "../styles/tailwind.css";
-import "@rainbow-me/rainbowkit/styles.css";
-import {
-  Chain,
-  chain,
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from "wagmi";
-import { providers } from "ethers";
-import { AnimatePresence } from "framer-motion";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import {
-  getDefaultWallets,
-  darkTheme,
   RainbowKitProvider,
+  getDefaultWallets,
   midnightTheme,
 } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { AnimatePresence } from "framer-motion";
 import { AppProps } from "next/app";
-
-export const avalancheChain: Chain = {
-  id: 43113,
-  name: "Avalanche",
-  network: "avalanche",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Avalanche",
-    symbol: "AVAX",
-  },
-  rpcUrls: {
-    default: "https://api.avax-test.network/ext/bc/C/rpc",
-  },
-  blockExplorers: {
-    default: { name: "SnowTrace", url: "https:/testnet.snowtrace.io" },
-  },
-  testnet: true,
-};
+import { WagmiConfig, configureChains, createClient, goerli } from "wagmi";
+import { arbitrumGoerli, avalancheFuji, polygonMumbai } from "wagmi/chains";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { ChainId } from "../sdk";
+import "../styles/globals.css";
+import "../styles/tailwind.css";
 
 const { chains, provider } = configureChains(
-  [chain.goerli, chain.arbitrumGoerli, chain.polygonMumbai],
+  [goerli, arbitrumGoerli, polygonMumbai, avalancheFuji],
   [
-    alchemyProvider({ apiKey: "e7cPXmSM4CN0WoDydp42aBK_SRswrWXU" }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? "" }),
     jsonRpcProvider({
       rpc: (chain) => {
-        if (chain.id !== avalancheChain.id) return null;
-        return { http: chain.rpcUrls.default };
+        if (chain.id !== ChainId.AVALANCHE_FUJI) return null;
+        return {
+          http: `https://api.avax-test.network/ext/bc/C/rpc`,
+        };
       },
     }),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "Dove Protocol",
   chains,
 });
 
@@ -62,6 +40,7 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
+
 const apolloClient = new ApolloClient({
   uri: process.env.GRAPHQL_URI,
   cache: new InMemoryCache(),

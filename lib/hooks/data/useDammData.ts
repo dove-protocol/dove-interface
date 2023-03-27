@@ -1,19 +1,13 @@
-import {
-  useContractReads,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-} from "wagmi";
+import { useMemo } from "react";
+import { useContractReads, useNetwork } from "wagmi";
 import {
   ChainId,
   Currency,
   CurrencyAmount,
-  DAMM_ADDRESS,
+  DOVE_ADDRESS,
   LZ_CHAIN,
 } from "../../../sdk";
-import { useMemo } from "react";
-import { BigNumber } from "ethers";
-import { dAMM as dAMMContractInterface } from "../../../abis/dAMM";
+import { doveABI } from "../../../src/generated";
 
 export default function useDammData(
   currency1: Currency | undefined,
@@ -30,9 +24,9 @@ export default function useDammData(
 } {
   const { chain } = useNetwork();
 
-  const dAMMContract = {
-    address: DAMM_ADDRESS[ChainId.ETHEREUM_GOERLI],
-    abi: dAMMContractInterface,
+  const doveContract = {
+    address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
+    abi: doveABI,
     chainId: ChainId.ETHEREUM_GOERLI,
   };
 
@@ -49,33 +43,27 @@ export default function useDammData(
     }
   }, [chain]);
 
-  const { data, isError, isLoading } = useContractReads({
+  const { data } = useContractReads({
     contracts: [
       {
-        ...dAMMContract,
+        ...doveContract,
         functionName: "reserve0",
       },
       {
-        ...dAMMContract,
+        ...doveContract,
         functionName: "reserve1",
       },
       {
-        ...dAMMContract,
+        ...doveContract,
         functionName: "totalSupply",
       },
       {
-        ...dAMMContract,
-        functionName: "marked0",
-        args: [lzChainId!],
-      },
-      {
-        ...dAMMContract,
-        functionName: "marked1",
-        args: [lzChainId!],
+        ...doveContract,
+        functionName: "marked",
+        args: [lzChainId ?? 0],
       },
     ],
     watch: true,
-    enabled: !!lzChainId,
   });
 
   if (
@@ -83,7 +71,6 @@ export default function useDammData(
     !data?.[1] ||
     !data?.[2] ||
     !data?.[3] ||
-    !data?.[4] ||
     !currency1 ||
     !currency2 ||
     !totalSupplyCurrency
@@ -92,25 +79,19 @@ export default function useDammData(
 
   return {
     data: {
-      reserve0: CurrencyAmount.fromRawAmount(
-        currency1,
-        (data[0] as BigNumber).toString()
-      ),
-      reserve1: CurrencyAmount.fromRawAmount(
-        currency2,
-        (data[1] as BigNumber).toString()
-      ),
+      reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].toString()),
+      reserve1: CurrencyAmount.fromRawAmount(currency2, data[1].toString()),
       totalSupply: CurrencyAmount.fromRawAmount(
         totalSupplyCurrency,
-        (data[2] as BigNumber).toString()
+        data[2].toString()
       ),
       marked0: CurrencyAmount.fromRawAmount(
         currency1,
-        (data[3] as BigNumber).toString()
+        data[3].marked0.toString()
       ),
       marked1: CurrencyAmount.fromRawAmount(
         currency2,
-        (data[4] as BigNumber).toString()
+        data[3].marked1.toString()
       ),
     },
   };
