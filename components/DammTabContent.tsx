@@ -541,9 +541,9 @@ const DammTabContent = () => {
           <div className="mb-4 flex items-center">
             <BiRefresh className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
-              <h4 className="text-white">Sync to L2</h4>
+              <h4 className="text-white">Syncing</h4>
               <p className="text-xs text-white/50">
-                Update Reserves with L2 AMM
+                Update reserves with L2 AMM
               </p>
             </div>
           </div>
@@ -573,12 +573,12 @@ const DammTabContent = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <button onClick={() => handleFinalizeIncomingSync(chainId)}>
-                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-2 text-xs uppercase tracking-widest text-white">
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-3 text-xs font-medium uppercase tracking-widest text-sky-400">
                     Finalize Sync
                   </p>
                 </button>
                 <button onClick={() => handleSync(chainId)}>
-                  <p className="flex w-36 items-center justify-center rounded-sm border border-sky-400 py-2 text-xs uppercase tracking-widest text-white">
+                  <p className="flex w-36 items-center justify-center rounded-sm bg-sky-400 py-3 text-xs font-medium uppercase tracking-widest text-black">
                     Sync To L2
                   </p>
                 </button>
