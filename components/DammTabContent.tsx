@@ -191,15 +191,12 @@ const DammTabContent = () => {
   const { sync: syncArbi } = useSyncL2(ChainId.ARBITRUM_GOERLI);
   const { sync: syncPoly } = useSyncL2(ChainId.POLYGON_MUMBAI);
   const { sync: syncAvax } = useSyncL2(ChainId.AVALANCHE_FUJI);
-  const { finalizeSync: finalizeSyncArbi } = useFinalizeSyncL1(
-    ChainId.ARBITRUM_GOERLI
-  );
-  const { finalizeSync: finalizeSyncPoly } = useFinalizeSyncL1(
-    ChainId.POLYGON_MUMBAI
-  );
-  const { finalizeSync: finalizeSyncAvax } = useFinalizeSyncL1(
-    ChainId.AVALANCHE_FUJI
-  );
+  const { finalizeSync: finalizeSyncArbi, status: statusArbi } =
+    useFinalizeSyncL1(ChainId.ARBITRUM_GOERLI);
+  const { finalizeSync: finalizeSyncPoly, status: statusPoly } =
+    useFinalizeSyncL1(ChainId.POLYGON_MUMBAI);
+  const { finalizeSync: finalizeSyncAvax, status: statusAvax } =
+    useFinalizeSyncL1(ChainId.AVALANCHE_FUJI);
 
   const handleSync = (chainId: ChainId) => {
     if (chainId === ChainId.ARBITRUM_GOERLI) {
@@ -218,6 +215,16 @@ const DammTabContent = () => {
       finalizeSyncPoly?.();
     } else if (chainId === ChainId.AVALANCHE_FUJI) {
       finalizeSyncAvax?.();
+    }
+  };
+
+  const getStatus = (chainId: ChainId) => {
+    if (chainId === ChainId.ARBITRUM_GOERLI) {
+      return statusArbi;
+    } else if (chainId === ChainId.POLYGON_MUMBAI) {
+      return statusPoly;
+    } else if (chainId === ChainId.AVALANCHE_FUJI) {
+      return statusAvax;
     }
   };
 
@@ -563,23 +570,46 @@ const DammTabContent = () => {
                     <p className="mb-2 text-white">
                       {SUPPORTED_CHAIN_NAMES[chainId as ChainId]}
                     </p>
+                    {(() => {
+                      const status = getStatus(chainId);
 
-                    <p className="flex w-24 items-center justify-center rounded-sm bg-yellow-400/5 py-1 text-xs uppercase tracking-widest text-yellow-400">
-                      <BiLoader className="mr-2" />
-                      Pending
-                    </p>
+                      switch (status) {
+                        case "PENDING_FINALIZE":
+                          return (
+                            <p className="flex w-24 items-center justify-center rounded-sm bg-yellow-400/5 py-1 text-xs uppercase tracking-widest text-yellow-400">
+                              <BiLoader className="mr-2" />
+                              Pending
+                            </p>
+                          );
+                        default:
+                          return (
+                            <p className="flex w-24 items-center justify-center rounded-sm bg-green-400/5 py-1 text-xs uppercase tracking-widest text-green-400">
+                              <BiCheckCircle className="mr-2" />
+                              Synced
+                            </p>
+                          );
+                      }
+                    })()}
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <button
-                  className="group flex  w-36 items-center justify-center rounded-sm border border-white/10 py-3"
-                  onClick={() => handleFinalizeIncomingSync(chainId)}
-                >
-                  <p className="text-xs uppercase tracking-widest text-sky-400 transition group-hover:drop-shadow-soju">
-                    Finalize Sync
-                  </p>
-                </button>
+                {(() => {
+                  const status = getStatus(chainId);
+
+                  if (status === "PENDING_FINALIZE") {
+                    return (
+                      <button
+                        className="group flex  w-36 items-center justify-center rounded-sm border border-white/10 py-3"
+                        onClick={() => handleFinalizeIncomingSync(chainId)}
+                      >
+                        <p className="text-xs uppercase tracking-widest text-sky-400 transition group-hover:drop-shadow-soju">
+                          Finalize Sync
+                        </p>
+                      </button>
+                    );
+                  }
+                })()}
                 <button
                   className="group flex  w-36 items-center justify-center rounded-sm border border-sky-400 bg-sky-400/5 py-3"
                   onClick={() => handleSync(chainId)}

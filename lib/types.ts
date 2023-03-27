@@ -10,3 +10,4 @@ export type ToastContent = {
   txid?: string;
   type: "success" | "error";
 };
+

@@ -42,7 +42,7 @@ const wagmiClient = createClient({
 });
 
 const apolloClient = new ApolloClient({
-  uri: process.env.GRAPHQL_URI,
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
