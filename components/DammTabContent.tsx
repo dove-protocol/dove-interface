@@ -9,6 +9,7 @@ import {
   BiPlus,
   BiRefresh,
   BiStats,
+  BiTimeFive,
 } from "react-icons/bi";
 import { goerli } from "wagmi";
 import shallow from "zustand/shallow";
@@ -270,9 +271,9 @@ const DammTabContent = () => {
               </>
             ) : (
               <>
-                <BiCheckCircle className="text-yellow-400" />
+                <BiTimeFive className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
-                  You can remove liquidity at any time
+                  You can remove liquidity until next epoch
                 </div>
               </>
             )}
@@ -345,9 +346,9 @@ const DammTabContent = () => {
               </>
             ) : (
               <>
-                <BiCheckCircle className="text-yellow-400" />
+                <BiTimeFive className="text-yellow-400" />
                 <div className="ml-2 text-sm text-white">
-                  You can remove liquidity at any time
+                  You can remove liquidity until next epoch
                 </div>
               </>
             )}
