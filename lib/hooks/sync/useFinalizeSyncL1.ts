@@ -34,8 +34,6 @@ export default function useFinalizeSyncL1(
     skip: !expectedChainId,
   });
 
-  console.log("data", data);
-
   // TODO: use proper syncID
   const { config } = usePrepareDoveFinalizeSyncFromL2({
     address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,

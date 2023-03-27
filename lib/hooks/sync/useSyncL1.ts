@@ -23,8 +23,6 @@ export default function useSyncL1(): {
     }
   }, [chain]);
 
-  console.log(ammAddress);
-
   const { config } = usePreparePairSyncToL1({
     address: ammAddress as `0x${string}`,
     args: [ethers.utils.parseEther("0.1"), ethers.utils.parseEther("0.2")],

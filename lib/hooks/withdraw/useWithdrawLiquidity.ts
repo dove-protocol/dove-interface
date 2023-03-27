@@ -42,13 +42,6 @@ export default function useWithdrawLiquidity(
     enabled: !!token0Data && !!token1Data && !!amount,
   });
 
-  console.log(
-    token0Data,
-    token1Data,
-    amount?.numerator.toString(),
-    quotedData?.amountA
-  );
-
   const { config } = usePrepareL1RouterRemoveLiquidity({
     address: L1_ROUTER_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
     args: [

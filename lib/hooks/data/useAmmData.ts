@@ -1,6 +1,13 @@
 import { useContractReads, useNetwork } from "wagmi";
 import { pairAbi } from "../../../abis/Pair";
-import { ChainId, Currency, CurrencyAmount, PAIR_ADDRESS } from "../../../sdk";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  PAIR_ADDRESS,
+  Token,
+} from "../../../sdk";
+import { useTokenBalances } from "../useTokenBalance";
 
 export default function useAmmData(
   currency1: Currency | undefined,
@@ -11,6 +18,7 @@ export default function useAmmData(
     reserve0: CurrencyAmount<Currency> | undefined;
     reserve1: CurrencyAmount<Currency> | undefined;
   } | null;
+  balances: (CurrencyAmount<Currency> | undefined)[];
 } {
   const { chain } = useNetwork();
 
@@ -47,12 +55,19 @@ export default function useAmmData(
     watch: true,
   });
 
+  const amounts = useTokenBalances(
+    [currency1 as Token, currency2 as Token],
+    pairAddress
+  );
+
   if (!data?.[0] || !data?.[1] || !currency1 || !currency2)
-    return { data: null };
+    return { data: null, balances: [] };
+
   return {
     data: {
       reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].toString()),
       reserve1: CurrencyAmount.fromRawAmount(currency1, data[1].toString()),
     },
+    balances: amounts,
   };
 }

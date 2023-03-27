@@ -11,7 +11,7 @@ import useDammData from "../lib/hooks/data/useDammData";
 import useMint from "../lib/hooks/mint/useMint";
 import useSwap from "../lib/hooks/swap/useSwap";
 import useSyncL1 from "../lib/hooks/sync/useSyncL1";
-import { ApprovalState } from "../lib/hooks/useApproval";
+import useApproval, { ApprovalState } from "../lib/hooks/useApproval";
 import { useChainDefaults } from "../lib/hooks/useDefaults";
 import useTokenApproval from "../lib/hooks/useTokenApproval";
 import { formatCurrencyAmount } from "../lib/utils/formatCurrencyAmount";
@@ -20,7 +20,7 @@ import {
   formatTransactionAmount,
 } from "../lib/utils/formatNumbers";
 import { ChainId } from "../sdk";
-import { DVE_LP } from "../sdk/constants";
+import { DVE_LP, PAIR_ADDRESS } from "../sdk/constants";
 import { useBurnStore } from "../state/burn/useBurnStore";
 import { useDerivedBurnInfo } from "../state/burn/useDerivedBurnInfo";
 import { useDerivedMintInfo } from "../state/mint/useDerivedMintInfo";
@@ -163,13 +163,19 @@ const SwapTabContent = () => {
     currencyBalances: burnBalances,
   } = useDerivedBurnInfo();
 
-  const { approve: approveVoucherA, state: approveVoucherStateA } =
-    useTokenApproval(burnAmounts[Field.CURRENCY_A]);
+  const { approve: approveVoucherA, state: approveVoucherStateA } = useApproval(
+    burnAmounts[Field.CURRENCY_A],
+    PAIR_ADDRESS[expectedChainId as ChainId]
+  );
 
-  const { approve: approveVoucherB, state: approveVoucherStateB } =
-    useTokenApproval(burnAmounts[Field.CURRENCY_B]);
+  console.log(PAIR_ADDRESS[expectedChainId as ChainId], approveVoucherStateA);
 
-  const { burn } = useBurn(
+  const { approve: approveVoucherB, state: approveVoucherStateB } = useApproval(
+    burnAmounts[Field.CURRENCY_B],
+    PAIR_ADDRESS[expectedChainId as ChainId]
+  );
+
+  const { burn, yeet } = useBurn(
     burnAmounts[Field.CURRENCY_A],
     burnAmounts[Field.CURRENCY_B],
     approveVoucherStateA,
@@ -212,15 +218,19 @@ const SwapTabContent = () => {
     burn?.();
   };
 
+  const handleYeet = () => {
+    yeet?.();
+  };
+
   /////////////////////////////
 
-  const { data } = useDammData(
+  const { data: dammData } = useDammData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
     DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
-  const { data: ammData } = useAmmData(
+  const { data: ammData, balances } = useAmmData(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
     expectedChainId
@@ -340,9 +350,14 @@ const SwapTabContent = () => {
 
       <Tabs.Content value="tab4">
         <TabContentContainer>
-          <p className="mb-2 text-xs uppercase tracking-widest text-white/50">
-            Available Claims
-          </p>
+          <div className="mb-2 flex justify-between">
+            <p className="text-xs uppercase tracking-widest text-white/50">
+              Available Claims
+            </p>
+            <p className="mr-4 text-xs uppercase tracking-widest text-white/50">
+              L1 | L2
+            </p>
+          </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
             <div className="flex items-center">
               <div className="relative mr-4 h-4 w-4">
@@ -353,7 +368,8 @@ const SwapTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {data?.marked0 && formatCurrencyAmount(data.marked0, 6)}
+              {dammData?.marked0 && formatCurrencyAmount(dammData.marked0, 6)} |{" "}
+              {balances?.[0] && formatCurrencyAmount(balances[0], 6)}
             </p>
           </div>
           <div className="mb-2 flex w-full items-center justify-between rounded-sm border-l-2 border-sky-400 bg-gradient-to-r from-sky-400/5 to-transparent p-4 py-2">
@@ -366,7 +382,8 @@ const SwapTabContent = () => {
               </p>
             </div>
             <p className="text-sm text-white">
-              {data?.marked1 && formatCurrencyAmount(data.marked1, 6)}
+              {dammData?.marked1 && formatCurrencyAmount(dammData.marked1, 6)} |{" "}
+              {balances?.[1] && formatCurrencyAmount(balances[1], 6)}
             </p>
           </div>
           <div className="mb-2 mt-2 h-px w-full bg-white/5" />
@@ -395,18 +412,23 @@ const SwapTabContent = () => {
           >
             {(() => {
               if (
-                !data?.marked0 ||
-                !data?.marked1 ||
+                !dammData?.marked0 ||
+                !dammData?.marked1 ||
+                !balances ||
+                !balances[0] ||
+                !balances[1] ||
                 !burnAmounts[Field.CURRENCY_A] ||
                 !burnAmounts[Field.CURRENCY_B]
               ) {
                 return <Button disabled text="Enter an amount" />;
               }
               if (
-                burnAmounts[Field.CURRENCY_A].greaterThan(data.marked0) ||
-                burnAmounts[Field.CURRENCY_B].greaterThan(data.marked1)
+                (burnAmounts[Field.CURRENCY_A].greaterThan(balances[0]) ||
+                  burnAmounts[Field.CURRENCY_B].greaterThan(balances[1])) &&
+                (burnAmounts[Field.CURRENCY_A].greaterThan(dammData.marked0) ||
+                  burnAmounts[Field.CURRENCY_B].greaterThan(dammData.marked1))
               ) {
-                return <Button disabled text="Sync before" />;
+                return <Button disabled text="Insufficient earmarked" />;
               }
               if (approveVoucherStateA === ApprovalState.NOT_APPROVED) {
                 return (
@@ -423,6 +445,12 @@ const SwapTabContent = () => {
                     text={`Approve ${burnCurrencies[Field.CURRENCY_B]?.symbol}`}
                   />
                 );
+              }
+              if (
+                burnAmounts[Field.CURRENCY_A].lessThan(balances[0]) ||
+                burnAmounts[Field.CURRENCY_B].lessThan(balances[1])
+              ) {
+                return <Button onClick={handleYeet} text="Yeet vouchers" />;
               }
             })()}
           </InteractButton>

@@ -5,7 +5,7 @@ import {
   Currency,
   CurrencyAmount,
   DOVE_ADDRESS,
-  LZ_CHAIN,
+  HL_DOMAIN,
 } from "../../../sdk";
 import { doveABI } from "../../../src/generated";
 
@@ -30,14 +30,14 @@ export default function useDammData(
     chainId: ChainId.ETHEREUM_GOERLI,
   };
 
-  const lzChainId = useMemo(() => {
+  const hlDomainId = useMemo(() => {
     if (!chain) return;
 
     if (chain.id === ChainId.ARBITRUM_GOERLI) {
-      return LZ_CHAIN[ChainId.ARBITRUM_GOERLI];
+      return HL_DOMAIN[ChainId.ARBITRUM_GOERLI];
     }
     if (chain.id === ChainId.POLYGON_MUMBAI) {
-      return LZ_CHAIN[ChainId.POLYGON_MUMBAI];
+      return HL_DOMAIN[ChainId.POLYGON_MUMBAI];
     } else {
       return 0;
     }
@@ -60,7 +60,7 @@ export default function useDammData(
       {
         ...doveContract,
         functionName: "marked",
-        args: [lzChainId ?? 0],
+        args: [hlDomainId ?? 0],
       },
     ],
     watch: true,

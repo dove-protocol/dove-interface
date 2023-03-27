@@ -50,8 +50,6 @@ export default function useProvideLiquidity(
       approvalState2 === ApprovalState.APPROVED,
   });
 
-  console.log(config);
-
   const { write } = useL1RouterAddLiquidity(config);
 
   return {

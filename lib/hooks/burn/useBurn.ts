@@ -4,7 +4,9 @@ import { useNetwork } from "wagmi";
 import { ChainId, Currency, CurrencyAmount, PAIR_ADDRESS } from "../../../sdk";
 import {
   usePairBurnVouchers,
+  usePairYeetVouchers,
   usePreparePairBurnVouchers,
+  usePreparePairYeetVouchers,
 } from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
 
@@ -15,6 +17,7 @@ export default function useBurn(
   approvalState2: ApprovalState | undefined
 ): {
   burn: () => void;
+  yeet: () => void;
 } {
   const { chain } = useNetwork();
 
@@ -47,7 +50,29 @@ export default function useBurn(
 
   const { write } = usePairBurnVouchers(config);
 
+  const { config: yeetConfig } = usePreparePairYeetVouchers({
+    address: pairAddress as `0x${string}`,
+    args: [
+      BigNumber.from(voucher1ToBurn?.quotient.toString() || 0),
+      BigNumber.from(voucher2ToBurn?.quotient.toString() || 0),
+    ],
+    enabled:
+      !!voucher1ToBurn &&
+      !!voucher2ToBurn &&
+      approvalState1 === ApprovalState.APPROVED &&
+      approvalState2 === ApprovalState.APPROVED,
+  });
+
+  console.log(
+    "yeetConfig",
+    voucher1ToBurn?.quotient.toString(),
+    voucher2ToBurn?.quotient.toString()
+  );
+
+  const { write: yeetWrite } = usePairYeetVouchers(yeetConfig);
+
   return {
     burn: () => write?.(),
+    yeet: () => yeetWrite?.(),
   };
 }

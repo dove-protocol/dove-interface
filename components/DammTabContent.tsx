@@ -548,7 +548,7 @@ const DammTabContent = () => {
           <div className="mb-4 flex items-center">
             <BiRefresh className="mr-4 rounded-sm border border-white/10 p-2 text-4xl text-white" />
             <div className="flex flex-col">
-              <h4 className="text-white">Syncing</h4>
+              <h4 className="text-white">Syncs Incoming</h4>
               <p className="text-xs text-white/50">
                 Update reserves with L2 AMM
               </p>

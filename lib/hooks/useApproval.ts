@@ -25,7 +25,7 @@ export default function useApproval(
 
   const { config: approvalConfig } = usePrepareErc20Approve({
     address: amountToApprove?.currency?.isToken
-      ? amountToApprove.currency.address as `0x${string}`
+      ? (amountToApprove.currency.address as `0x${string}`)
       : undefined,
     args: [
       spender as `0x${string}`,
@@ -36,6 +36,11 @@ export default function useApproval(
       !!amountToApprove &&
       approvalState === ApprovalState.NOT_APPROVED,
   });
+
+  console.log(
+    amountToApprove?.currency?.isToken &&
+      (amountToApprove.currency.address as `0x${string}`)
+  );
 
   const { write } = useErc20Approve(approvalConfig);
 
@@ -56,7 +61,7 @@ function useApprovalStateForSpender(
       ? (amountToApprove.currency.address as `0x${string}`)
       : undefined,
     args: [address as `0x${string}`, spender as `0x${string}`],
-    watch: true, 
+    watch: true,
   });
 
   if (!amountToApprove) return ApprovalState.UNKNOWN;
