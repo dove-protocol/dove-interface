@@ -573,12 +573,12 @@ const DammTabContent = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <button onClick={() => handleFinalizeIncomingSync(chainId)}>
-                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-3 text-xs font-medium uppercase tracking-widest text-sky-400">
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-white/10 py-3 text-xs uppercase tracking-widest text-sky-400">
                     Finalize Sync
                   </p>
                 </button>
                 <button onClick={() => handleSync(chainId)}>
-                  <p className="flex w-36 items-center justify-center rounded-sm bg-sky-400 py-3 text-xs font-medium uppercase tracking-widest text-black">
+                  <p className="flex w-36 items-center justify-center rounded-sm border border-sky-400 bg-sky-400/5 py-3 text-xs uppercase tracking-widest text-white">
                     Sync To L2
                   </p>
                 </button>
