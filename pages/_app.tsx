@@ -57,11 +57,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <NextSeo
         title="Dove Interface"
-        description="Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks. Focus on the technical merits of your chosen L2, while Dove unlocks boundless liquidity for executing advanced leveraged LSD strategies on any L2."
+        description="Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks."
         openGraph={{
           type: "website",
           description:
-            "Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks. Focus on the technical merits of your chosen L2, while Dove unlocks boundless liquidity for executing advanced leveraged LSD strategies on any L2.",
+            "Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks.",
           title: "Dove Interface",
           images: [
             {
