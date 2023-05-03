@@ -6,7 +6,7 @@ const Navbar = () => {
   return (
     <div className="fixed z-50 flex w-full justify-center">
       <div className="flex w-full items-center justify-between px-8 py-8">
-        <div className="relative h-16 w-24">
+        <div className="relative h-12 w-24">
           <Image src="/logo_text.png" fill alt="" className="object-contain" />
         </div>
         <div className="flex items-center space-x-4">
