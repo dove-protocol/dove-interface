@@ -7,8 +7,13 @@ import {
 import "@rainbow-me/rainbowkit/styles.css";
 import { AnimatePresence } from "framer-motion";
 import { AppProps } from "next/app";
-import { WagmiConfig, configureChains, createClient, goerli } from "wagmi";
-import { arbitrumGoerli, avalancheFuji, polygonMumbai } from "wagmi/chains";
+import { WagmiConfig, configureChains, createClient } from "wagmi";
+import {
+  arbitrumGoerli,
+  avalancheFuji,
+  goerli,
+  polygonMumbai,
+} from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { ChainId } from "../sdk";

@@ -1,4 +1,4 @@
-import { GiPeaceDove } from "react-icons/gi";
+import Image from "next/image";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { ChainId } from "../sdk";
 import { SUPPORTED_CHAIN_NAMES } from "../sdk/constants/chains";
@@ -34,7 +34,11 @@ const UnsupportedNetworkContent = () => {
     <TabContentContainer>
       <div className="flex flex-col">
         <div className="mb-4 flex flex-col items-start justify-start">
-          <GiPeaceDove className="mb-2 rounded-sm border border-white/10 p-2 text-4xl text-white" />
+          <div className="relative mb-2 rounded-sm border border-white/10 p-2 text-white">
+            <div className="relative h-8 w-8">
+              <Image src="/logo.png" fill alt="" className="object-cover" />
+            </div>
+          </div>
           <div className="flex flex-col">
             <h4 className="text-white">Dove Protocol</h4>
             <p className=" text-xs text-white/50">

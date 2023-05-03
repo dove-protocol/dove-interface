@@ -1,7 +1,7 @@
 import { ChainId } from "../enums/chainId";
 
 export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0x5Aebb6E8f23782Af574232D5E0eA95Ec1EEa3587",
+  [ChainId.ETHEREUM_GOERLI]: "0x47a7aD7F8a617BF4f4a0cA588fEE7390F9869bC0",
   [ChainId.ARBITRUM_GOERLI]: "",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.AVALANCHE_FUJI]: "",
@@ -9,13 +9,13 @@ export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const L2_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0x0eCd916D0DD87433bf2772D8d6363c7A770a5Ab5",
-  [ChainId.POLYGON_MUMBAI]: "0xa9582De37b16C0d28E89c2F02a66692642F3B487",
-  [ChainId.AVALANCHE_FUJI]: "0x0656AB5c74a804076ce027ae5BB3eF91dc45f665",
+  [ChainId.ARBITRUM_GOERLI]: "0xF475ceb78C0e2F49784eFAe8c3BcA993B74aB988",
+  [ChainId.POLYGON_MUMBAI]: "0xD50853D8D7570b462D0fd109b918D3327a7fB4c7",
+  [ChainId.AVALANCHE_FUJI]: "0xD24D109675D73a09B4E56581beD3943eDfc3D642",
 };
 
 export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.ETHEREUM_GOERLI]: "0x4cEe61a7641390b71225cD64FB6cE7CA30E7e151",
+  [ChainId.ETHEREUM_GOERLI]: "0x5e2d96cc6a8490e75b8308a2aeb1653793124b91",
   [ChainId.ARBITRUM_GOERLI]: "",
   [ChainId.POLYGON_MUMBAI]: "",
   [ChainId.AVALANCHE_FUJI]: "",
@@ -23,9 +23,9 @@ export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const PAIR_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0xD348BcCdbB17d7ff2A3D48952aa4f2886F151256",
-  [ChainId.POLYGON_MUMBAI]: "0xDA3fEC084E9958268F650dA21817860ba2D2988d",
-  [ChainId.AVALANCHE_FUJI]: "0x3c30d2c818ad1fe7B44595A3CF264A97dcE566cE",
+  [ChainId.ARBITRUM_GOERLI]: "0xCD73e9D7F975d4Ac17385abe9824ECD3f4377d67",
+  [ChainId.POLYGON_MUMBAI]: "0x36820F7fA9A23657F074909e432a047825910dEA",
+  [ChainId.AVALANCHE_FUJI]: "0x5F24f6F5d7b5524374c2be55D5af0444ead7b8A3",
 };
 
 export const USDC_ADDRESS: { [chainId in ChainId]: string } = {
