@@ -14,13 +14,13 @@ const Main = ({ children }: { children: React.ReactNode }) => {
       </Head>
       <NextSeo
         useAppDir
-        title="Dove"
+        title="Dove Interface"
         description="Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks. Focus on the technical merits of your chosen L2, while Dove unlocks boundless liquidity for executing advanced leveraged LSD strategies on any L2."
         openGraph={{
           type: "website",
           description:
             "Experience the power of Dove, our innovative solution that eliminates liquidity fragmentation and bridges gaps across Layer 2 networks. Focus on the technical merits of your chosen L2, while Dove unlocks boundless liquidity for executing advanced leveraged LSD strategies on any L2.",
-          title: "Dove",
+          title: "Dove Interface",
           images: [
             {
               url: "https://i.imgur.com/6fGh6n4.png",
