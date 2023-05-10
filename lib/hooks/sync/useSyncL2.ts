@@ -3,6 +3,7 @@ import { parseEther } from "viem";
 import { ChainId, DOVE_ADDRESS, HL_DOMAIN, PAIR_ADDRESS } from "../../../sdk";
 import { useDoveSyncL2, usePrepareDoveSyncL2 } from "../../../src/generated";
 import { wrapAddress } from "../../utils/wrapAddress";
+import useToast from "../useToast";
 
 export default function useSyncL2(chainToSync: ChainId): {
   sync: () => void;
@@ -21,7 +22,16 @@ export default function useSyncL2(chainToSync: ChainId): {
     enabled: !!domainId,
   });
 
-  const { write } = useDoveSyncL2(config);
+  const { write, data } = useDoveSyncL2({
+    ...config,
+  });
+
+  useToast(
+    data?.hash,
+    "Syncing to L2...",
+    "Synced to L2!",
+    "Failed to sync to L2"
+  );
 
   return {
     sync: () => write?.(),

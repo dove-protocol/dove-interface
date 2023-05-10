@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BiArrowToRight, BiCog, BiHistory } from "react-icons/bi";
 import { GiPeaceDove } from "react-icons/gi";
+import { Toaster } from "sonner";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { goerli } from "wagmi/chains";
 import AmmTabContent from "../components/AmmTabContent";
@@ -52,6 +53,7 @@ export default function Home() {
   return (
     <Main>
       <Article>
+        <Toaster />
         <div className="radial absolute h-screen w-full"></div>
         <div className="absolute h-full w-[100vw] opacity-20">
           {/* <div className="background-gradient-pattern" /> */}

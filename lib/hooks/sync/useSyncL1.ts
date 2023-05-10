@@ -6,6 +6,7 @@ import {
   usePairSyncToL1,
   usePreparePairSyncToL1,
 } from "../../../src/generated";
+import useToast from "../useToast";
 
 export default function useSyncL1(): {
   sync: () => void;
@@ -30,7 +31,14 @@ export default function useSyncL1(): {
     enabled: !!chain,
   });
 
-  const { write } = usePairSyncToL1(config);
+  const { write, data } = usePairSyncToL1(config);
+
+  useToast(
+    data?.hash,
+    "Syncing to L1...",
+    "Synced to L1!",
+    "Failed to sync to L1"
+  );
 
   return {
     sync: () => write?.(),

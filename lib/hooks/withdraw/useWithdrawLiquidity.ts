@@ -15,6 +15,7 @@ import {
   usePrepareL1RouterRemoveLiquidity,
 } from "../../../src/generated";
 import useBlockTimestamp from "../useBlockTimestamp";
+import useToast from "../useToast";
 
 export default function useWithdrawLiquidity(
   amount: CurrencyAmount<Currency> | undefined
@@ -56,7 +57,14 @@ export default function useWithdrawLiquidity(
     enabled: !!amount && !!quotedData?.[0] && !!quotedData?.[1],
   });
 
-  const { write } = useL1RouterRemoveLiquidity(config);
+  const { write, data } = useL1RouterRemoveLiquidity(config);
+
+  useToast(
+    data?.hash,
+    "Removing Liquidity...",
+    "Removed Liquidity!",
+    "Failed to remove liquidity"
+  );
 
   return {
     withdraw: () => write?.(),

@@ -5,6 +5,7 @@ import {
   useErc20Approve,
   usePrepareErc20Approve,
 } from "../../src/generated";
+import useToast from "./useToast";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -36,12 +37,9 @@ export default function useApproval(
       approvalState === ApprovalState.NOT_APPROVED,
   });
 
-  // console.log(
-  //   amountToApprove?.currency?.isToken &&
-  //     (amountToApprove.currency.address as `0x${string}`)
-  // );
+  const { write, data } = useErc20Approve(approvalConfig);
 
-  const { write } = useErc20Approve(approvalConfig);
+  useToast(data?.hash, "Approving...", "Approved!", "Failed to approve");
 
   return {
     approve: () => write?.(),

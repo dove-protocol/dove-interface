@@ -5,6 +5,7 @@ import {
   usePrepareErc20MockMint,
 } from "../../../src/generated";
 import { wrapAddress } from "../../utils/wrapAddress";
+import useToast from "../useToast";
 
 export default function useMint(
   amountToMint: CurrencyAmount<Currency> | undefined,
@@ -25,7 +26,9 @@ export default function useMint(
     enabled: !!amountToMint && (!!address || !!account),
   });
 
-  const { write } = useErc20MockMint(config);
+  const { write, data } = useErc20MockMint(config);
+
+  useToast(data?.hash, "Minting...", "Minted!", "Failed to mint");
 
   return {
     mint: () => write?.(),

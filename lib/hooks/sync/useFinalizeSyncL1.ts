@@ -4,6 +4,7 @@ import {
   useDoveFinalizeSyncFromL2,
   usePrepareDoveFinalizeSyncFromL2,
 } from "../../../src/generated";
+import useToast from "../useToast";
 
 export default function useFinalizeSyncL1(
   expectedChainId: ChainId | undefined
@@ -41,7 +42,14 @@ export default function useFinalizeSyncL1(
     enabled: !!expectedChainId && data?.syncs[0]?.status === "PENDING_FINALIZE",
   });
 
-  const { write } = useDoveFinalizeSyncFromL2(config);
+  const { write, data: finalizeData } = useDoveFinalizeSyncFromL2(config);
+
+  useToast(
+    finalizeData?.hash,
+    "Finalizing sync from L2...",
+    "Finalized sync from L2!",
+    "Failed to finalize sync from L2"
+  );
 
   return {
     finalizeSync: () => write?.(),

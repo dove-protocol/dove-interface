@@ -13,6 +13,7 @@ import {
 } from "../../../src/generated";
 import { wrapAddress } from "../../utils/wrapAddress";
 import { ApprovalState } from "../useApproval";
+import useToast from "../useToast";
 
 export default function useProvideLiquidity(
   amount1: CurrencyAmount<Currency> | undefined,
@@ -50,7 +51,14 @@ export default function useProvideLiquidity(
       approvalState2 === ApprovalState.APPROVED,
   });
 
-  const { write } = useL1RouterAddLiquidity(config);
+  const { write, data } = useL1RouterAddLiquidity(config);
+
+  useToast(
+    data?.hash,
+    "Adding Liquidity...",
+    "Added Liquidity!",
+    "Failed to add liquidity"
+  );
 
   return {
     provide: () => write?.(),

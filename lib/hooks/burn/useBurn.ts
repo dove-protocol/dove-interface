@@ -9,6 +9,7 @@ import {
   usePreparePairYeetVouchers,
 } from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
+import useToast from "../useToast";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
@@ -61,13 +62,14 @@ export default function useBurn(
       approvalState2 === ApprovalState.APPROVED,
   });
 
-  // console.log(
-  //   "yeetConfig",
-  //   voucher1ToBurn?.quotient.toString(),
-  //   voucher2ToBurn?.quotient.toString()
-  // );
+  const { write: yeetWrite, data } = usePairYeetVouchers(yeetConfig);
 
-  const { write: yeetWrite } = usePairYeetVouchers(yeetConfig);
+  useToast(
+    data?.hash,
+    "Yeeting vouchers...",
+    "Vouchers yeeted!",
+    "Failed to yeet vouchers"
+  );
 
   return {
     burn: () => write?.(),

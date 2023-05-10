@@ -16,6 +16,7 @@ import {
   usePrepareL2RouterSwapExactTokensForTokensSimple,
 } from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
+import useToast from "../useToast";
 
 export default function useSwap(
   amountIn: CurrencyAmount<Currency> | undefined,
@@ -90,7 +91,9 @@ export default function useSwap(
       !!amountIn && !!amountOutData && approvalState === ApprovalState.APPROVED,
   });
 
-  const { write } = useL2RouterSwapExactTokensForTokensSimple(config);
+  const { write, data } = useL2RouterSwapExactTokensForTokensSimple(config);
+
+  useToast(data?.hash, "Swapping...", "Swapped!", "Failed to swap");
 
   return {
     swap: () => write?.(),
