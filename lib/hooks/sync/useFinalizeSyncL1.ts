@@ -38,7 +38,7 @@ export default function useFinalizeSyncL1(
   const { config } = usePrepareDoveFinalizeSyncFromL2({
     address: DOVE_ADDRESS[ChainId.ETHEREUM_GOERLI] as `0x${string}`,
     args: [HL_DOMAIN[expectedChainId as ChainId], data?.syncs[0]?.syncId ?? 0],
-    enabled: !!expectedChainId && data?.syncs[0]?.status === "PENDING_FINAlIZE",
+    enabled: !!expectedChainId && data?.syncs[0]?.status === "PENDING_FINALIZE",
   });
 
   const { write } = useDoveFinalizeSyncFromL2(config);
