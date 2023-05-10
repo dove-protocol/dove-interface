@@ -1,4 +1,4 @@
-import { goerli } from "wagmi";
+import { goerli } from "viem/chains";
 import { DOVE_ADDRESS } from "../../sdk";
 import { useDoveIsLiquidityLocked } from "../../src/generated";
 
@@ -7,6 +7,7 @@ export default function useLiquidityLocked(): {
 } {
   const { data } = useDoveIsLiquidityLocked({
     address: DOVE_ADDRESS[goerli.id] as `0x${string}`,
+    chainId: goerli.id,
     watch: true,
   });
 

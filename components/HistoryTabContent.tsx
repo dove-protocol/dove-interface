@@ -1,10 +1,7 @@
-import React from "react";
-import { useState } from "react";
-import * as Switch from "@radix-ui/react-switch";
+import { BiHistory, BiLinkExternal, BiShuffle } from "react-icons/bi";
+import { useNetwork } from "wagmi";
 import { useUserStore } from "../state/user/useUserStore";
 import TabContentContainer from "./TabContentContainer";
-import { BiCog, BiHistory, BiLinkExternal, BiShuffle } from "react-icons/bi";
-import { useNetwork } from "wagmi";
 
 const HistoryTabContent = () => {
   const allToastContents = useUserStore((state) => state.allToastContents);
@@ -44,7 +41,7 @@ const HistoryTabContent = () => {
         ))
       ) : (
         <div className="flex h-40 w-full items-center justify-center">
-          <p className="text-white">No previous transactions</p>
+          <p className="text-white">No previous transactions.</p>
         </div>
       )}
 

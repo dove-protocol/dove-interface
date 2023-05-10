@@ -14,7 +14,7 @@ export function useTokenBalance(
   });
 
   if (token && data) {
-    return CurrencyAmount.fromRawAmount(token, data.value.toString());
+    return CurrencyAmount.fromRawAmount(token, data.value);
   }
 }
 

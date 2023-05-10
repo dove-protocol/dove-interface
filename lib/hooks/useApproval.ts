@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 import { Currency, CurrencyAmount } from "../../sdk";
 import {
@@ -6,6 +5,7 @@ import {
   useErc20Approve,
   usePrepareErc20Approve,
 } from "../../src/generated";
+import useToast from "./useToast";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -29,7 +29,7 @@ export default function useApproval(
       : undefined,
     args: [
       spender as `0x${string}`,
-      BigNumber.from(amountToApprove?.numerator.toString() || "0"),
+      BigInt(amountToApprove?.numerator.toString() || "0"),
     ],
     enabled:
       !!spender &&
@@ -37,12 +37,9 @@ export default function useApproval(
       approvalState === ApprovalState.NOT_APPROVED,
   });
 
-  console.log(
-    amountToApprove?.currency?.isToken &&
-      (amountToApprove.currency.address as `0x${string}`)
-  );
+  const { write, data } = useErc20Approve(approvalConfig);
 
-  const { write } = useErc20Approve(approvalConfig);
+  useToast(data?.hash, "Approving...", "Approved!", "Failed to approve");
 
   return {
     approve: () => write?.(),
@@ -64,13 +61,14 @@ function useApprovalStateForSpender(
     watch: true,
   });
 
+  if (allowance === 0n) return ApprovalState.NOT_APPROVED;
   if (!amountToApprove) return ApprovalState.UNKNOWN;
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;
 
   const allowanceAmount = CurrencyAmount.fromRawAmount(
     amountToApprove.currency,
-    allowance.toString()
+    allowance
   );
 
   // console.log(

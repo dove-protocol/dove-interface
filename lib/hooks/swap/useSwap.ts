@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useMemo } from "react";
 import { useAccount, useNetwork } from "wagmi";
 import {
@@ -16,6 +16,7 @@ import {
   usePrepareL2RouterSwapExactTokensForTokensSimple,
 } from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
+import useToast from "../useToast";
 
 export default function useSwap(
   amountIn: CurrencyAmount<Currency> | undefined,
@@ -66,7 +67,7 @@ export default function useSwap(
   const { data: amountOutData } = useL2RouterGetAmountOut({
     address: routerAddress as `0x${string}`,
     args: [
-      BigNumber.from(amountIn?.numerator.toString() ?? 0),
+      BigInt(amountIn?.numerator.toString() ?? 0),
       amountIn?.currency.isToken
         ? (amountIn?.currency.address as `0x${string}`)
         : "0x",
@@ -77,20 +78,22 @@ export default function useSwap(
   const { config } = usePrepareL2RouterSwapExactTokensForTokensSimple({
     address: routerAddress as `0x${string}`,
     args: [
-      BigNumber.from(amountIn?.numerator.toString() ?? 0),
-      BigNumber.from(amountOutData?.toString() ?? 0),
+      BigInt(amountIn?.numerator.toString() ?? 0),
+      BigInt(amountOutData?.toString() ?? 0),
       amountIn?.currency.isToken
         ? (amountIn?.currency.address as `0x${string}`)
         : "0x",
       isToken0 ? token1Data ?? "0x" : token0Data ?? "0x",
       address ?? "0x",
-      ethers.constants.MaxUint256, // TODO: use deadline
+      ethers.MaxUint256, // TODO: use deadline
     ],
     enabled:
       !!amountIn && !!amountOutData && approvalState === ApprovalState.APPROVED,
   });
 
-  const { write } = useL2RouterSwapExactTokensForTokensSimple(config);
+  const { write, data } = useL2RouterSwapExactTokensForTokensSimple(config);
+
+  useToast(data?.hash, "Swapping...", "Swapped!", "Failed to swap");
 
   return {
     swap: () => write?.(),

@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import {
   ChainId,
@@ -15,6 +15,7 @@ import {
   usePrepareL1RouterRemoveLiquidity,
 } from "../../../src/generated";
 import useBlockTimestamp from "../useBlockTimestamp";
+import useToast from "../useToast";
 
 export default function useWithdrawLiquidity(
   amount: CurrencyAmount<Currency> | undefined
@@ -37,7 +38,7 @@ export default function useWithdrawLiquidity(
     args: [
       token0Data ?? "0x",
       token1Data ?? "0x",
-      BigNumber.from(amount?.numerator.toString() ?? "0"),
+      BigInt(amount?.numerator.toString() ?? "0"),
     ],
     enabled: !!token0Data && !!token1Data && !!amount,
   });
@@ -47,16 +48,23 @@ export default function useWithdrawLiquidity(
     args: [
       token0Data ?? "0x",
       token1Data ?? "0x",
-      BigNumber.from(amount?.numerator.toString() || "0"),
-      quotedData?.amountA ?? BigNumber.from("0"),
-      quotedData?.amountB ?? BigNumber.from("0"),
+      BigInt(amount?.numerator.toString() || "0"),
+      quotedData?.[0] ?? BigInt("0"),
+      quotedData?.[1] ?? BigInt("0"),
       address ?? "0x",
-      ethers.constants.MaxUint256, // TODO: use deadline
+      ethers.MaxUint256, // TODO: use deadline
     ],
-    enabled: !!amount && !!quotedData?.amountA && !!quotedData?.amountB,
+    enabled: !!amount && !!quotedData?.[0] && !!quotedData?.[1],
   });
 
-  const { write } = useL1RouterRemoveLiquidity(config);
+  const { write, data } = useL1RouterRemoveLiquidity(config);
+
+  useToast(
+    data?.hash,
+    "Removing Liquidity...",
+    "Removed Liquidity!",
+    "Failed to remove liquidity"
+  );
 
   return {
     withdraw: () => write?.(),

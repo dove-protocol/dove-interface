@@ -1,5 +1,5 @@
-import { BigNumber, utils } from "ethers";
 import { useMemo } from "react";
+import { parseEther } from "viem";
 import { useNetwork } from "wagmi";
 import { ChainId, Currency, CurrencyAmount, PAIR_ADDRESS } from "../../../sdk";
 import {
@@ -9,6 +9,7 @@ import {
   usePreparePairYeetVouchers,
 } from "../../../src/generated";
 import { ApprovalState } from "../useApproval";
+import useToast from "../useToast";
 
 export default function useBurn(
   voucher1ToBurn: CurrencyAmount<Currency> | undefined,
@@ -35,12 +36,10 @@ export default function useBurn(
   const { config } = usePreparePairBurnVouchers({
     address: pairAddress as `0x${string}`,
     args: [
-      BigNumber.from(voucher1ToBurn?.quotient.toString() || 0),
-      BigNumber.from(voucher2ToBurn?.quotient.toString() || 0),
+      BigInt(voucher1ToBurn?.quotient.toString() || 0),
+      BigInt(voucher2ToBurn?.quotient.toString() || 0),
     ],
-    overrides: {
-      value: utils.parseEther("0.1"),
-    },
+    value: parseEther("0.1"),
     enabled:
       !!voucher1ToBurn &&
       !!voucher2ToBurn &&
@@ -53,8 +52,8 @@ export default function useBurn(
   const { config: yeetConfig } = usePreparePairYeetVouchers({
     address: pairAddress as `0x${string}`,
     args: [
-      BigNumber.from(voucher1ToBurn?.quotient.toString() || 0),
-      BigNumber.from(voucher2ToBurn?.quotient.toString() || 0),
+      BigInt(voucher1ToBurn?.quotient.toString() || 0),
+      BigInt(voucher2ToBurn?.quotient.toString() || 0),
     ],
     enabled:
       !!voucher1ToBurn &&
@@ -63,13 +62,14 @@ export default function useBurn(
       approvalState2 === ApprovalState.APPROVED,
   });
 
-  console.log(
-    "yeetConfig",
-    voucher1ToBurn?.quotient.toString(),
-    voucher2ToBurn?.quotient.toString()
-  );
+  const { write: yeetWrite, data } = usePairYeetVouchers(yeetConfig);
 
-  const { write: yeetWrite } = usePairYeetVouchers(yeetConfig);
+  useToast(
+    data?.hash,
+    "Yeeting vouchers...",
+    "Vouchers yeeted!",
+    "Failed to yeet vouchers"
+  );
 
   return {
     burn: () => write?.(),

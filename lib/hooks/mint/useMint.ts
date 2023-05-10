@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 import { Currency, CurrencyAmount } from "../../../sdk";
 import {
@@ -6,6 +5,7 @@ import {
   usePrepareErc20MockMint,
 } from "../../../src/generated";
 import { wrapAddress } from "../../utils/wrapAddress";
+import useToast from "../useToast";
 
 export default function useMint(
   amountToMint: CurrencyAmount<Currency> | undefined,
@@ -17,16 +17,18 @@ export default function useMint(
 
   const { config } = usePrepareErc20MockMint({
     address: amountToMint?.currency.isToken
-      ? amountToMint.currency.address as `0x${string}`
+      ? (amountToMint.currency.address as `0x${string}`)
       : undefined,
     args: [
       wrapAddress(account ?? address),
-      BigNumber.from(amountToMint?.numerator.toString() || "0"),
+      BigInt(amountToMint?.numerator.toString() || "0"),
     ],
     enabled: !!amountToMint && (!!address || !!account),
   });
 
-  const { write } = useErc20MockMint(config);
+  const { write, data } = useErc20MockMint(config);
+
+  useToast(data?.hash, "Minting...", "Minted!", "Failed to mint");
 
   return {
     mint: () => write?.(),

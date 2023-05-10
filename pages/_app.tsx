@@ -8,7 +8,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { AnimatePresence } from "framer-motion";
 import { NextSeo } from "next-seo";
 import { AppProps } from "next/app";
-import { WagmiConfig, configureChains, createClient } from "wagmi";
+import { WagmiConfig, configureChains, createConfig } from "wagmi";
 import {
   arbitrumGoerli,
   avalancheFuji,
@@ -21,7 +21,7 @@ import { ChainId } from "../sdk";
 import "../styles/globals.css";
 import "../styles/tailwind.css";
 
-const { chains, provider } = configureChains(
+const { chains, publicClient } = configureChains(
   [goerli, arbitrumGoerli, polygonMumbai, avalancheFuji],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? "" }),
@@ -41,10 +41,10 @@ const { connectors } = getDefaultWallets({
   chains,
 });
 
-const wagmiClient = createClient({
+const config = createConfig({
   autoConnect: true,
+  publicClient,
   connectors,
-  provider,
 });
 
 const apolloClient = new ApolloClient({
@@ -72,7 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         twitter={{ cardType: "summary_large_image", handle: "@doveprotocol" }}
       />
       <ApolloProvider client={apolloClient}>
-        <WagmiConfig client={wagmiClient}>
+        <WagmiConfig config={config}>
           <RainbowKitProvider
             chains={chains}
             modalSize="compact"

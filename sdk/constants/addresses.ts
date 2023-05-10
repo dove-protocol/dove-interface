@@ -9,9 +9,9 @@ export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const L2_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0xF475ceb78C0e2F49784eFAe8c3BcA993B74aB988",
-  [ChainId.POLYGON_MUMBAI]: "0xD50853D8D7570b462D0fd109b918D3327a7fB4c7",
-  [ChainId.AVALANCHE_FUJI]: "0xD24D109675D73a09B4E56581beD3943eDfc3D642",
+  [ChainId.ARBITRUM_GOERLI]: "0xE33F31f5c0Dbce6015929F4A0D6CB225e5Fbc4CF",
+  [ChainId.POLYGON_MUMBAI]: "0xFF558F93f9cDe9e36c7802A85fAEb251A3d8a401",
+  [ChainId.AVALANCHE_FUJI]: "0xDeCB5F4aD282C3BE8B5642ecA8AB965450cc481A",
 };
 
 export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
@@ -23,9 +23,9 @@ export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const PAIR_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0xCD73e9D7F975d4Ac17385abe9824ECD3f4377d67",
-  [ChainId.POLYGON_MUMBAI]: "0x36820F7fA9A23657F074909e432a047825910dEA",
-  [ChainId.AVALANCHE_FUJI]: "0x5F24f6F5d7b5524374c2be55D5af0444ead7b8A3",
+  [ChainId.ARBITRUM_GOERLI]: "0xCe88ACA6d810C10Df9DeAF984CBFB325184BdC45",
+  [ChainId.POLYGON_MUMBAI]: "0x04be2bB9109f5399289A35F12Acdc1d8bF45a57f",
+  [ChainId.AVALANCHE_FUJI]: "0x1ceF23E384c25E35d2ac6ff8CA573911C47f4237",
 };
 
 export const USDC_ADDRESS: { [chainId in ChainId]: string } = {
@@ -44,14 +44,14 @@ export const USDT_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const vUSDC_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0x1d509f787616d2c4289bf5be0ce6bf72065e4898",
-  [ChainId.POLYGON_MUMBAI]: "0x3c204088c5524e409dbb1e07850e67b30a648e1f",
-  [ChainId.AVALANCHE_FUJI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "0xdd0b2440edb26037345425e2a3aefab1f922a089",
+  [ChainId.POLYGON_MUMBAI]: "0x315a637c421a15a228d1fe37a8505cc23e95e06b",
+  [ChainId.AVALANCHE_FUJI]: "0xeb46b43b9e3170eaade2a6352e4bc73c28390562",
 };
 
 export const vUSDT_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0x564929554fad6c1773d71e3f15c3b7bcc9adf9b7",
-  [ChainId.POLYGON_MUMBAI]: "0xef3c0664db587b3adfde428012a589e6ffb1a6d0",
-  [ChainId.AVALANCHE_FUJI]: "",
+  [ChainId.ARBITRUM_GOERLI]: "0xac846d1dc0466ddfdb1415073500a55122266c5a",
+  [ChainId.POLYGON_MUMBAI]: "0x851ee25aebb3e59b829fbdcf729b405423a17df9",
+  [ChainId.AVALANCHE_FUJI]: "0x150ec754113b96732dc89d2bff585da82af26a95",
 };

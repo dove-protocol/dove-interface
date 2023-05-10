@@ -38,7 +38,7 @@ export function useDerivedProvideInfo(): {
   // calculate amount of second token to provide
   if (data?.reserve0 && data?.reserve1 && independentAmount) {
     // first provider of liquidity
-    if (data.reserve0.equalTo("0") || data.reserve1.equalTo("0")) {
+    if (data.reserve0.equalTo(0n) || data.reserve1.equalTo(0n)) {
       dependentAmount = tryParseCurrencyAmount(
         independentAmount.toExact(),
         currencies[dependentField]
