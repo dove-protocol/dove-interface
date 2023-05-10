@@ -44,7 +44,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
     super(numerator, denominator);
     invariant(this.quotient <= ethers.MaxUint256, "AMOUNT");
     this.currency = currency;
-    this.decimalScale = BigInt(currency.decimals) ** 10n;
+    this.decimalScale = 10n ** BigInt(currency.decimals);
   }
 
   public add(other: CurrencyAmount<T>): CurrencyAmount<T> {

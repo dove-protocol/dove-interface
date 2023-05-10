@@ -25,6 +25,8 @@ export function useDerivedSwapInfo(): {
     DVE_LP[ChainId.ETHEREUM_GOERLI]
   );
 
+  console.log(data);
+
   const dependentField =
     independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A;
 
@@ -32,6 +34,8 @@ export function useDerivedSwapInfo(): {
     fields[independentField],
     currencies[independentField]
   );
+
+  console.log(fields[independentField], currencies[independentField]);
 
   // fallback to undefined if parsing fails?
   let dependentAmount;

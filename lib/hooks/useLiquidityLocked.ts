@@ -7,6 +7,7 @@ export default function useLiquidityLocked(): {
 } {
   const { data } = useDoveIsLiquidityLocked({
     address: DOVE_ADDRESS[goerli.id] as `0x${string}`,
+    chainId: goerli.id,
     watch: true,
   });
 
