@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import {
   ChainId,
@@ -37,7 +37,7 @@ export default function useWithdrawLiquidity(
     args: [
       token0Data ?? "0x",
       token1Data ?? "0x",
-      BigNumber.from(amount?.numerator.toString() ?? "0"),
+      BigInt(amount?.numerator.toString() ?? "0"),
     ],
     enabled: !!token0Data && !!token1Data && !!amount,
   });
@@ -47,13 +47,13 @@ export default function useWithdrawLiquidity(
     args: [
       token0Data ?? "0x",
       token1Data ?? "0x",
-      BigNumber.from(amount?.numerator.toString() || "0"),
-      quotedData?.amountA ?? BigNumber.from("0"),
-      quotedData?.amountB ?? BigNumber.from("0"),
+      BigInt(amount?.numerator.toString() || "0"),
+      quotedData?.[0] ?? BigInt("0"),
+      quotedData?.[1] ?? BigInt("0"),
       address ?? "0x",
-      ethers.constants.MaxUint256, // TODO: use deadline
+      BigInt(ethers.constants.MaxUint256.toString()), // TODO: use deadline
     ],
-    enabled: !!amount && !!quotedData?.amountA && !!quotedData?.amountB,
+    enabled: !!amount && !!quotedData?.[0] && !!quotedData?.[1],
   });
 
   const { write } = useL1RouterRemoveLiquidity(config);

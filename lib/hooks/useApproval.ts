@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 import { Currency, CurrencyAmount } from "../../sdk";
 import {
@@ -29,7 +28,7 @@ export default function useApproval(
       : undefined,
     args: [
       spender as `0x${string}`,
-      BigNumber.from(amountToApprove?.numerator.toString() || "0"),
+      BigInt(amountToApprove?.numerator.toString() || "0"),
     ],
     enabled:
       !!spender &&
@@ -37,10 +36,10 @@ export default function useApproval(
       approvalState === ApprovalState.NOT_APPROVED,
   });
 
-  console.log(
-    amountToApprove?.currency?.isToken &&
-      (amountToApprove.currency.address as `0x${string}`)
-  );
+  // console.log(
+  //   amountToApprove?.currency?.isToken &&
+  //     (amountToApprove.currency.address as `0x${string}`)
+  // );
 
   const { write } = useErc20Approve(approvalConfig);
 
@@ -70,7 +69,7 @@ function useApprovalStateForSpender(
 
   const allowanceAmount = CurrencyAmount.fromRawAmount(
     amountToApprove.currency,
-    allowance.toString()
+    allowance
   );
 
   // console.log(

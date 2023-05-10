@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
-import { useBlockNumber, useProvider } from "wagmi";
+import { useBlockNumber, usePublicClient } from "wagmi";
 
 export default function useBlockTimestamp(): number | undefined {
   const [blockTimestamp, setBlockTimestamp] = useState<number | undefined>();
   const { data: blockData } = useBlockNumber();
 
-  const provider = useProvider();
+  const provider = usePublicClient();
 
   useEffect(() => {
     if (!blockData || !provider) return;
 
     (async () => {
-      const blockInfo = await provider.getBlock(blockData);
+      const blockInfo = await provider.getBlock({
+        blockNumber: blockData,
+      });
 
-      setBlockTimestamp(blockInfo.timestamp);
+      setBlockTimestamp(Number(blockInfo.timestamp));
     })();
   });
 

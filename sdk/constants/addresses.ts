@@ -10,8 +10,8 @@ export const L1_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
 export const L2_ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
   [ChainId.ARBITRUM_GOERLI]: "0xF475ceb78C0e2F49784eFAe8c3BcA993B74aB988",
-  [ChainId.POLYGON_MUMBAI]: "0xD50853D8D7570b462D0fd109b918D3327a7fB4c7",
-  [ChainId.AVALANCHE_FUJI]: "0xD24D109675D73a09B4E56581beD3943eDfc3D642",
+  [ChainId.POLYGON_MUMBAI]: "0xFF558F93f9cDe9e36c7802A85fAEb251A3d8a401",
+  [ChainId.AVALANCHE_FUJI]: "0xE33F31f5c0Dbce6015929F4A0D6CB225e5Fbc4CF",
 };
 
 export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
@@ -23,9 +23,9 @@ export const DOVE_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const PAIR_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ETHEREUM_GOERLI]: "",
-  [ChainId.ARBITRUM_GOERLI]: "0xCD73e9D7F975d4Ac17385abe9824ECD3f4377d67",
-  [ChainId.POLYGON_MUMBAI]: "0x36820F7fA9A23657F074909e432a047825910dEA",
-  [ChainId.AVALANCHE_FUJI]: "0x5F24f6F5d7b5524374c2be55D5af0444ead7b8A3",
+  [ChainId.ARBITRUM_GOERLI]: "0xCe88ACA6d810C10Df9DeAF984CBFB325184BdC45",
+  [ChainId.POLYGON_MUMBAI]: "0x04be2bB9109f5399289A35F12Acdc1d8bF45a57f",
+  [ChainId.AVALANCHE_FUJI]: "0x1ceF23E384c25E35d2ac6ff8CA573911C47f4237",
 };
 
 export const USDC_ADDRESS: { [chainId in ChainId]: string } = {

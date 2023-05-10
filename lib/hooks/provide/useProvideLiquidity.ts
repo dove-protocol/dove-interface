@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import {
   ChainId,
@@ -26,8 +26,8 @@ export default function useProvideLiquidity(
     args: [
       amount1?.currency.isToken ? wrapAddress(amount1.currency.address) : "0x",
       amount2?.currency.isToken ? wrapAddress(amount2.currency.address) : "0x",
-      BigNumber.from(amount1?.numerator.toString() ?? "0"),
-      BigNumber.from(amount2?.numerator.toString() ?? "0"),
+      BigInt(amount1?.numerator.toString() ?? "0"),
+      BigInt(amount2?.numerator.toString() ?? "0"),
     ],
   });
 
@@ -36,12 +36,12 @@ export default function useProvideLiquidity(
     args: [
       amount1?.currency.isToken ? wrapAddress(amount1.currency.address) : "0x",
       amount2?.currency.isToken ? wrapAddress(amount2.currency.address) : "0x",
-      BigNumber.from(amount1?.numerator.toString() ?? "0"),
-      BigNumber.from(amount2?.numerator.toString() ?? "0"),
-      quoteData?.amountA ?? BigNumber.from("0"),
-      quoteData?.amountB ?? BigNumber.from("0"),
+      BigInt(amount1?.numerator.toString() ?? "0"),
+      BigInt(amount2?.numerator.toString() ?? "0"),
+      quoteData?.[0] ?? BigInt("0"),
+      quoteData?.[1] ?? BigInt("0"),
       address ?? "0x",
-      ethers.constants.MaxUint256,
+      BigInt(ethers.constants.MaxUint256.toString()),
     ],
     enabled:
       !!amount1 &&

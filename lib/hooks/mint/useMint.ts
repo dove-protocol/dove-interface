@@ -21,7 +21,7 @@ export default function useMint(
       : undefined,
     args: [
       wrapAddress(account ?? address),
-      BigNumber.from(amountToMint?.numerator.toString() || "0"),
+      BigInt(amountToMint?.numerator.toString() || "0"),
     ],
     enabled: !!amountToMint && (!!address || !!account),
   });

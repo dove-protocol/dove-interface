@@ -1,4 +1,4 @@
-import { goerli } from "wagmi";
+import { goerli } from "viem/chains";
 import { DOVE_ADDRESS } from "../../sdk";
 import { useDoveIsLiquidityLocked } from "../../src/generated";
 

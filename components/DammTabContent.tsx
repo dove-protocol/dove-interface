@@ -11,7 +11,7 @@ import {
   BiStats,
   BiTimeFive,
 } from "react-icons/bi";
-import { goerli } from "wagmi";
+import { goerli } from "viem/chains";
 import shallow from "zustand/shallow";
 import { dammTabsData } from "../constants/tabs";
 import useDammData from "../lib/hooks/data/useDammData";

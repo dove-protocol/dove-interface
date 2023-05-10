@@ -168,7 +168,7 @@ const SwapTabContent = () => {
     PAIR_ADDRESS[expectedChainId as ChainId]
   );
 
-  console.log(PAIR_ADDRESS[expectedChainId as ChainId], approveVoucherStateA);
+  // console.log(PAIR_ADDRESS[expectedChainId as ChainId], approveVoucherStateA);
 
   const { approve: approveVoucherB, state: approveVoucherStateB } = useApproval(
     burnAmounts[Field.CURRENCY_B],
