@@ -84,7 +84,7 @@ export default function useSwap(
         : "0x",
       isToken0 ? token1Data ?? "0x" : token0Data ?? "0x",
       address ?? "0x",
-      BigInt(ethers.constants.MaxUint256.toString()), // TODO: use deadline
+      ethers.MaxUint256, // TODO: use deadline
     ],
     enabled:
       !!amountIn && !!amountOutData && approvalState === ApprovalState.APPROVED,

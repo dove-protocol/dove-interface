@@ -1,18 +1,18 @@
+import _Big from "big.js";
 import invariant from "tiny-invariant";
-import JSBI from "jsbi";
 import { Currency } from "../currency";
 import { Token } from "../token";
 import { Fraction } from "./fraction";
-import _Big from "big.js";
 
+import { ethers } from "ethers";
 import toFormat from "toformat";
-import { BigintIsh, Rounding, MaxUint256 } from "../../constants";
+import { Rounding } from "../../constants";
 
 const Big = toFormat(_Big);
 
 export class CurrencyAmount<T extends Currency> extends Fraction {
   public readonly currency: T;
-  public readonly decimalScale: JSBI;
+  public readonly decimalScale: bigint;
 
   /**
    * Returns a new currency amount instance from the unitless amount of token, i.e. the raw amount
@@ -21,7 +21,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
    */
   public static fromRawAmount<T extends Currency>(
     currency: T,
-    rawAmount: BigintIsh
+    rawAmount: bigint
   ): CurrencyAmount<T> {
     return new CurrencyAmount(currency, rawAmount);
   }
@@ -34,24 +34,17 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
    */
   public static fromFractionalAmount<T extends Currency>(
     currency: T,
-    numerator: BigintIsh,
-    denominator: BigintIsh
+    numerator: bigint,
+    denominator: bigint
   ): CurrencyAmount<T> {
     return new CurrencyAmount(currency, numerator, denominator);
   }
 
-  protected constructor(
-    currency: T,
-    numerator: BigintIsh,
-    denominator?: BigintIsh
-  ) {
+  protected constructor(currency: T, numerator: bigint, denominator?: bigint) {
     super(numerator, denominator);
-    invariant(JSBI.lessThanOrEqual(this.quotient, MaxUint256), "AMOUNT");
+    invariant(this.quotient <= ethers.MaxUint256, "AMOUNT");
     this.currency = currency;
-    this.decimalScale = JSBI.exponentiate(
-      JSBI.BigInt(10),
-      JSBI.BigInt(currency.decimals)
-    );
+    this.decimalScale = BigInt(currency.decimals) ** 10n;
   }
 
   public add(other: CurrencyAmount<T>): CurrencyAmount<T> {
@@ -74,7 +67,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
     );
   }
 
-  public multiply(other: Fraction | BigintIsh): CurrencyAmount<T> {
+  public multiply(other: Fraction): CurrencyAmount<T> {
     const multiplied = super.multiply(other);
     return CurrencyAmount.fromFractionalAmount(
       this.currency,
@@ -83,7 +76,7 @@ export class CurrencyAmount<T extends Currency> extends Fraction {
     );
   }
 
-  public divide(other: Fraction | BigintIsh): CurrencyAmount<T> {
+  public divide(other: Fraction): CurrencyAmount<T> {
     const divided = super.divide(other);
     return CurrencyAmount.fromFractionalAmount(
       this.currency,

@@ -79,19 +79,25 @@ export default function useDammData(
 
   return {
     data: {
-      reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].toString()),
-      reserve1: CurrencyAmount.fromRawAmount(currency2, data[1].toString()),
+      reserve0: CurrencyAmount.fromRawAmount(
+        currency1,
+        data[0].result as bigint
+      ),
+      reserve1: CurrencyAmount.fromRawAmount(
+        currency2,
+        data[1].result as bigint
+      ),
       totalSupply: CurrencyAmount.fromRawAmount(
         totalSupplyCurrency,
-        data[2].toString()
+        data[2].result as bigint
       ),
       marked0: CurrencyAmount.fromRawAmount(
         currency1,
-        data[3].marked0.toString()
+        (data[3].result as [bigint, bigint])[0] as bigint
       ),
       marked1: CurrencyAmount.fromRawAmount(
         currency2,
-        data[3].marked1.toString()
+        (data[3].result as [bigint, bigint])[1] as bigint
       ),
     },
   };

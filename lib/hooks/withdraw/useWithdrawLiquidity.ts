@@ -51,7 +51,7 @@ export default function useWithdrawLiquidity(
       quotedData?.[0] ?? BigInt("0"),
       quotedData?.[1] ?? BigInt("0"),
       address ?? "0x",
-      BigInt(ethers.constants.MaxUint256.toString()), // TODO: use deadline
+      ethers.MaxUint256, // TODO: use deadline
     ],
     enabled: !!amount && !!quotedData?.[0] && !!quotedData?.[1],
   });

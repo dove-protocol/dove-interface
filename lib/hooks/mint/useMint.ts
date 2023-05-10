@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 import { Currency, CurrencyAmount } from "../../../sdk";
 import {
@@ -17,7 +16,7 @@ export default function useMint(
 
   const { config } = usePrepareErc20MockMint({
     address: amountToMint?.currency.isToken
-      ? amountToMint.currency.address as `0x${string}`
+      ? (amountToMint.currency.address as `0x${string}`)
       : undefined,
     args: [
       wrapAddress(account ?? address),

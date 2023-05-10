@@ -20,6 +20,7 @@
     "clsx": "^1.2.1",
     "decimal.js-light": "^2.5.1",
     "eslint-config-next": "^13.0.1",
+    "ethers": "^6.3.0",
     "framer-motion": "^6.2.8",
     "graphql": "^16.6.0",
     "immer": "^9.0.12",

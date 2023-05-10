@@ -41,7 +41,7 @@ export default function useProvideLiquidity(
       quoteData?.[0] ?? BigInt("0"),
       quoteData?.[1] ?? BigInt("0"),
       address ?? "0x",
-      BigInt(ethers.constants.MaxUint256.toString()),
+      ethers.MaxUint256,
     ],
     enabled:
       !!amount1 &&

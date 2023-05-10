@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
 import { useMemo } from "react";
+import { parseEther } from "viem";
 import { useNetwork } from "wagmi";
 import { ChainId, PAIR_ADDRESS } from "../../../sdk";
 import {
@@ -25,10 +25,8 @@ export default function useSyncL1(): {
 
   const { config } = usePreparePairSyncToL1({
     address: ammAddress as `0x${string}`,
-    args: [ethers.utils.parseEther("0.1"), ethers.utils.parseEther("0.2")],
-    overrides: {
-      value: ethers.utils.parseEther("0.5"),
-    },
+    args: [parseEther("0.1"), parseEther("0.2")],
+    value: parseEther("0.5"),
     enabled: !!chain,
   });
 

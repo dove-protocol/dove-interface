@@ -65,8 +65,8 @@ export default function useAmmData(
 
   return {
     data: {
-      reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].toString()),
-      reserve1: CurrencyAmount.fromRawAmount(currency1, data[1].toString()),
+      reserve0: CurrencyAmount.fromRawAmount(currency1, data[0].result as bigint),
+      reserve1: CurrencyAmount.fromRawAmount(currency1, data[1].result as bigint),
     },
     balances: amounts,
   };

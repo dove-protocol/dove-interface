@@ -1,5 +1,4 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import JSBI from "jsbi";
 import Image from "next/image";
 import {
   BiCheckCircle,
@@ -405,16 +404,12 @@ const DammTabContent = () => {
                     formatCurrencyAmount(
                       CurrencyAmount.fromRawAmount(
                         currencies[Field.CURRENCY_A],
-                        data?.reserve0.equalTo("0") ||
-                          data?.totalSupply.equalTo("0")
-                          ? JSBI.BigInt(0)
-                          : JSBI.divide(
-                              JSBI.multiply(
-                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                                data.reserve0.numerator
-                              ),
+                        data?.reserve0.equalTo(0n) ||
+                          data?.totalSupply.equalTo(0n)
+                          ? 0n
+                          : (withdrawAmounts[Field.CURRENCY_A]?.numerator *
+                              data.reserve0.numerator) /
                               data?.totalSupply.numerator
-                            )
                       ),
                       6
                     )}
@@ -442,16 +437,12 @@ const DammTabContent = () => {
                     formatCurrencyAmount(
                       CurrencyAmount.fromRawAmount(
                         currencies[Field.CURRENCY_B],
-                        data?.reserve1.equalTo("0") ||
-                          data?.totalSupply.equalTo("0")
-                          ? JSBI.BigInt(0)
-                          : JSBI.divide(
-                              JSBI.multiply(
-                                withdrawAmounts[Field.CURRENCY_A]?.numerator,
-                                data.reserve1.numerator
-                              ),
+                        data?.reserve1.equalTo(0n) ||
+                          data?.totalSupply.equalTo(0n)
+                          ? 0n
+                          : (withdrawAmounts[Field.CURRENCY_A]?.numerator *
+                              data.reserve1.numerator) /
                               data?.totalSupply.numerator
-                            )
                       ),
                       6
                     )}
