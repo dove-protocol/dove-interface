@@ -63,6 +63,7 @@ function useApprovalStateForSpender(
     watch: true,
   });
 
+  if (allowance === 0n) return ApprovalState.NOT_APPROVED;
   if (!amountToApprove) return ApprovalState.UNKNOWN;
   if (amountToApprove.currency.isNative) return ApprovalState.APPROVED;
   if (!allowance) return ApprovalState.UNKNOWN;

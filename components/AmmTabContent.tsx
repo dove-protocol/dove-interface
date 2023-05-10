@@ -75,8 +75,6 @@ const SwapTabContent = () => {
     ),
   };
 
-  console.log(parsedAmounts[dependentField]);
-
   const { approve, state: approveState } = useTokenApproval(
     parsedAmounts[Field.CURRENCY_A]
   );
