@@ -1,7 +1,7 @@
-import create from "zustand";
 import produce from "immer";
-import { ToastContent } from "../../lib/types";
+import create from "zustand";
 import { devtools } from "zustand/middleware";
+import { ToastContent } from "../../lib/types";
 
 interface UserStoreState {
   activeTab: string;
@@ -41,7 +41,7 @@ export const useUserStore = create<UserStoreState>(
           })
         );
       },
-      showAdvanced: true,
+      showAdvanced: false,
       setShowAdvanced: (showAdvanced) =>
         set(() => ({ showAdvanced: showAdvanced })),
     }),
