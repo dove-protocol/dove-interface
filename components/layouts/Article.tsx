@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
-import Navbar from "../Navbar";
-import { GiPeaceDove } from "react-icons/gi";
 import * as Toast from "@radix-ui/react-toast";
+import { motion } from "framer-motion";
+import React from "react";
 import { BiCheck, BiLinkExternal, BiX } from "react-icons/bi";
+import { GiPeaceDove } from "react-icons/gi";
 import { useNetwork } from "wagmi";
 import { transitionAnimation } from "../../lib/utils/transitionAnimation";
 import { useUserStore } from "../../state/user/useUserStore";
+import Navbar from "../Navbar";
 
 const Article = ({ children }: { children: React.ReactNode }) => {
   const { isOpen, setOpen, toastContent } = useUserStore();
@@ -20,7 +20,7 @@ const Article = ({ children }: { children: React.ReactNode }) => {
       exit="hidden"
       className="relative w-full"
     >
-      <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center overflow-hidden">
+      <div className="mx-auto flex h-screen w-full max-w-xl flex-col items-center overflow-hidden">
         <Toast.Provider>
           <Toast.Root
             className="group relative z-[9999] flex items-center rounded-sm border border-white/5 bg-pita p-2 shadow-damn rdx-state-closed:animate-hide rdx-state-open:animate-slideIn"
